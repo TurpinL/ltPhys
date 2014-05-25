@@ -147,7 +147,7 @@ const Mat3& Mat3::transposed() const
 	return Mat3(*this).transpose();
 }
 
-const Scalar Mat3::get(const int index) const
+const Scalar& Mat3::get(const int index) const
 {
 	return m_data[index];
 }

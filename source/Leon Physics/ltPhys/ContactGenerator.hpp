@@ -7,7 +7,10 @@
 #include "ShapeHalfspace.hpp"
 #include "ShapeBox.hpp"
 #include "ShapeTerrain.hpp"
+#include "Scalar.hpp"
 #include "Transform.hpp"
+#include "Vec3.hpp"
+#include "Quat.hpp"
 
 namespace lt
 {
@@ -50,7 +53,6 @@ public:
 	////////////////////////////////////////////////////////////
 	static unsigned int box_terrain(const CollisionRegistration& a, const CollisionRegistration& b, CollisionData *collisionData);
 };
-
 
 } // namespace lt
 

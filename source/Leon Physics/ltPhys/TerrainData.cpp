@@ -100,12 +100,12 @@ void TerrainData::setTerrainSize(const lt::Vec3 &terrainSize)
 	m_terrainSize = terrainSize;
 }
 
-unsigned int TerrainData::getHeigthMapLength() const
+unsigned int TerrainData::getHeightMapLength() const
 {
 	return m_hmLength;
 }
 
-unsigned int TerrainData::getHeigthMapWidth() const
+unsigned int TerrainData::getHeightMapWidth() const
 {
 	return m_hmWidth;
 }
@@ -127,7 +127,7 @@ const lt::Vec3& TerrainData::getTerrainSize() const
 
 const Mesh& TerrainData::getMesh() const
 {
-	return mesh;
+	return m_mesh;
 }
 
 ////////////////////////////////////////
@@ -136,16 +136,16 @@ const Mesh& TerrainData::getMesh() const
 
 void TerrainData::clearMesh()
 {
-	// Delete the previous mesh data, if it had any.
-	if(mesh.verts != nullptr) { delete[] mesh.verts; }
-	if(mesh.norms != nullptr) { delete[] mesh.norms; }
-	if(mesh.texCoords != nullptr) { delete[] mesh.texCoords; }
-	if(mesh.indices != nullptr) { delete[] mesh.indices; }
+	// Delete the previous m_mesh data, if it had any.
+	if(m_mesh.verts != nullptr) { delete[] m_mesh.verts; }
+	if(m_mesh.norms != nullptr) { delete[] m_mesh.norms; }
+	if(m_mesh.texCoords != nullptr) { delete[] m_mesh.texCoords; }
+	if(m_mesh.indices != nullptr) { delete[] m_mesh.indices; }
 
-	mesh.numVerts = 0;
-	mesh.numNorms = 0;
-	mesh.numTexCoords = 0;
-	mesh.numIndices = 0;
+	m_mesh.numVerts = 0;
+	m_mesh.numNorms = 0;
+	m_mesh.numTexCoords = 0;
+	m_mesh.numIndices = 0;
 }
 
 void TerrainData::calcMeshData()
@@ -156,19 +156,19 @@ void TerrainData::calcMeshData()
 	// One for each heightmap element.
 	unsigned int numCells = m_hmLength * m_hmWidth;
 
-	mesh.numVerts = numCells;
-	mesh.verts = new lt::Vec3[mesh.numVerts];
+	m_mesh.numVerts = numCells;
+	m_mesh.verts = new lt::Vec3[m_mesh.numVerts];
 
-	mesh.numNorms = numCells;
-	mesh.norms = new lt::Vec3[mesh.numNorms];
+	m_mesh.numNorms = numCells;
+	m_mesh.norms = new lt::Vec3[m_mesh.numNorms];
 
-	mesh.numTexCoords = numCells;
-	mesh.texCoords = new lt::Vec3[mesh.numTexCoords];
+	m_mesh.numTexCoords = numCells;
+	m_mesh.texCoords = new lt::Vec3[m_mesh.numTexCoords];
 
 	// Each set of neighbouring 4 elements of the heightmap will share 2 triangles.
 	// 3 vertices per triangle. 2 * 3 = 6. Hence the 6 in the equation.
-	mesh.numIndices = (m_hmLength - 1) * (m_hmWidth - 1) * 6;
-	mesh.indices = new GLuint[mesh.numIndices];
+	m_mesh.numIndices = (m_hmLength - 1) * (m_hmWidth - 1) * 6;
+	m_mesh.indices = new GLuint[m_mesh.numIndices];
 
 	// Calculate the distance between each point.
 	float xStride = m_terrainSize.x / (m_hmLength - 1);
@@ -182,8 +182,8 @@ void TerrainData::calcMeshData()
 		{
 			unsigned int index = x + (z * m_hmLength);
 
-			mesh.verts[index] = lt::Vec3(x * xStride, m_heightMapData[index] * heightMult, z * zStride);
-			mesh.texCoords[index] = lt::Vec3(x * xStride, z * zStride, 0);
+			m_mesh.verts[index] = lt::Vec3(x * xStride, m_heightMapData[index] * heightMult, z * zStride);
+			m_mesh.texCoords[index] = lt::Vec3(x * xStride, z * zStride, 0);
 		}
 	}
 
@@ -201,18 +201,18 @@ void TerrainData::calcMeshData()
 			if(!(x == 0 || x == m_hmLength - 1 || z == 0 || z == m_hmWidth - 1))
 			{
 				// Sample surrounding nodes.
-				mesh.norms[i] =  calcTriangleNorm(mesh.verts[i], mesh.verts[i-X-Z], mesh.verts[i-X]);
-				mesh.norms[i] += calcTriangleNorm(mesh.verts[i], mesh.verts[i-Z  ], mesh.verts[i-X-Z]);
-				mesh.norms[i] += calcTriangleNorm(mesh.verts[i], mesh.verts[i+X  ], mesh.verts[i-Z]);
-				mesh.norms[i] += calcTriangleNorm(mesh.verts[i], mesh.verts[i+X+Z], mesh.verts[i+X]);
-				mesh.norms[i] += calcTriangleNorm(mesh.verts[i], mesh.verts[i+Z  ], mesh.verts[i+X+Z]);
-				mesh.norms[i] += calcTriangleNorm(mesh.verts[i], mesh.verts[i-X  ], mesh.verts[i+Z]);
-				mesh.norms[i].normalize();
+				m_mesh.norms[i] =  calcTriangleNorm(m_mesh.verts[i], m_mesh.verts[i-X-Z], m_mesh.verts[i-X]);
+				m_mesh.norms[i] += calcTriangleNorm(m_mesh.verts[i], m_mesh.verts[i-Z  ], m_mesh.verts[i-X-Z]);
+				m_mesh.norms[i] += calcTriangleNorm(m_mesh.verts[i], m_mesh.verts[i+X  ], m_mesh.verts[i-Z]);
+				m_mesh.norms[i] += calcTriangleNorm(m_mesh.verts[i], m_mesh.verts[i+X+Z], m_mesh.verts[i+X]);
+				m_mesh.norms[i] += calcTriangleNorm(m_mesh.verts[i], m_mesh.verts[i+Z  ], m_mesh.verts[i+X+Z]);
+				m_mesh.norms[i] += calcTriangleNorm(m_mesh.verts[i], m_mesh.verts[i-X  ], m_mesh.verts[i+Z]);
+				m_mesh.norms[i].normalize();
 			}
 			else
 			{
 				// Give the edges a verticle normal.
-				mesh.norms[i] = lt::Vec3(0.0f, 1.0f, 0.0f);
+				m_mesh.norms[i] = lt::Vec3(0.0f, 1.0f, 0.0f);
 			}
 		}
 	}
@@ -223,13 +223,13 @@ void TerrainData::calcMeshData()
 	{
 		for (unsigned int z = 0; z < m_hmWidth - 1; z++)
 		{
-			mesh.indices[curIndex] = (x  ) + ((z+1) * m_hmLength); curIndex++;
-			mesh.indices[curIndex] = (x  ) + ((z  ) * m_hmLength); curIndex++;
-			mesh.indices[curIndex] = (x+1) + ((z+1) * m_hmLength); curIndex++;
+			m_mesh.indices[curIndex] = (x  ) + ((z+1) * m_hmLength); curIndex++;
+			m_mesh.indices[curIndex] = (x  ) + ((z  ) * m_hmLength); curIndex++;
+			m_mesh.indices[curIndex] = (x+1) + ((z+1) * m_hmLength); curIndex++;
 
-			mesh.indices[curIndex] = (x+1) + ((z+1) * m_hmLength); curIndex++;
-			mesh.indices[curIndex] = (x  ) + ((z  ) * m_hmLength); curIndex++;
-			mesh.indices[curIndex] = (x+1) + ((z  ) * m_hmLength); curIndex++;
+			m_mesh.indices[curIndex] = (x+1) + ((z+1) * m_hmLength); curIndex++;
+			m_mesh.indices[curIndex] = (x  ) + ((z  ) * m_hmLength); curIndex++;
+			m_mesh.indices[curIndex] = (x+1) + ((z  ) * m_hmLength); curIndex++;
 		}
 	}
 }

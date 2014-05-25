@@ -1,7 +1,9 @@
 #ifndef LTPHYS_CONTACT_H
 #define LTPHYS_CONTACT_H
 
+#include "Scalar.hpp"
 #include "Vec3.hpp"
+#include "Transform.hpp"
 #include "RigidBody.hpp"
 
 namespace lt
@@ -39,21 +41,6 @@ struct Contact
 
 	/** Stores the two bodies that are in contact */
 	RigidBody* body[2];
-
-	/** Transforms positions from contact space to world space. */
-	Mat3 contactToWorld;
-
-	/** Holds required change in velocity for this contact to be resolved. */
-	Scalar desiredDeltaVelocity;
-
-	/** Holds the closing velocity at point of contact, set when calculateInternals is run. */
-	Vec3 contactVelocity;
-
-	/** Hold the world space position of the contact point relative 
-	 * to the centre of each body. 
-	 * This is set when the calculateInternals function is run.
-	 */
-	Vec3 relativeContactPosition[2];
 };
 
 /**

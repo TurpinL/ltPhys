@@ -7,20 +7,39 @@
 namespace lt
 {
 
-/**  ShapeTerrain.hpp
- *	\brief 
- *
- *  \author Leon Turpin
- *  \date March 2014
- */
+////////////////////////////////////////////////////////////
+///	@brief Data for a terrain collision 
+///
+/// @author Leon Turpin
+/// @date March 2014
+//////////////////////////////////////////////////////////// 
 class ShapeTerrain : public CollisionShape
 {
 public:
+	//////////////////////////////////////////////////////////// 
+	/// @brief Default Constructor
+	///
+	/// Creates a terrain with null terrain data
+	/// 
+	//////////////////////////////////////////////////////////// 
 	ShapeTerrain();
 
 	virtual ShapeType getShapeType() const { return LT_SHAPE_TERRAIN; }
 
+	//////////////////////////////////////////////////////////// 
+	/// @brief Sets this terrain's terrain data to terrainData
+	///
+	/// @param terrainData data to pass to this terrain shape
+	///
+	//////////////////////////////////////////////////////////// 
 	void setTerrainData(TerrainData *terrainData);
+
+	//////////////////////////////////////////////////////////// 
+	/// @brief Gets this terrain's terrain data.
+	///
+	/// @return Terrain data
+	///
+	//////////////////////////////////////////////////////////// 
 	const TerrainData* getTerrainData() const;
 private:
 	TerrainData *m_terrainData;

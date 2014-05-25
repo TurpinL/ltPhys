@@ -1,0 +1,189 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="Resource Files">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    </Filter>
+    <Filter Include="PhysicsDemo">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hpp;hxx;hm;inl;inc;xsd</Extensions>
+    </Filter>
+    <Filter Include="PhysicsDemo\ltPhys">
+      <UniqueIdentifier>{2938bc10-4c8e-43cc-8bfb-759a4cba4184}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="PhysicsDemo\ltPhys\Constraints">
+      <UniqueIdentifier>{19a2454f-30f1-4288-a15a-58dcd9970572}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="PhysicsDemo\ltPhys\Collisions">
+      <UniqueIdentifier>{010efb89-f6e0-474b-bf49-ecf60e480357}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="PhysicsDemo\ltPhys\Math">
+      <UniqueIdentifier>{c9965ed6-1bf8-4b4d-8f21-9f4bdc0bf481}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="PhysicsDemo\ltPhys\Systems">
+      <UniqueIdentifier>{b2a184c5-908e-415b-a89e-7d5d7926481a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="PhysicsDemo\ltPhys\Bodies">
+      <UniqueIdentifier>{653a9240-49f2-4e49-8074-16497dea02fa}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="main.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="ltPhys\FGenGravity.cpp">
+      <Filter>PhysicsDemo\ltPhys\Constraints</Filter>
+    </ClCompile>
+    <ClCompile Include="ltPhys\FGenSpring.cpp">
+      <Filter>PhysicsDemo\ltPhys\Constraints</Filter>
+    </ClCompile>
+    <ClCompile Include="ltPhys\FGenSpring2.cpp">
+      <Filter>PhysicsDemo\ltPhys\Constraints</Filter>
+    </ClCompile>
+    <ClCompile Include="ltPhys\Mat3.cpp">
+      <Filter>PhysicsDemo\ltPhys\Math</Filter>
+    </ClCompile>
+    <ClCompile Include="ltPhys\Quat.cpp">
+      <Filter>PhysicsDemo\ltPhys\Math</Filter>
+    </ClCompile>
+    <ClCompile Include="ltPhys\Transform.cpp">
+      <Filter>PhysicsDemo\ltPhys\Math</Filter>
+    </ClCompile>
+    <ClCompile Include="ltPhys\Vec3.cpp">
+      <Filter>PhysicsDemo\ltPhys\Math</Filter>
+    </ClCompile>
+    <ClCompile Include="ltPhys\RigidBody.cpp">
+      <Filter>PhysicsDemo\ltPhys\Bodies</Filter>
+    </ClCompile>
+    <ClCompile Include="ltPhys\World.cpp">
+      <Filter>PhysicsDemo\ltPhys\Systems</Filter>
+    </ClCompile>
+    <ClCompile Include="ltPhys\ForceGeneratorRegistry.cpp">
+      <Filter>PhysicsDemo\ltPhys\Systems</Filter>
+    </ClCompile>
+    <ClCompile Include="ltPhys\ShapeSphere.cpp">
+      <Filter>PhysicsDemo\ltPhys\Collisions</Filter>
+    </ClCompile>
+    <ClCompile Include="ltPhys\CollisionRegistry.cpp">
+      <Filter>PhysicsDemo\ltPhys\Systems</Filter>
+    </ClCompile>
+    <ClCompile Include="ltPhys\ContactGenerator.cpp">
+      <Filter>PhysicsDemo\ltPhys\Collisions</Filter>
+    </ClCompile>
+    <ClCompile Include="PhysicsDemo.cpp">
+      <Filter>PhysicsDemo</Filter>
+    </ClCompile>
+    <ClCompile Include="PhysicsDemo_Display.cpp">
+      <Filter>PhysicsDemo</Filter>
+    </ClCompile>
+    <ClCompile Include="PhysicsDemo_Event.cpp">
+      <Filter>PhysicsDemo</Filter>
+    </ClCompile>
+    <ClCompile Include="PhysicsDemo_Idle.cpp">
+      <Filter>PhysicsDemo</Filter>
+    </ClCompile>
+    <ClCompile Include="PhysicsDemo_Init.cpp">
+      <Filter>PhysicsDemo</Filter>
+    </ClCompile>
+    <ClCompile Include="ltPhys\ShapeHalfspace.cpp">
+      <Filter>PhysicsDemo\ltPhys\Collisions</Filter>
+    </ClCompile>
+    <ClCompile Include="ltPhys\ShapeBox.cpp">
+      <Filter>PhysicsDemo\ltPhys\Collisions</Filter>
+    </ClCompile>
+    <ClCompile Include="ltPhys\ShapeTerrain.cpp">
+      <Filter>PhysicsDemo\ltPhys\Collisions</Filter>
+    </ClCompile>
+    <ClCompile Include="ltPhys\TerrainData.cpp">
+      <Filter>PhysicsDemo\ltPhys\Collisions</Filter>
+    </ClCompile>
+    <ClCompile Include="HeightmapFunctions.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="ltPhys.hpp">
+      <Filter>PhysicsDemo\ltPhys</Filter>
+    </ClInclude>
+    <ClInclude Include="ltPhys\ForceGenerator.hpp">
+      <Filter>PhysicsDemo\ltPhys\Constraints</Filter>
+    </ClInclude>
+    <ClInclude Include="ltPhys\Contact.hpp">
+      <Filter>PhysicsDemo\ltPhys\Collisions</Filter>
+    </ClInclude>
+    <ClInclude Include="ltPhys\FGenGravity.hpp">
+      <Filter>PhysicsDemo\ltPhys\Constraints</Filter>
+    </ClInclude>
+    <ClInclude Include="ltPhys\FGenSpring.hpp">
+      <Filter>PhysicsDemo\ltPhys\Constraints</Filter>
+    </ClInclude>
+    <ClInclude Include="ltPhys\FGenSpring2.hpp">
+      <Filter>PhysicsDemo\ltPhys\Constraints</Filter>
+    </ClInclude>
+    <ClInclude Include="ltPhys\Quat.hpp">
+      <Filter>PhysicsDemo\ltPhys\Math</Filter>
+    </ClInclude>
+    <ClInclude Include="ltPhys\Mat3.hpp">
+      <Filter>PhysicsDemo\ltPhys\Math</Filter>
+    </ClInclude>
+    <ClInclude Include="ltPhys\Scalar.hpp">
+      <Filter>PhysicsDemo\ltPhys\Math</Filter>
+    </ClInclude>
+    <ClInclude Include="ltPhys\Vec3.hpp">
+      <Filter>PhysicsDemo\ltPhys\Math</Filter>
+    </ClInclude>
+    <ClInclude Include="ltPhys\Transform.hpp">
+      <Filter>PhysicsDemo\ltPhys\Math</Filter>
+    </ClInclude>
+    <ClInclude Include="ltPhys\RigidBody.hpp">
+      <Filter>PhysicsDemo\ltPhys\Bodies</Filter>
+    </ClInclude>
+    <ClInclude Include="ltPhys\World.hpp">
+      <Filter>PhysicsDemo\ltPhys\Systems</Filter>
+    </ClInclude>
+    <ClInclude Include="ltPhys\ForceGeneratorRegistry.hpp">
+      <Filter>PhysicsDemo\ltPhys\Systems</Filter>
+    </ClInclude>
+    <ClInclude Include="ltPhys\CollisionShape.hpp">
+      <Filter>PhysicsDemo\ltPhys\Collisions</Filter>
+    </ClInclude>
+    <ClInclude Include="ltPhys\ShapeSphere.hpp">
+      <Filter>PhysicsDemo\ltPhys\Collisions</Filter>
+    </ClInclude>
+    <ClInclude Include="ltPhys\CollisionRegistry.hpp">
+      <Filter>PhysicsDemo\ltPhys\Systems</Filter>
+    </ClInclude>
+    <ClInclude Include="ltPhys\ContactGenerator.hpp">
+      <Filter>PhysicsDemo\ltPhys\Collisions</Filter>
+    </ClInclude>
+    <ClInclude Include="PhysicsDemo.hpp">
+      <Filter>PhysicsDemo</Filter>
+    </ClInclude>
+    <ClInclude Include="ltPhys\ShapeHalfspace.hpp">
+      <Filter>PhysicsDemo\ltPhys\Collisions</Filter>
+    </ClInclude>
+    <ClInclude Include="ltPhys\ShapeBox.hpp">
+      <Filter>PhysicsDemo\ltPhys\Collisions</Filter>
+    </ClInclude>
+    <ClInclude Include="ltPhys\ShapeTerrain.hpp">
+      <Filter>PhysicsDemo\ltPhys\Collisions</Filter>
+    </ClInclude>
+    <ClInclude Include="ltPhys\TerrainData.hpp">
+      <Filter>PhysicsDemo\ltPhys\Collisions</Filter>
+    </ClInclude>
+    <ClInclude Include="ltPhys\Mesh.hpp">
+      <Filter>PhysicsDemo\ltPhys</Filter>
+    </ClInclude>
+    <ClInclude Include="HeightmapFunctions.hpp">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="TO-DO.txt" />
+  </ItemGroup>
+</Project>

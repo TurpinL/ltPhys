@@ -1,0 +1,111 @@
++/++! properly Implement const Transform Transform::operator* (const Transform& rhs) const
+	- Works with transforms atleast.
++++! Implement Transform& Transform::rotate(const Quat &angle)
++++! Fully convert Vec3 to the Homogeneous Coordinate System
+	- The operators don't maintain strict mathematic w values, but I think that might be more annoying than pleasurable.
++++! Implement apply offset force relative to the body rotation.
++++! Implement Rotational Dampening 
+++-! Implement Springs that attach at an offset
+	- I think it works fine?
++++! Fixed the gravity class so it properly takes into account mass.
++++! Fixed logic in vec3 normalize not being correct and skipping essential math.
++++! Get offset forces working properly(similar to bullet physics);
+	- They seem to generate the correct forces. Might be a problem when multiple forces are applied.
++++! Figure out why shapes are spinning out.
+	- Calculating the transformation matrix was done too early, should've been at the end of the integrate function
+	- Bullet applies a small dampening force, so 0 dampening isn't really 0.
++++! Test various box shapes with the offset forces and inertia tensors
+	- Totally cool
++++! Fixed Mat3::invert() so it wasn't reading from the same array it was writing to. 
++++! Make a World class that stores a body registry and Force Generator Registry
+
+MILESTONE: Generic Rigid Body Motion Physics. (It seems ok atleast)
+
++++! Implement Sphere - Sphere contact.
++++! Implement a collision registry/checker.
++++! Properly calculate the exiting velocities for collision
+	PostFixNote: I think they're right at least. They look right and momentum is conserved.
+
++++! Fix(Rigidbody) transform not updating when position changes.
++++! Fix(Rigidbody) World inertia tensor not updating when angle or inertia tensor change.
++++! Give rigid bodies a coefficient of restitution.
+
++++! Implement restitution in collision resolution algorithm
+
++++! Collision Type: Halfspace_Sphere
++++! Collision Type: Box_Halfspace
+	PreFixNote: Collision resolution doesn't like boxes, I suspect the closing velocity calculations are incomplete.
+
++++! Fix collision resolution so it works for boxes.
+	PostFixNote: Interpenetration was calculating totalInvMass as an unsigned int.
+
++++! Fix issue where each contact is applies the impulse as if it's the only one.
+	PostFixNote: "Fixed" I implemented Contact::impulseModifier, it sorta fixes the issue, but I'm not sure if it's a good idea.
+
++++! Calculate angular component for closing velocity
+
++++! Bug? The cube doesn't seem to lose energy when it bounces and has any restitution.
+	PostFixNote: Implemented a different collision resoltion thing that I understand less, but it seems to work
+
++++! Implement that double buffering thing, see if it is a good idea?
+	PreFixNote: Seems to be, boxes bounce much more realistically
+	PostFixNote: Fixed issue where closing velocities were inaccurate because the previous impulse resolution steps would modify the
+		velocities of the bodies in the collision
+
++++! Bug: When an object is colliding with more than one thing, it'll be pushed out of the first collision making the second collision inaccurate. 
+	- This also occurs with box collisions, Since they have multiple contacts all being fixed for interpenetration
+	PostFixNote: Fixed by seperating the impulse resolution and interpenetration step.
+
++++! Bug: When an object with infinite mass collides with a collision shape with no object, All objects seem to dissapear.
+	PostFixNote: Added checks to prevent this.
+
++++! Added Terrain Shape.
+
++++! Non linear interpenetration resolution
+
+Contact Preperation, calculates data about a contact that may be used in collision resolution and interpenetration resolution.
+
+Avoid excessive rotation p328
+
+Properly calculate the interpenetration resolution
+
+Point - Terrain collision
+
+Bug? : Boxes don't bounce to their original height when they have a coef of restitution of 1 and 1 for linear damping.
+
+Confusion? How are boxes not getting 4x too much force when they bounce with 4 contact points?
+
+
+Change from a collision response system that directly modifies velocities to one that applies an impulse
+
+Collision Type: Sphere_Box
+Collision Type: Box_Box
+
+Add proper collision checker function matching.
+
+Add Friction
+/
+Test that torque is applied appropriately for the impulse
+
+There's still something wrong with the spring class, or angular velocity. Sometimes things go real jittery
+	PreFixNote: Not sure how to duplicate. 
+	
+The inertia tensor to world transformation might not work too well.
+
+Implement better rotation update in lt::RigidBody::intergrate
+Remove the redundant bottom row of the Transform class
+
+Finish implementing a lot of features of the quaternion class
+Document the Quaternion class
+
+MILESTONES:
+
+Stable Primitive Collision Resolution
+
+Complex Collisions (Importing Models).
+
+A Suite of Constraints.
+
+Collision Culling.
+
+Ragdolls?!

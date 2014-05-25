@@ -1,0 +1,125 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>{5913F130-4655-46F1-9723-B20AF1C1A9B8}</ProjectGuid>
+    <RootNamespace>LeonPhysics</RootNamespace>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <CharacterSet>MultiByte</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>MultiByte</CharacterSet>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup />
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>Disabled</Optimization>
+      <AdditionalIncludeDirectories>$(SolutionDir)\..\Libraries\glew-1.9.0\include;$(SolutionDir)\..\Libraries\SDL-1.2.15\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ClCompile>
+    <Link>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalLibraryDirectories>$(SolutionDir)\..\Libraries\SDL-1.2.15\lib\x86;$(SolutionDir)\..\Libraries\glew-1.9.0\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>SDLmain.lib;SDL.lib;OpenGL32.lib;Glu32.lib;Glew32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <SubSystem>Console</SubSystem>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>MaxSpeed</Optimization>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+    </ClCompile>
+    <Link>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <ClCompile Include="HeightmapFunctions.cpp" />
+    <ClCompile Include="ltPhys\CollisionRegistry.cpp" />
+    <ClCompile Include="ltPhys\ContactGenerator.cpp" />
+    <ClCompile Include="ltPhys\FGenGravity.cpp" />
+    <ClCompile Include="ltPhys\FGenSpring.cpp" />
+    <ClCompile Include="ltPhys\FGenSpring2.cpp" />
+    <ClCompile Include="ltPhys\ForceGeneratorRegistry.cpp" />
+    <ClCompile Include="ltPhys\Mat3.cpp" />
+    <ClCompile Include="ltPhys\Quat.cpp" />
+    <ClCompile Include="ltPhys\RigidBody.cpp" />
+    <ClCompile Include="ltPhys\ShapeBox.cpp" />
+    <ClCompile Include="ltPhys\ShapeHalfspace.cpp" />
+    <ClCompile Include="ltPhys\ShapeSphere.cpp" />
+    <ClCompile Include="ltPhys\ShapeTerrain.cpp" />
+    <ClCompile Include="ltPhys\TerrainData.cpp" />
+    <ClCompile Include="ltPhys\Transform.cpp" />
+    <ClCompile Include="ltPhys\Vec3.cpp" />
+    <ClCompile Include="ltPhys\World.cpp" />
+    <ClCompile Include="main.cpp" />
+    <ClCompile Include="PhysicsDemo.cpp" />
+    <ClCompile Include="PhysicsDemo_Display.cpp" />
+    <ClCompile Include="PhysicsDemo_Event.cpp" />
+    <ClCompile Include="PhysicsDemo_Idle.cpp" />
+    <ClCompile Include="PhysicsDemo_Init.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="HeightmapFunctions.hpp" />
+    <ClInclude Include="ltPhys.hpp" />
+    <ClInclude Include="ltPhys\CollisionRegistry.hpp" />
+    <ClInclude Include="ltPhys\CollisionShape.hpp" />
+    <ClInclude Include="ltPhys\Contact.hpp" />
+    <ClInclude Include="ltPhys\ContactGenerator.hpp" />
+    <ClInclude Include="ltPhys\FGenGravity.hpp" />
+    <ClInclude Include="ltPhys\FGenSpring.hpp" />
+    <ClInclude Include="ltPhys\FGenSpring2.hpp" />
+    <ClInclude Include="ltPhys\ForceGenerator.hpp" />
+    <ClInclude Include="ltPhys\ForceGeneratorRegistry.hpp" />
+    <ClInclude Include="ltPhys\Mat3.hpp" />
+    <ClInclude Include="ltPhys\Mesh.hpp" />
+    <ClInclude Include="ltPhys\Quat.hpp" />
+    <ClInclude Include="ltPhys\RigidBody.hpp" />
+    <ClInclude Include="ltPhys\Scalar.hpp" />
+    <ClInclude Include="ltPhys\ShapeBox.hpp" />
+    <ClInclude Include="ltPhys\ShapeHalfspace.hpp" />
+    <ClInclude Include="ltPhys\ShapeSphere.hpp" />
+    <ClInclude Include="ltPhys\ShapeTerrain.hpp" />
+    <ClInclude Include="ltPhys\TerrainData.hpp" />
+    <ClInclude Include="ltPhys\Transform.hpp" />
+    <ClInclude Include="ltPhys\Vec3.hpp" />
+    <ClInclude Include="ltPhys\World.hpp" />
+    <ClInclude Include="PhysicsDemo.hpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="TO-DO.txt" />
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>

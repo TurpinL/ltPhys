@@ -49,7 +49,7 @@ void CollisionRegistry::findContacts()
 			if(m_registry[i].body != m_registry[j].body ||
 				(m_registry[i].body == nullptr && m_registry[i].body == nullptr))
 			{
-				_checkCollision(m_registry[i], m_registry[j]);
+				checkCollision(m_registry[i], m_registry[j]);
 			}
 		}
 	}
@@ -72,7 +72,7 @@ void CollisionRegistry::remove(RigidBody* body, CollisionShape* shape)
 		if (body == m_registry[i].body && 
 			shape == m_registry[i].shape)
 		{
-			_removeElement(i);
+			removeElement(i);
 			// Decrease the iterator to check the, now different, current element again. 
 			i--;
 		}
@@ -87,7 +87,7 @@ void CollisionRegistry::remove(RigidBody* body)
 		// Check for a match
 		if (body == m_registry[i].body)
 		{
-			_removeElement(i);
+			removeElement(i);
 			// Decrease the iterator to check the, now different, current element again. 
 			i--;
 		}
@@ -102,7 +102,7 @@ void CollisionRegistry::remove(CollisionShape *shape)
 		// Check for a match
 		if (shape == m_registry[i].shape)
 		{
-			_removeElement(i);
+			removeElement(i);
 			// Decrease the iterator to check the, now different, current element again. 
 			i--;
 		}
@@ -137,7 +137,7 @@ const CollisionData& CollisionRegistry::getCollisionData() const
 //	PRIVATES			
 //--------------------------
 
-void CollisionRegistry::_removeElement(int index)
+void CollisionRegistry::removeElement(int index)
 {
 	// Swap this element and the end so as not to leave holes.
 	m_registry[index] = m_registry[m_registry.size()]; 
@@ -145,7 +145,7 @@ void CollisionRegistry::_removeElement(int index)
 	m_registry.pop_back();
 }
 
-void CollisionRegistry::_checkCollision(const CollisionRegistration& shapeA, const CollisionRegistration& shapeB)
+void CollisionRegistry::checkCollision(const CollisionRegistration& shapeA, const CollisionRegistration& shapeB)
 {
 	// Get the shape types
 	const ShapeType& shapeAType = shapeA.shape->getShapeType();

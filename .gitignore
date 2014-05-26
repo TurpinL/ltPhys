@@ -10,3 +10,4 @@ libraries/
 *.ilk
 *.manifest
 *.lastbuildstate
+*.cache

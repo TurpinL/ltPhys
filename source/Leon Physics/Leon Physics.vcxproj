@@ -67,6 +67,7 @@
     <ClCompile Include="HeightmapFunctions.cpp" />
     <ClCompile Include="ltPhys\CollisionRegistry.cpp" />
     <ClCompile Include="ltPhys\ContactGenerator.cpp" />
+    <ClCompile Include="ltPhys\ContactResolver.cpp" />
     <ClCompile Include="ltPhys\FGenGravity.cpp" />
     <ClCompile Include="ltPhys\FGenSpring.cpp" />
     <ClCompile Include="ltPhys\FGenSpring2.cpp" />
@@ -96,6 +97,7 @@
     <ClInclude Include="ltPhys\CollisionShape.hpp" />
     <ClInclude Include="ltPhys\Contact.hpp" />
     <ClInclude Include="ltPhys\ContactGenerator.hpp" />
+    <ClInclude Include="ltPhys\ContactResolver.hpp" />
     <ClInclude Include="ltPhys\FGenGravity.hpp" />
     <ClInclude Include="ltPhys\FGenSpring.hpp" />
     <ClInclude Include="ltPhys\FGenSpring2.hpp" />

@@ -113,10 +113,10 @@ private:
 	CollisionData m_collisionData;
 	std::vector<CollisionRegistration> m_registry;
 
-	void _removeElement(int index);
+	void removeElement(int index);
 
 	/** Takes two CollisionRegistrations and finds the best collision function for the pair. */
-	void _checkCollision(const CollisionRegistration& shapeA, const CollisionRegistration& shapeB);
+	void checkCollision(const CollisionRegistration& shapeA, const CollisionRegistration& shapeB);
 };
 
 } // namespace lt

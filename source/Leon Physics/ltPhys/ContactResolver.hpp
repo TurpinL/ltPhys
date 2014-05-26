@@ -2,18 +2,23 @@
 #define LTPHYS_CONTACTRESOLVER_H
 
 #include "Contact.hpp"
-#include "CollisionShape.hpp"
-#include "ShapeSphere.hpp"
-#include "ShapeHalfspace.hpp"
-#include "ShapeBox.hpp"
-#include "ShapeTerrain.hpp"
-#include "Transform.hpp"
+#include <list>
 
 namespace lt
 {
 
+////////////////////////////////////////////////////////////
+/// @brief Stores the velocity response of one collision 
+////////////////////////////////////////////////////////////
+struct CollisionResponse
+{
+	RigidBody *body;
+	Vec3 changeInVelocity;
+	Vec3 changeInAngularVelocity;
+};
+
 /** ContactResolver.hpp
- *	@brief
+ *	@brief Resolves the contacts found by the contact generator.
  *
  *  @author Leon Turpin
  *  @date May 2014
@@ -21,13 +26,19 @@ namespace lt
 class ContactResolver
 {
 public:
-	static unsigned int sphere_sphere(const CollisionRegistration& a, const CollisionRegistration& b, CollisionData *collisionData);
-	static unsigned int sphere_box(const CollisionRegistration& a, const CollisionRegistration& b, CollisionData *collisionData);
-	static unsigned int sphere_halfspace(const CollisionRegistration& a, const CollisionRegistration& b, CollisionData *collisionData);
-	static unsigned int sphere_terrain(const CollisionRegistration& a, const CollisionRegistration& b, CollisionData *collisionData);
-	//static unsigned int box_box(const CollisionRegistration& a, const CollisionRegistration& b, CollisionData *collisionData);
-	static unsigned int box_halfspace(const CollisionRegistration& a, const CollisionRegistration& b, CollisionData *collisionData);
-	static unsigned int box_terrain(const CollisionRegistration& a, const CollisionRegistration& b, CollisionData *collisionData);
+	////////////////////////////////////////////////////////////		
+	/// @brief Applies velocities and moves objects to resolve 
+	/// interpenetration and collision forces.
+	///
+	/// @param colData List of collisions to resolve.
+	///
+	////////////////////////////////////////////////////////////			
+	void resolveContacts(const lt::CollisionData &colData);
+private:
+	void resolveMotion(const Contact& contact, std::list<CollisionResponse> &collisionResponseRegistry);
+	void calcImpulse(const Contact& contact, std::list<CollisionResponse> &collisionResponseRegistry);
+	void resolveAllInterpenetrations(const lt::CollisionData &colData);
+	void resolveInterpenetration(const Contact& contact);
 };
 
 } // namespace lt

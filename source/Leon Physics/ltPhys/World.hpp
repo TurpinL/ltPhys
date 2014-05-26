@@ -9,19 +9,10 @@
 #include "CollisionRegistry.hpp"
 #include "CollisionShape.hpp"
 #include "ForceGeneratorRegistry.hpp"
+#include "ContactResolver.hpp"
 
 namespace lt
 {
-
-////////////////////////////////////////////////////////////
-/// @brief Stores the velocity response of one collision 
-////////////////////////////////////////////////////////////
-struct CollisionResponse
-{
-	RigidBody *body;
-	Vec3 changeInVelocity;
-	Vec3 changeInAngularVelocity;
-};
 
 ////////////////////////////////////////////////////////////
 /// @brief Manages the whole simulation world. 
@@ -170,12 +161,9 @@ public:
 private:
 	std::vector<RigidBody*> m_rigidBodies;
 	ForceGeneratorRegistry m_forceGenRegistry;
+	ContactResolver contactResolver;
 
-	void _resolveCollisions(const Scalar& timeStep);
-	void _resolveCollisionMotion(const Contact& contact, std::list<CollisionResponse> &collisionResponseRegistry);
-	void _calcCollisionImpulse(const Contact& contact, std::list<CollisionResponse> &collisionResponseRegistry);
-	void _resolveCollisionInterpenetration(const Contact& contact);
-	void _integrateBodies(const Scalar& timeStep);
+	void integrateBodies(const Scalar& timeStep);
 };
 
 } // namespace lt

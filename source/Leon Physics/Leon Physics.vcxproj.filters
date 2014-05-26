@@ -31,6 +31,9 @@
     <Filter Include="PhysicsDemo\ltPhys\Bodies">
       <UniqueIdentifier>{653a9240-49f2-4e49-8074-16497dea02fa}</UniqueIdentifier>
     </Filter>
+    <Filter Include="PhysicsDemo\ltPhys\Collisions\Shapes">
+      <UniqueIdentifier>{8c24da6c-0ae4-4124-a2bb-676051820694}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -66,9 +69,6 @@
     <ClCompile Include="ltPhys\ForceGeneratorRegistry.cpp">
       <Filter>PhysicsDemo\ltPhys\Systems</Filter>
     </ClCompile>
-    <ClCompile Include="ltPhys\ShapeSphere.cpp">
-      <Filter>PhysicsDemo\ltPhys\Collisions</Filter>
-    </ClCompile>
     <ClCompile Include="ltPhys\CollisionRegistry.cpp">
       <Filter>PhysicsDemo\ltPhys\Systems</Filter>
     </ClCompile>
@@ -90,20 +90,26 @@
     <ClCompile Include="PhysicsDemo_Init.cpp">
       <Filter>PhysicsDemo</Filter>
     </ClCompile>
-    <ClCompile Include="ltPhys\ShapeHalfspace.cpp">
+    <ClCompile Include="HeightmapFunctions.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="ltPhys\ContactResolver.cpp">
       <Filter>PhysicsDemo\ltPhys\Collisions</Filter>
     </ClCompile>
     <ClCompile Include="ltPhys\ShapeBox.cpp">
-      <Filter>PhysicsDemo\ltPhys\Collisions</Filter>
+      <Filter>PhysicsDemo\ltPhys\Collisions\Shapes</Filter>
+    </ClCompile>
+    <ClCompile Include="ltPhys\ShapeHalfspace.cpp">
+      <Filter>PhysicsDemo\ltPhys\Collisions\Shapes</Filter>
+    </ClCompile>
+    <ClCompile Include="ltPhys\ShapeSphere.cpp">
+      <Filter>PhysicsDemo\ltPhys\Collisions\Shapes</Filter>
     </ClCompile>
     <ClCompile Include="ltPhys\ShapeTerrain.cpp">
-      <Filter>PhysicsDemo\ltPhys\Collisions</Filter>
+      <Filter>PhysicsDemo\ltPhys\Collisions\Shapes</Filter>
     </ClCompile>
     <ClCompile Include="ltPhys\TerrainData.cpp">
-      <Filter>PhysicsDemo\ltPhys\Collisions</Filter>
-    </ClCompile>
-    <ClCompile Include="HeightmapFunctions.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>PhysicsDemo\ltPhys</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -149,12 +155,6 @@
     <ClInclude Include="ltPhys\ForceGeneratorRegistry.hpp">
       <Filter>PhysicsDemo\ltPhys\Systems</Filter>
     </ClInclude>
-    <ClInclude Include="ltPhys\CollisionShape.hpp">
-      <Filter>PhysicsDemo\ltPhys\Collisions</Filter>
-    </ClInclude>
-    <ClInclude Include="ltPhys\ShapeSphere.hpp">
-      <Filter>PhysicsDemo\ltPhys\Collisions</Filter>
-    </ClInclude>
     <ClInclude Include="ltPhys\CollisionRegistry.hpp">
       <Filter>PhysicsDemo\ltPhys\Systems</Filter>
     </ClInclude>
@@ -164,23 +164,32 @@
     <ClInclude Include="PhysicsDemo.hpp">
       <Filter>PhysicsDemo</Filter>
     </ClInclude>
-    <ClInclude Include="ltPhys\ShapeHalfspace.hpp">
-      <Filter>PhysicsDemo\ltPhys\Collisions</Filter>
-    </ClInclude>
-    <ClInclude Include="ltPhys\ShapeBox.hpp">
-      <Filter>PhysicsDemo\ltPhys\Collisions</Filter>
-    </ClInclude>
-    <ClInclude Include="ltPhys\ShapeTerrain.hpp">
-      <Filter>PhysicsDemo\ltPhys\Collisions</Filter>
-    </ClInclude>
-    <ClInclude Include="ltPhys\TerrainData.hpp">
-      <Filter>PhysicsDemo\ltPhys\Collisions</Filter>
-    </ClInclude>
     <ClInclude Include="ltPhys\Mesh.hpp">
       <Filter>PhysicsDemo\ltPhys</Filter>
     </ClInclude>
     <ClInclude Include="HeightmapFunctions.hpp">
       <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="ltPhys\ContactResolver.hpp">
+      <Filter>PhysicsDemo\ltPhys\Collisions</Filter>
+    </ClInclude>
+    <ClInclude Include="ltPhys\ShapeTerrain.hpp">
+      <Filter>PhysicsDemo\ltPhys\Collisions\Shapes</Filter>
+    </ClInclude>
+    <ClInclude Include="ltPhys\ShapeBox.hpp">
+      <Filter>PhysicsDemo\ltPhys\Collisions\Shapes</Filter>
+    </ClInclude>
+    <ClInclude Include="ltPhys\ShapeHalfspace.hpp">
+      <Filter>PhysicsDemo\ltPhys\Collisions\Shapes</Filter>
+    </ClInclude>
+    <ClInclude Include="ltPhys\ShapeSphere.hpp">
+      <Filter>PhysicsDemo\ltPhys\Collisions\Shapes</Filter>
+    </ClInclude>
+    <ClInclude Include="ltPhys\TerrainData.hpp">
+      <Filter>PhysicsDemo\ltPhys</Filter>
+    </ClInclude>
+    <ClInclude Include="ltPhys\CollisionShape.hpp">
+      <Filter>PhysicsDemo\ltPhys\Collisions\Shapes</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

@@ -1,5 +1,7 @@
 #include "Mat3.hpp"
 
+#include <cmath>
+
 namespace lt
 {
 
@@ -155,6 +157,44 @@ const Scalar& Mat3::get(const int index) const
 Scalar& Mat3::operator[] (const int index)
 {
 	return m_data[index];
+}
+
+void constructOrthonormalBasis(Vec3 &x, const Vec3 &y, Vec3 &z)
+{
+	// Set the y axis to a vector not in the direction of x
+	if(abs(x.y) > abs(x.x))
+	{
+		x = lt::Vec3(0.f, 1.f, 0.f);
+	}
+	else
+	{
+		x = lt::Vec3(1.f, 0.f, 0.f);
+	}
+
+	// Calculate Z from the vector product of x and y
+	z = y.cross(x);
+
+	// Check that y and x aren't parallel
+	if(z.dot(z) != (Scalar)0.0)
+	{
+		// Calculate y from the product of z and x
+		x = z.cross(y);
+
+		// Normalize the output vectors
+		x.normalize();
+		z.normalize();
+	}
+}
+
+const Mat3 constructOrthonormalBasis(const Vec3 &y)
+{
+	Vec3 x, z;
+
+	constructOrthonormalBasis(x, y, z);
+
+	return Mat3(x.x, y.x, z.x,
+				x.y, y.y, z.y,
+				x.z, y.z, z.z);
 }
 
 } // namespace lt

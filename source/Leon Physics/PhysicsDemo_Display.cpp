@@ -18,6 +18,9 @@ void PhysicsDemo::display()
 		glRotatef(m_camAng.y, 0.0f, 1.0f, 0.0f);
 		glRotatef(m_camAng.z, 0.0f, 0.0f, 1.0f);
 
+		//lt::Vec3 camPos = -m_box.getTransform().getPosition();
+		//glTranslatef(camPos.x, camPos.y, camPos.z);
+
 		// Reference Axes
 		glDisable(GL_LIGHTING);
 			glBegin(GL_LINES);
@@ -65,7 +68,7 @@ void PhysicsDemo::display()
 					glTranslatef(pos.x, pos.y, pos.z);
 
 					// Draw axes that are oriented by the collision normal
-					lt::Mat3 basis = lt::World::constructOrthonormalBasis(norm);
+					lt::Mat3 basis = lt::constructOrthonormalBasis(norm);
 
 					lt::Vec3 x = basis * lt::Vec3(1.f, 0.f, 0.f);
 					lt::Vec3 y = basis * lt::Vec3(0.f, 1.f, 0.f);
@@ -98,7 +101,8 @@ void PhysicsDemo::display()
 			glMultMatrixf(transform);
 
 			glColor3f(1.0f, 0.0f, 0.0f);
-			drawSphere(m_staticSphereShape.getRadius(), 20);
+			drawBox(m_boxShape.getHalfExtents());
+			//drawSphere(m_staticSphereShape.getRadius(), 20);
 		glPopMatrix();
 
 		// Sphere 2
@@ -108,7 +112,8 @@ void PhysicsDemo::display()
 			glMultMatrixf(transform);
 
 			glColor3f(1.0f, 1.0f, 0.0f);
-			drawSphere(m_staticSphereShape.getRadius(), 20);
+			drawBox(m_boxShape.getHalfExtents());
+			//drawSphere(m_staticSphereShape.getRadius(), 20);
 		glPopMatrix();
 
 		// Phys Sphere
@@ -121,6 +126,8 @@ void PhysicsDemo::display()
 		glPopMatrix();
 
 		//glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+
+		glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 
 		// Halfspace
 		glPushMatrix();
@@ -137,8 +144,6 @@ void PhysicsDemo::display()
 			glEnd();
 		glPopMatrix();
 
-		glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
-
 		// Phys Box
 		glPushMatrix();
 			m_box.getTransform().getOpenGLMatrix(transform);	
@@ -147,6 +152,18 @@ void PhysicsDemo::display()
 			glColor3f(0.0f, 0.5f, 1.0f);
 			drawBox(m_boxShape.getHalfExtents());
 		glPopMatrix();
+
+		// Boxes
+		for (int i = 0; i < BOX_COUNT; i++)
+		{
+			glPushMatrix();
+				m_boxes[i].getTransform().getOpenGLMatrix(transform);	
+				glMultMatrixf(transform);
+
+				glColor3f(0.0f, 0.5f, 1.0f);
+				drawBox(m_boxShapes[i].getHalfExtents());
+			glPopMatrix();
+		}
 
 		// Render Terrain
 		glPushMatrix();

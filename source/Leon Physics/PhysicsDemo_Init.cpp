@@ -85,14 +85,13 @@ void PhysicsDemo::initPhysics()
 
 	world.addRigidBody(&m_myRigidBody, &m_staticSphereShape);
 	world.addRigidBody(&m_box, &m_boxShape);
-	world.addRigidBody(&m_controlledBody, &m_staticSphereShape);
 	world.addForceGenerator(&m_myRigidBody, &m_gravity);
 	world.addForceGenerator(&m_myRigidBody, &m_spring);
 	world.addForceGenerator(&m_box, &m_boxSpring);
 	world.addForceGenerator(&m_box, &m_gravity);
 
 	// Initialize static bodies
-	m_groundBody.setPosition(lt::Vec3(0, -10, 0));
+	m_groundBody.setPosition(lt::Vec3(0, 0, 0));
 	m_groundBody.setAngle(lt::Quat(lt::Vec3(1.0f, 0.0f, 0.0f), 0.0f));
 	m_groundBody.setRestitution(0.0f);
 	m_groundBody.setInvMass(0.0f);
@@ -103,8 +102,6 @@ void PhysicsDemo::initPhysics()
 	m_staticBallBody.setInvMass(0.0f);
 	m_staticBallBody.setInvInertiaTensor(lt::Vec3(0, 0, 0));
 
-	world.addRigidBody(&m_groundBody, &m_groundShape);
-	world.addRigidBody(&m_staticBallBody, &m_staticSphereShape);
 
 	// Terrain
 	// Create heightmap
@@ -119,22 +116,41 @@ void PhysicsDemo::initPhysics()
 		else
 			heightMap[i] = 1;
 	}*/
-	heightMap::genHeightMapFaultFormation(heightMap, hmLength, hmWidth, 32, 0.4f);
-	//heightMap::genFromRAW(heightMap, hmLength, hmWidth, "hm64.raw");
-	m_terrainData = new TerrainData(heightMap, hmLength, hmWidth, lt::Vec3(100.0f, 20.0f, 100.0f));
+	//heightMap::genHeightMapFaultFormation(heightMap, hmLength, hmWidth, 32, 0.4f);
+	heightMap::genFromRAW(heightMap, hmLength, hmWidth, "pit128.raw");
+	m_terrainData = new TerrainData(heightMap, hmLength, hmWidth, lt::Vec3(100.0f, 10.0f, 100.0f));
 	delete[] heightMap;
 
 	m_terrainShape.setTerrainData(m_terrainData);
 
-	m_terrainBody.setPosition(m_terrainData->getTerrainSize() * -0.5 - lt::Vec3(0, 6, 0));
+	m_terrainBody.setPosition(m_terrainData->getTerrainSize() * -0.5 - lt::Vec3(0, 50, 0));
 	m_terrainBody.setRestitution(0.0f);
 	m_terrainBody.setInvMass(0.0f);
 	m_terrainBody.setInvInertiaTensor(lt::Vec3(0, 0, 0));
 
-	world.addRigidBody(&m_terrainBody, &m_terrainShape);
+	//world.addCollisionShape(nullptr, &m_staticSphereShape, lt::Transform(lt::Vec3(0.f, 0.f, 0.f), lt::Quat()));
+	//world.addCollisionShape(nullptr, &m_groundShape, lt::Transform(lt::Vec3(0.f, 0.f, 0.f), lt::Quat()));
 
-	/*world.addCollisionShape(nullptr, &m_staticSphereShape, lt::Transform(lt::Vec3(0.f, 0.f, 0.f), lt::Quat()));
-	world.addCollisionShape(nullptr, &m_groundShape, lt::Transform(lt::Vec3(0.f, 0.f, 0.f), lt::Quat()));*/
+	// Initialize lots of boxes
+	for (int i = 0; i < BOX_COUNT; i++)
+	{
+		m_boxShapes[i].setHalfExtents(lt::Vec3(0.5f, 0.5f, 0.5f));
+		//m_boxes[i].setPosition(lt::Vec3((rand() % 1000) * 0.05f - 25, 2.0f, (rand() % 1000) * 0.05f - 25));
+		//m_boxes[i].setAngle(lt::Quat(lt::Vec3(0, 0, 1), 50.f));
+		m_boxes[i].setDamping(0.7f);
+		m_boxes[i].setAngularDamping(0.7f);
+		m_boxes[i].setRestitution(0.7f);
+		m_boxes[i].setMass(0.7f);
+		m_boxes[i].setInertiaTensor( lt::Vec3(0.1f, 0.1f, 0.1f) );
+
+		world.addRigidBody(&m_boxes[i], &m_boxShapes[i]);
+		world.addForceGenerator(&m_boxes[i], &m_gravity);
+	}
+
+	world.addRigidBody(&m_controlledBody, &m_boxShape);
+	world.addRigidBody(&m_staticBallBody, &m_boxShape);
+	world.addRigidBody(&m_groundBody, &m_groundShape);
+	world.addRigidBody(&m_terrainBody, &m_terrainShape);
 }
 
 const lt::Vec3 inertiaTensorCuboid(const lt::Vec3& dimensions, const lt::Scalar& mass)

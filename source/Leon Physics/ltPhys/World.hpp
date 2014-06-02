@@ -141,23 +141,6 @@ public:
 	////////////////////////////////////////////////////////////		
 	CollisionRegistry m_collisionRegistry;
 
-	////////////////////////////////////////////////////////////			
-	/// @brief Constructs orthonormal basis vectors based on a given X vector.
-	///
-	/// @param x A normalized vector that you want to base the orthonormal basis around.
-	/// @param y calculated basis vector. Not read from in this function.
-	/// @param z calculated basis vector. Not read from in this function.
-	///
-	////////////////////////////////////////////////////////////			 
-	static void constructOrthonormalBasis(const Vec3 &x, Vec3* y, Vec3* z);
-
-	////////////////////////////////////////////////////////////			
-	/// @brief Constructs orthonormal basis vectors based on a given X vector.
-	///
-	/// @param x A normalized vector that you want to base the orthonormal basis around.
-	///
-	////////////////////////////////////////////////////////////	
-	static const Mat3 constructOrthonormalBasis(const Vec3 &x);
 private:
 	std::vector<RigidBody*> m_rigidBodies;
 	ForceGeneratorRegistry m_forceGenRegistry;

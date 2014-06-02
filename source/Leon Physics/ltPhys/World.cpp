@@ -49,7 +49,7 @@ void World::removeRigidBody(RigidBody* body)
 		if (m_rigidBodies[i] == body)
 		{
 			// Swap this element and the end so as not to leave holes.
-			m_rigidBodies[i] = m_rigidBodies[m_rigidBodies.size()]; 
+			m_rigidBodies[i] = m_rigidBodies[m_rigidBodies.size() - 1]; 
 			// Delete the duplicated element.
 			m_rigidBodies.pop_back();
 
@@ -100,44 +100,6 @@ void World::integrateBodies(const Scalar& timeStep)
 	{
 		m_rigidBodies[i]->integrate(timeStep);
 	}
-}
-
-void World::constructOrthonormalBasis(const Vec3 &x, Vec3* y, Vec3* z)
-{
-	// Set the y axis to a vector not in the direction of x
-	if(abs(x.x) > abs(x.y))
-	{
-		*y = lt::Vec3(0.f, 1.f, 0.f);
-	}
-	else
-	{
-		*y = lt::Vec3(1.f, 0.f, 0.f);
-	}
-
-	// Calculate Z from the vector product of x and y
-	*z = x.cross(*y);
-
-	// Check that y and x aren't parallel
-	if(z->dot(*z) != (Scalar)0.0)
-	{
-		// Calculate y from the product of z and x
-		*y = z->cross(x);
-
-		// Normalize the output vectors
-		y->normalize();
-		z->normalize();
-	}
-}
-
-const Mat3 World::constructOrthonormalBasis(const Vec3 &x)
-{
-	Vec3 y, z;
-
-	constructOrthonormalBasis(x, &y, &z);
-
-	return Mat3(x.x, y.x, z.x,
-				x.y, y.y, z.y,
-				x.z, y.z, z.z);
 }
 
 } // namespace lt

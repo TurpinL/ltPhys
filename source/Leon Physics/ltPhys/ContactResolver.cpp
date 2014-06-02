@@ -1,5 +1,7 @@
 #include "ContactResolver.hpp"
 
+#include <iostream>
+
 namespace lt
 {
 
@@ -51,6 +53,14 @@ void ContactResolver::calcImpulse(const Contact& contact, std::list<CollisionRes
 	// Calculate restitution of collision
 	Scalar restitution = A.getRestitution() * B.getRestitution();
 
+	// Calculate contact velocity
+	/*Mat3 orthoNormalBasis = constructOrthonormalBasis(contact.normal);
+	Vec3 contactVel = (orthoNormalBasis * A.getVelocity()) - (orthoNormalBasis * B.getVelocity());
+	contactVel *= 0.02;
+
+	contactVel.y = 0;
+	contactVel = orthoNormalBasis.inverse() * contactVel;*/
+
 	// Find the offset of the collision from the centre of mass of each body.
 	Vec3 contactPosA = contact.position - A.getPosition();
 	Vec3 contactPosB = contact.position - B.getPosition();
@@ -77,8 +87,10 @@ void ContactResolver::calcImpulse(const Contact& contact, std::list<CollisionRes
 	responseOfBodyA.body = &A;
 	responseOfBodyB.body = &B;
 
-	responseOfBodyA.changeInVelocity = (impulse * A.getInvMass());
-	responseOfBodyB.changeInVelocity = (-impulse * B.getInvMass());
+	/*responseOfBodyA.changeInVelocity = (impulse - contactVel) * A.getInvMass();
+	responseOfBodyB.changeInVelocity = -(impulse - contactVel) * B.getInvMass();*/
+	responseOfBodyA.changeInVelocity = impulse * A.getInvMass();
+	responseOfBodyB.changeInVelocity = -impulse * B.getInvMass();
 
 	responseOfBodyA.changeInAngularVelocity = uA * f;
 	responseOfBodyB.changeInAngularVelocity = -uB * f;
@@ -89,16 +101,65 @@ void ContactResolver::calcImpulse(const Contact& contact, std::list<CollisionRes
 
 void ContactResolver::resolveAllInterpenetrations(const lt::CollisionData &colData)
 {
+	Vec3 positionChange[2];
+	Vec3 angleChange[2];
+
 	for (unsigned int i = 0; i < colData.size - colData.contactsLeft; i++)
 	{
 		if(colData.contacts[i].body[0] != nullptr && colData.contacts[i].body[1] != nullptr)
 		{
-			resolveInterpenetration(colData.contacts[i]);
+			resolveInterpenetration(colData.contacts[i], positionChange, angleChange);
 		}
 	}
+
+	/*// Find and resolve the deepest penetration, until there
+    // is no penetration left, or we reach the max interations.
+    float deepestPenetration;
+    Contact *deepestPenetrator;
+    int maxInterations = 1000;
+	Vec3 angleChange[2];
+	Vec3 positionChange[2];
+
+    for (int i = 0; i < maxInterations; i++)
+    {
+        deepestPenetrator = nullptr;
+        deepestPenetration = 0;
+ 
+        //Find the deepest penetration
+        for (int j = 0; j < colData.size - colData.contactsLeft; j++)
+        {
+            float curPenetration = abs(colData.contacts[j].penetration);
+ 
+            if (deepestPenetration < curPenetration)
+            {
+                deepestPenetration = curPenetration;
+                deepestPenetrator = &(colData.contacts[j]);
+            }
+        }
+ 
+        // If we don't have any more penetrations, break.
+        if(!deepestPenetrator) 
+		{
+			std::cout << "Breaking: " << i << "\n";
+			break;
+		}
+
+		// Debugging message to say we used all iterations.
+		if(i == maxInterations - 1)
+		{
+			std::cout << "No Break!\n";
+		}
+ 
+        // Resolve the penetration
+        resolveInterpenetration(*deepestPenetrator, positionChange, angleChange);
+ 
+        // Modify contacts affected by the resolution
+        // of this penetration.
+        recalcPenetrations(colData, positionChange, angleChange, *deepestPenetrator);
+    }*/
 }
 
-void ContactResolver::resolveInterpenetration(const Contact& contact)
+void ContactResolver::resolveInterpenetration(Contact& contact, Vec3 angleChange[2], Vec3 positionChange[2])
 {
 	Scalar totalInertia = 0;
 	Scalar angularInertia[2];
@@ -128,7 +189,7 @@ void ContactResolver::resolveInterpenetration(const Contact& contact)
 
 	if(totalInertia > 0) 
 	{
-		// Calculate linear and angular movement
+		// Calculate linear and angular movement.
 		Scalar inverseInertia = 1 / totalInertia;
 		linearMove[0] =  contact.penetration * linearInertia[0] * inverseInertia;
 		linearMove[1] = -contact.penetration * linearInertia[1] * inverseInertia;
@@ -140,7 +201,8 @@ void ContactResolver::resolveInterpenetration(const Contact& contact)
 			if(contact.body[i])
 			{
 				// Apply linear movement
-				contact.body[i]->setPosition(contact.normal * linearMove[i] + contact.body[i]->getPosition());
+				positionChange[i] = contact.normal * linearMove[i];
+				contact.body[i]->setPosition(positionChange[i] + contact.body[i]->getPosition());
 
 				if(angularMove[i] != 0)
 				{
@@ -150,20 +212,49 @@ void ContactResolver::resolveInterpenetration(const Contact& contact)
 					Vec3 impulsePerMove = inverseInertiaTensor * impulsiveTorque;
 
 					Vec3 rotationPerMove = impulsePerMove * 1/angularInertia[i];
-					Vec3 rotation = rotationPerMove * angularMove[i];
+					angleChange[i] = Vec3(0, 0, 0);//rotationPerMove * angularMove[i];
 				
 					// Apply angular movement
 					Quat newAngle = contact.body[i]->getAngle();
-					newAngle = Quat(Vec3(1.0f, 0.0f, 0.0f), rotation.x) * newAngle;
-					newAngle = Quat(Vec3(0.0f, 1.0f, 0.0f), rotation.y) * newAngle;
-					newAngle = Quat(Vec3(0.0f, 0.0f, 1.0f), rotation.z) * newAngle;
+					newAngle = Quat(Vec3(1.0f, 0.0f, 0.0f), angleChange[i].x) * newAngle;
+					newAngle = Quat(Vec3(0.0f, 1.0f, 0.0f), angleChange[i].y) * newAngle;
+					newAngle = Quat(Vec3(0.0f, 0.0f, 1.0f), angleChange[i].z) * newAngle;
 
 					contact.body[i]->setAngle(newAngle);
 				}
 			}
 		}
 	}
+
+	contact.penetration = 0;
 }
 
+// Incomplete and doesn't seem to work properly. Helps slightly though.
+void ContactResolver::recalcPenetrations(const lt::CollisionData &colData, Vec3 angleChange[2], Vec3 positionChange[2], const Contact& deepestPenetrator)
+{
+	for (int i = 0; i < colData.size - colData.contactsLeft; i++)
+	{
+		if(&colData.contacts[i] != &deepestPenetrator)
+		{
+			if(deepestPenetrator.body[0] == colData.contacts[i].body[0])
+			{
+				colData.contacts[i].penetration -= positionChange[0].dot(colData.contacts[i].normal);
+			}
+			else if(deepestPenetrator.body[0] == colData.contacts[i].body[1])
+			{
+				colData.contacts[i].penetration += positionChange[0].dot(colData.contacts[i].normal);
+			}
+		
+			if(deepestPenetrator.body[1] == colData.contacts[i].body[0])
+			{
+				colData.contacts[i].penetration += positionChange[1].dot(colData.contacts[i].normal);
+			}
+			else if(deepestPenetrator.body[1] == colData.contacts[i].body[1])
+			{
+				colData.contacts[i].penetration += positionChange[1].dot(colData.contacts[i].normal);
+			}
+		}
+	}
+}
 	
 } // namespace lt

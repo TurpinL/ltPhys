@@ -41,7 +41,10 @@ public:
 	////////////////////////////////////////////////////////////
 	static unsigned int sphere_terrain(const CollisionRegistration& a, const CollisionRegistration& b, CollisionData *collisionData);
 
-	//static unsigned int box_box(const CollisionRegistration& a, const CollisionRegistration& b, CollisionData *collisionData);
+	////////////////////////////////////////////////////////////
+	/// @brief Check for contact between a box and box
+	////////////////////////////////////////////////////////////
+	static unsigned int box_box(const CollisionRegistration& a, const CollisionRegistration& b, CollisionData *collisionData);
 
 	////////////////////////////////////////////////////////////
 	/// @brief Check for contact between a box and a halfspace

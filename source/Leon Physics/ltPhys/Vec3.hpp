@@ -177,6 +177,20 @@ public:
 	 */
 	const Vec3 rotate(const Scalar &angle, const Vec3 &axis) const;
 
+	/**
+	 * @brief accesses the vector components.
+	 *
+	 * @param index x = 0, y = 1, z = 2, w = 3.
+	 */
+	Scalar& operator[] (unsigned int index); 
+
+	/**
+	 * @brief accesses the vector components.
+	 *
+	 * @param index x = 0, y = 1, z = 2, w = 3.
+	 */
+	const Scalar& get(unsigned int index) const;
+
 	Scalar x, y, z, w; 
 };
 

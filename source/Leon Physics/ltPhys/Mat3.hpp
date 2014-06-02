@@ -142,6 +142,24 @@ private:
 	Scalar m_data[9];
 };
 
+////////////////////////////////////////////////////////////			
+/// @brief Constructs orthonormal basis vectors based on a given Y vector.
+///
+/// @param x calculated basis vector. Not read from in this function.
+/// @param y A normalized vector that you want to base the orthonormal basis around.
+/// @param z calculated basis vector. Not read from in this function.
+///
+////////////////////////////////////////////////////////////			 
+void constructOrthonormalBasis(Vec3 &x, Vec3 &y, Vec3  &z);
+
+////////////////////////////////////////////////////////////			
+/// @brief Constructs orthonormal basis vectors based on a given Y vector.
+///
+/// @param y A normalized vector that you want to base the orthonormal basis around.
+///
+////////////////////////////////////////////////////////////	
+const Mat3 constructOrthonormalBasis(const Vec3 &y);
+
 } // namespace lt
 
 #endif // LTPHYS_MAT3_H

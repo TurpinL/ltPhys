@@ -171,6 +171,10 @@ void CollisionRegistry::checkCollision(const CollisionRegistration& shapeA, cons
 	{
 		ContactGenerator::box_terrain(shapeA, shapeB, &m_collisionData);
 	}
+	else if(shapeAType == LT_SHAPE_BOX && shapeBType == LT_SHAPE_BOX)
+	{
+		ContactGenerator::box_box(shapeA, shapeB, &m_collisionData);
+	}
 	else
 	{
 		//std::cout << "CollisionRegistry::Unhandled collision type (" << shapeAType << ", " << shapeBType << ")\n";

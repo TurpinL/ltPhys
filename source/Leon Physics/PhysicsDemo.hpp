@@ -1,6 +1,8 @@
 #ifndef PHYSICSDEMO_HPP
 #define PHYSICSDEMO_HPP
 
+#define BOX_COUNT 1
+
 #include <SDL.h> // SDL v1.2.15
 #include <GL/glew.h> // GLEW v1.9.0
 #include "ltPhys.hpp"
@@ -24,6 +26,10 @@ private:
 	lt::RigidBody m_box;
 	lt::FGenSpring2 m_boxSpring;
 	lt::Vec3 m_boxSpringOffset;
+
+	// Physics Cubes
+	lt::RigidBody m_boxes[BOX_COUNT];
+	lt::ShapeBox m_boxShapes[BOX_COUNT];
 
 	// Shapes
 	lt::ShapeSphere m_staticSphereShape;

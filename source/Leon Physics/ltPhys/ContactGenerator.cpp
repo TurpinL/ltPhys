@@ -1,7 +1,18 @@
 #include "ContactGenerator.hpp"
 
+#include <cmath>
+#include <iostream>
+
 namespace lt
 {
+
+static inline Vec3 getShapeAxis(const ShapeBox &box, const Transform &boxTransform, unsigned int index);
+static inline Scalar transformToAxis(const ShapeBox &box, const Transform &boxTransform, const Vec3 &axis); 
+static inline Scalar penetrationOnAxis(const ShapeBox &boxA, const Transform &boxATransform, const ShapeBox &boxB, const Transform &boxBTransform, const Vec3 &axis, const Vec3 &separation);
+static inline bool tryAxis(const ShapeBox &boxA, const Transform &boxATransform, const ShapeBox &boxB, const Transform &boxBTransform, Vec3 axis, const Vec3 &separation, unsigned int index, Scalar &smallestPenetration, unsigned int &smallestCase);
+static inline Vec3 contactPoint(const Vec3 &pOne, const Vec3 &dOne, Scalar sizeOne, const Vec3 &pTwo, const Vec3 &dTwo, Scalar sizeTwo, bool useOne);
+
+void fillPointFaceBoxBox(const ShapeBox &boxA, const Transform &boxATransform, RigidBody *boxABody, const ShapeBox &boxB, const Transform &boxBTransform, RigidBody *boxBBody, const Vec3 &separation, CollisionData *collisionData, unsigned bestPen, Scalar penetration);
 
 unsigned int ContactGenerator::sphere_sphere(const CollisionRegistration& a, const CollisionRegistration& b, CollisionData *collisionData)
 {
@@ -186,18 +197,150 @@ unsigned int ContactGenerator::sphere_terrain(const CollisionRegistration& a, co
 	return 0;
 }
 
-//
-//unsigned int ContactGenerator::box_box(const CollisionRegistration& a, const CollisionRegistration& b, CollisionData *collisionData)
-//{
-//	// Make sure we have contacts left and Check if they're the right shapes.
-//	if (collisionData->contactsLeft <= 0 ||
-//	   a.shape->getShapeType() != LT_SHAPE_BOX || 
-//	   b.shape->getShapeType() != LT_SHAPE_BOX ) 
-//	{
-//		return 0;		
-//	}
-//
-//}
+unsigned int ContactGenerator::box_box(const CollisionRegistration& a, const CollisionRegistration& b, CollisionData *collisionData)
+{
+	// Make sure we have contacts left and Check if they're the right shapes.
+	if (collisionData->contactsLeft <= 0 ||
+	   a.shape->getShapeType() != LT_SHAPE_BOX || 
+	   b.shape->getShapeType() != LT_SHAPE_BOX ) 
+	{
+		return 0;		
+	}
+
+	// then typecast their appropriate shapes
+	const ShapeBox& boxA = *(ShapeBox*)a.shape;
+	const ShapeBox& boxB = *(ShapeBox*)b.shape;
+
+	const Vec3& boxAHalfExtents = boxA.getHalfExtents();
+	const Vec3& boxBHalfExtents = boxB.getHalfExtents();
+
+	Transform& boxATransform = Transform::Identity();
+	Transform& boxBTransform = Transform::Identity();
+
+	// Vector between box centres.
+	Vec3 separation = Vec3();
+
+	if(a.body != nullptr)
+	{
+		separation -= a.body->getPosition();
+		boxATransform =  a.body->getTransform();
+	} 
+
+	if(b.body != nullptr)
+	{
+		separation += b.body->getPosition();
+		boxBTransform =  b.body->getTransform();
+	}
+
+	Scalar smallestPen = SCALAR_MAX;
+	unsigned int bestPen = 0xffffffff;
+
+	// Check each axis, keeping track of the axis with the smallest penetration.
+	// Stops when if finds an axis without penetration.
+	if (	
+		!tryAxis(boxA, boxATransform, boxB, boxBTransform, getShapeAxis(boxA, boxATransform, 0), separation, 0, smallestPen, bestPen) ||
+		!tryAxis(boxA, boxATransform, boxB, boxBTransform, getShapeAxis(boxA, boxATransform, 1), separation, 1, smallestPen, bestPen) ||
+		!tryAxis(boxA, boxATransform, boxB, boxBTransform, getShapeAxis(boxA, boxATransform, 2), separation, 2, smallestPen, bestPen) ||
+
+		!tryAxis(boxA, boxATransform, boxB, boxBTransform, getShapeAxis(boxB, boxBTransform, 0), separation, 3, smallestPen, bestPen) ||
+		!tryAxis(boxA, boxATransform, boxB, boxBTransform, getShapeAxis(boxB, boxBTransform, 1), separation, 4, smallestPen, bestPen) ||
+		!tryAxis(boxA, boxATransform, boxB, boxBTransform, getShapeAxis(boxB, boxBTransform, 2), separation, 5, smallestPen, bestPen) 
+	)
+	{
+		return 0;
+	}
+
+	unsigned bestSingleAxis = bestPen;
+
+	if (	
+		!tryAxis(boxA, boxATransform, boxB, boxBTransform, getShapeAxis(boxA, boxATransform, 0).cross(getShapeAxis(boxB, boxBTransform, 0)), separation,  6, smallestPen, bestPen) ||
+		!tryAxis(boxA, boxATransform, boxB, boxBTransform, getShapeAxis(boxA, boxATransform, 0).cross(getShapeAxis(boxB, boxBTransform, 1)), separation,  7, smallestPen, bestPen) ||
+		!tryAxis(boxA, boxATransform, boxB, boxBTransform, getShapeAxis(boxA, boxATransform, 0).cross(getShapeAxis(boxB, boxBTransform, 2)), separation,  8, smallestPen, bestPen) ||
+
+		!tryAxis(boxA, boxATransform, boxB, boxBTransform, getShapeAxis(boxA, boxATransform, 1).cross(getShapeAxis(boxB, boxBTransform, 0)), separation,  9, smallestPen, bestPen) ||
+		!tryAxis(boxA, boxATransform, boxB, boxBTransform, getShapeAxis(boxA, boxATransform, 1).cross(getShapeAxis(boxB, boxBTransform, 1)), separation, 10, smallestPen, bestPen) ||
+		!tryAxis(boxA, boxATransform, boxB, boxBTransform, getShapeAxis(boxA, boxATransform, 1).cross(getShapeAxis(boxB, boxBTransform, 2)), separation, 11, smallestPen, bestPen) ||
+
+		!tryAxis(boxA, boxATransform, boxB, boxBTransform, getShapeAxis(boxA, boxATransform, 2).cross(getShapeAxis(boxB, boxBTransform, 0)), separation, 12, smallestPen, bestPen) ||
+		!tryAxis(boxA, boxATransform, boxB, boxBTransform, getShapeAxis(boxA, boxATransform, 2).cross(getShapeAxis(boxB, boxBTransform, 1)), separation, 13, smallestPen, bestPen) ||
+		!tryAxis(boxA, boxATransform, boxB, boxBTransform, getShapeAxis(boxA, boxATransform, 2).cross(getShapeAxis(boxB, boxBTransform, 2)), separation, 14, smallestPen, bestPen)
+	)
+	{
+		return 0;
+	}
+
+	// We've found a collision, and we know which of the axes gave the smallest penetration.
+	if (bestPen < 3)
+	{
+		// BoxB vertex on boxA Face.
+		// TODO: Do stuff
+		//std::cout << "Colliding < 3";
+		fillPointFaceBoxBox(boxA, boxATransform, a.body, boxB, boxBTransform, b.body, separation, collisionData, bestPen, smallestPen);
+		return 1;
+	}
+	else if (bestPen < 6)
+	{
+		// BoxA vertex on BoxB Face.
+		// TODO: Do stuff
+		//std::cout << "Colliding < 6";
+		fillPointFaceBoxBox(boxB, boxBTransform, b.body, boxA, boxATransform, a.body, separation, collisionData, bestPen, smallestPen);
+		return 1;
+	}
+	else
+	{
+		// Edge Edge contact.
+		//std::cout << "Colliding >= 6";
+
+		// Find which axis.
+		bestPen -= 6;
+		unsigned int axisIndexA = bestPen / 3;
+		unsigned int axisIndexB = bestPen % 3;
+		Vec3 axisA = getShapeAxis(boxA, boxATransform, axisIndexA);
+		Vec3 axisB = getShapeAxis(boxB, boxBTransform, axisIndexB);
+		Vec3 axis = axisA.cross(axisB);
+		axis.normalize();
+
+		// Axis should point from box one to box two.
+		if ( axis.dot(separation) > 0 )
+		{
+			axis = -axis;
+		}
+
+		Vec3 ptOnEdgeA = boxAHalfExtents;
+		Vec3 ptOnEdgeB = boxBHalfExtents;
+
+		for (unsigned int i = 0; i < 3; i++)
+		{
+			if (i == axisIndexA) { ptOnEdgeA[i] = 0; }
+			else if (getShapeAxis(boxA, boxATransform, i).dot(axis) > 0) { ptOnEdgeA[i] = -ptOnEdgeA[i]; }
+
+			if (i == axisIndexB) { ptOnEdgeB[i] = 0; }
+			else if (getShapeAxis(boxB, boxBTransform, i).dot(axis) > 0) { ptOnEdgeB[i] = -ptOnEdgeB[i]; }
+		}
+
+		// Transform the points into world coordinates.
+		ptOnEdgeA = boxATransform * ptOnEdgeA;
+		ptOnEdgeB = boxBTransform * ptOnEdgeB;
+
+		// Find the point of closest approach of the two
+		// line-segments.
+		Vec3 vertex = contactPoint(ptOnEdgeA, axisA, boxAHalfExtents.get(axisIndexA), ptOnEdgeB, axisB, boxBHalfExtents.get(axisIndexB), bestSingleAxis > 2);
+
+		// Create contact data
+		Contact& contact = collisionData->contacts[collisionData->size - collisionData->contactsLeft];
+		collisionData->contactsLeft--;
+
+		contact.body[0] = a.body;
+		contact.body[1] = b.body;
+		contact.normal = axis;
+		contact.penetration = smallestPen;
+		contact.position = vertex;
+
+		return 1;
+	}
+
+	return 0;
+}
 
 unsigned int ContactGenerator::box_halfspace(const CollisionRegistration& a, const CollisionRegistration& b, CollisionData *collisionData)
 {
@@ -395,6 +538,124 @@ unsigned int ContactGenerator::box_terrain(const CollisionRegistration& a, const
 	}
 
 	return numContacts;
+}
+
+static inline Vec3 getShapeAxis(const ShapeBox &box, const Transform &boxTransform, unsigned int index)
+{
+	return Vec3(boxTransform.get(index), boxTransform.get(index+4), boxTransform.get(index+8));
+}
+
+static inline Scalar transformToAxis(const ShapeBox &box, const Transform &boxTransform, const Vec3 &axis)
+{
+	return 
+		box.getHalfExtents().x * abs(axis.dot( getShapeAxis(box, boxTransform, 0) )) + 
+		box.getHalfExtents().y * abs(axis.dot( getShapeAxis(box, boxTransform, 1) )) + 
+		box.getHalfExtents().z * abs(axis.dot( getShapeAxis(box, boxTransform, 2) )); 
+}
+
+static inline Scalar penetrationOnAxis(const ShapeBox &boxA, const Transform &boxATransform, 
+	const ShapeBox &boxB, const Transform &boxBTransform, const Vec3 &axis, const Vec3 &separation)
+{
+	Scalar projectionA = transformToAxis(boxA, boxATransform, axis); 
+	Scalar projectionB = transformToAxis(boxB, boxBTransform, axis);
+
+	Scalar distance = abs( separation.dot(axis) );
+
+	return projectionA + projectionB - distance;
+}
+
+static inline bool tryAxis(const ShapeBox &boxA, const Transform &boxATransform, 
+	const ShapeBox &boxB, const Transform &boxBTransform, Vec3 axis, 
+	const Vec3 &separation, unsigned int index, Scalar &smallestPenetration, unsigned int &smallestCase)
+{
+	// Omit almost parallel axes and normalize
+	if (axis.dot(axis) < 0.0001) return true;
+	axis.normalize();
+
+	Scalar penetration = penetrationOnAxis(boxA, boxATransform, boxB, boxBTransform, axis, separation);
+
+	if (penetration < 0) return false;
+
+	if(penetration < smallestPenetration)
+	{
+		smallestPenetration = penetration;
+		smallestCase = index;
+	}
+
+	return true;
+}
+
+// Taken from Ian Millington's book "Game Physics Engine Development"
+static inline Vec3 contactPoint(const Vec3 &pOne, const Vec3 &dOne, Scalar sizeOne, const Vec3 &pTwo, const Vec3 &dTwo, Scalar sizeTwo, bool useOne)
+{
+	Vec3 toSt, cOne, cTwo;
+	Scalar dpStaOne, dpStaTwo, dpOneTwo, smOne, smTwo;
+	Scalar denom, mua, mub;
+
+	smOne = dOne.dot(dOne);
+	smTwo = dTwo.dot(dTwo);
+	dpOneTwo = dTwo.dot(dOne);
+
+	toSt = pOne - pTwo;
+	dpStaOne = dOne.dot(toSt);
+	dpStaTwo = dTwo.dot(toSt);
+
+	denom = smOne * smTwo - dpOneTwo * dpOneTwo;
+
+	// Zero denominator indicates parallel lines
+	if (abs(denom) < 0.0001f)
+	{
+		return useOne ? pOne : pTwo;
+	}
+
+	mua = (dpOneTwo * dpStaTwo - smTwo * dpStaOne) / denom;
+	mub = (smOne * dpStaTwo - dpOneTwo * dpStaOne) / denom;
+
+	// If either of the edges has the nearest point out
+    // of bounds, then the edges aren't crossed, we have
+    // an edge-face contact. Our point is on the edge, which
+    // we know from the useOne parameter.
+	if (mua > sizeOne ||
+		mua < -sizeOne || 
+		mub > sizeTwo ||
+		mub < -sizeTwo)
+	{
+		return useOne ? pOne : pTwo;
+	}
+	else
+	{
+		cOne = pOne + dOne * mua;
+		cTwo = pTwo + dTwo * mub;
+
+		return cOne * 0.5f + cTwo * 0.5f; 
+	}
+}
+
+
+void fillPointFaceBoxBox(const ShapeBox &boxA, const Transform &boxATransform, RigidBody *boxABody,
+	const ShapeBox &boxB, const Transform &boxBTransform, RigidBody *boxBBody,
+	const Vec3 &separation, CollisionData *collisionData, unsigned bestPen, Scalar penetration)
+{
+	Vec3 normal = getShapeAxis(boxA, boxATransform, bestPen);
+	if (getShapeAxis(boxA, boxATransform, bestPen).dot(separation) > 0)
+	{
+		normal = -normal;
+	}
+
+	Vec3 vertex = boxB.getHalfExtents();
+	if (getShapeAxis(boxB, boxBTransform, 0).dot(normal) < 0) { vertex.x = -vertex.x; }
+	if (getShapeAxis(boxB, boxBTransform, 1).dot(normal) < 0) { vertex.y = -vertex.y; }
+	if (getShapeAxis(boxB, boxBTransform, 2).dot(normal) < 0) { vertex.z = -vertex.z; }
+
+	// Create contact data
+	Contact& contact = collisionData->contacts[collisionData->size - collisionData->contactsLeft];
+	collisionData->contactsLeft--;
+
+	contact.body[0] = boxABody;
+	contact.body[1] = boxBBody;
+	contact.normal = normal = normal;
+	contact.penetration = penetration;
+	contact.position = boxATransform * vertex;
 }
 
 } // namespace lt

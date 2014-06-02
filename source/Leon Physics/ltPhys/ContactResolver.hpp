@@ -38,7 +38,9 @@ private:
 	void resolveMotion(const Contact& contact, std::list<CollisionResponse> &collisionResponseRegistry);
 	void calcImpulse(const Contact& contact, std::list<CollisionResponse> &collisionResponseRegistry);
 	void resolveAllInterpenetrations(const lt::CollisionData &colData);
-	void resolveInterpenetration(const Contact& contact);
+	void resolveInterpenetration(Contact& contact, Vec3 angleChange[2], Vec3 positionChange[2]);
+	void recalcPenetrations(const lt::CollisionData &colData, Vec3 angleChange[2], Vec3 positionChange[2], const Contact& deepestPenetrator);
+
 };
 
 } // namespace lt

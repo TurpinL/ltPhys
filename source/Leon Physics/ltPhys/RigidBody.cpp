@@ -31,14 +31,13 @@ void RigidBody::integrate(const Scalar& timeStep)
 	const Scalar DEG_TO_RAD = 57.2957795f;
 
 	// Acceleration due to force
-	Vec3 forceAccel = m_accel;
-	forceAccel = m_forceAccum * m_invMass;
+	m_accel = m_forceAccum * m_invMass;
 
 	// Angular acceleration due to torque
 	Vec3 angAccel = m_invInteriaTensor * m_torqueAccum;
 	
 	// Update Velocities
-	m_vel += forceAccel * timeStep;
+	m_vel += m_accel * timeStep;
 	m_angVel += angAccel * timeStep;
 
 	// Apply damping

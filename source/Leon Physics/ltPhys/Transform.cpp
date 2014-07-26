@@ -151,9 +151,28 @@ Scalar& Transform::operator[] (int index)
 	return m_data[index];
 }
 
+const Vec3 Transform::getAxisVector(const int index) const
+{
+	return Vec3(m_data[index], m_data[index+4], m_data[index+8]);
+}
+
 Transform Transform::Identity()
 {
 	return Transform().loadIdentity();
+}
+
+const Vec3 Transform::transformInvP(const Vec3& point) const
+{
+	Vec3 temp = point;
+	temp.x -= m_data[3];
+	temp.x -= m_data[7];
+	temp.x -= m_data[11];
+		
+	return Vec3(
+		temp.x*m_data[0] + temp.y*m_data[4] + temp.z*m_data[8],
+		temp.x*m_data[1] + temp.y*m_data[5] + temp.z*m_data[9],
+		temp.x*m_data[2] + temp.y*m_data[6] + temp.z*m_data[10]
+	);
 }
 
 } // namespace lt

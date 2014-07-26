@@ -59,18 +59,6 @@ public:
 	Transform(const Scalar data[16]);
 
 	////////////////////////////////////////////////////////////
-	/// @brief Create a perspective transformation matrix then
-	/// set destination to that transform
-	///
-	/// @param fov Field of View of the perspective
-	/// @param aspect Aspect ratio of the perspective.
-	/// @param near Distance of near clipping plane
-	/// @param far Distance of far clipping plane
-	///
-	////////////////////////////////////////////////////////////
-	static void createFromPerspective(Transform &destination, const Scalar &fov, const Scalar &aspect, const Scalar &near, const Scalar &far);
-
-	////////////////////////////////////////////////////////////
 	/// @brief Set this transform to an identity matrix
 	/// 
 	/// @return Reference to this matrix
@@ -167,12 +155,61 @@ public:
 	Scalar& operator[] (const int index);
 
 	////////////////////////////////////////////////////////////
+	/// @brief Gets a vector representing one axis (one column)
+	/// in the matrix
+	/// 
+	/// @param i the column to return
+	///
+	/// @return The vector.
+	///
+	////////////////////////////////////////////////////////////
+	const Vec3 getAxisVector(const int index) const;
+
+	////////////////////////////////////////////////////////////
 	/// @brief returns and identity matrix
 	///
 	/// @return Identity matrix.
 	///
 	////////////////////////////////////////////////////////////
 	static Transform Identity();
+
+	////////////////////////////////////////////////////////////
+	/// @brief Transform the given point by the transformational
+	/// inverse of this matrix.
+	///
+	/// @return Transformed point.
+	///
+	////////////////////////////////////////////////////////////
+	//const Vec3 transformP(const Vec3& point) const;
+
+	////////////////////////////////////////////////////////////
+	/// @brief Transform the given point by the transformational
+	/// inverse of this matrix.
+	///
+	/// @return Transformed point.
+	///
+	////////////////////////////////////////////////////////////
+	const Vec3 transformInvP(const Vec3& point) const;
+
+	////////////////////////////////////////////////////////////
+	/// @brief Transform the given vector by the transformational
+	/// inverse of this matrix. Different to transformP(...) as it 
+	/// ignores rotation
+	///
+	/// @return Transformed point.
+	///
+	////////////////////////////////////////////////////////////
+	//const Vec3 transformV(const Vec3& vector) const;
+
+	////////////////////////////////////////////////////////////
+	/// @brief Transform the given vector by the transformational
+	/// inverse of this matrix. Different to transformInvP(...) as it 
+	/// ignores rotation
+	///
+	/// @return Transformed point.
+	///
+	////////////////////////////////////////////////////////////
+	//const Vec3 transformInvV(const Vec3& vector) const;
 
 private:
 	Scalar m_data[16];

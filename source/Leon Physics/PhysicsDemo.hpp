@@ -1,7 +1,7 @@
 #ifndef PHYSICSDEMO_HPP
 #define PHYSICSDEMO_HPP
 
-#define BOX_COUNT 1
+#define BOX_COUNT 30
 
 #include <SDL.h> // SDL v1.2.15
 #include <GL/glew.h> // GLEW v1.9.0

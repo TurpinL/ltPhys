@@ -6,7 +6,6 @@
 namespace lt
 {
 
-static inline Vec3 getShapeAxis(const ShapeBox &box, const Transform &boxTransform, unsigned int index);
 static inline Scalar transformToAxis(const ShapeBox &box, const Transform &boxTransform, const Vec3 &axis); 
 static inline Scalar penetrationOnAxis(const ShapeBox &boxA, const Transform &boxATransform, const ShapeBox &boxB, const Transform &boxBTransform, const Vec3 &axis, const Vec3 &separation);
 static inline bool tryAxis(const ShapeBox &boxA, const Transform &boxATransform, const ShapeBox &boxB, const Transform &boxBTransform, Vec3 axis, const Vec3 &separation, unsigned int index, Scalar &smallestPenetration, unsigned int &smallestCase);
@@ -237,34 +236,30 @@ unsigned int ContactGenerator::box_box(const CollisionRegistration& a, const Col
 
 	// Check each axis, keeping track of the axis with the smallest penetration.
 	// Stops when if finds an axis without penetration.
-	if (	
-		!tryAxis(boxA, boxATransform, boxB, boxBTransform, getShapeAxis(boxA, boxATransform, 0), separation, 0, smallestPen, bestPen) ||
-		!tryAxis(boxA, boxATransform, boxB, boxBTransform, getShapeAxis(boxA, boxATransform, 1), separation, 1, smallestPen, bestPen) ||
-		!tryAxis(boxA, boxATransform, boxB, boxBTransform, getShapeAxis(boxA, boxATransform, 2), separation, 2, smallestPen, bestPen) ||
+	if (!tryAxis(boxA, boxATransform, boxB, boxBTransform, boxATransform.getAxisVector(0), separation, 0, smallestPen, bestPen) ||
+        !tryAxis(boxA, boxATransform, boxB, boxBTransform, boxATransform.getAxisVector(1), separation, 1, smallestPen, bestPen) ||
+        !tryAxis(boxA, boxATransform, boxB, boxBTransform, boxATransform.getAxisVector(2), separation, 2, smallestPen, bestPen) ||
 
-		!tryAxis(boxA, boxATransform, boxB, boxBTransform, getShapeAxis(boxB, boxBTransform, 0), separation, 3, smallestPen, bestPen) ||
-		!tryAxis(boxA, boxATransform, boxB, boxBTransform, getShapeAxis(boxB, boxBTransform, 1), separation, 4, smallestPen, bestPen) ||
-		!tryAxis(boxA, boxATransform, boxB, boxBTransform, getShapeAxis(boxB, boxBTransform, 2), separation, 5, smallestPen, bestPen) 
-	)
+        !tryAxis(boxA, boxATransform, boxB, boxBTransform, boxBTransform.getAxisVector(0), separation, 3, smallestPen, bestPen) ||
+        !tryAxis(boxA, boxATransform, boxB, boxBTransform, boxBTransform.getAxisVector(1), separation, 4, smallestPen, bestPen) ||
+        !tryAxis(boxA, boxATransform, boxB, boxBTransform, boxBTransform.getAxisVector(2), separation, 5, smallestPen, bestPen) )
 	{
 		return 0;
 	}
 
 	unsigned bestSingleAxis = bestPen;
 
-	if (	
-		!tryAxis(boxA, boxATransform, boxB, boxBTransform, getShapeAxis(boxA, boxATransform, 0).cross(getShapeAxis(boxB, boxBTransform, 0)), separation,  6, smallestPen, bestPen) ||
-		!tryAxis(boxA, boxATransform, boxB, boxBTransform, getShapeAxis(boxA, boxATransform, 0).cross(getShapeAxis(boxB, boxBTransform, 1)), separation,  7, smallestPen, bestPen) ||
-		!tryAxis(boxA, boxATransform, boxB, boxBTransform, getShapeAxis(boxA, boxATransform, 0).cross(getShapeAxis(boxB, boxBTransform, 2)), separation,  8, smallestPen, bestPen) ||
+	if (!tryAxis(boxA, boxATransform, boxB, boxBTransform, boxATransform.getAxisVector(0).cross(boxBTransform.getAxisVector(0)), separation,  6, smallestPen, bestPen) ||
+        !tryAxis(boxA, boxATransform, boxB, boxBTransform, boxATransform.getAxisVector(0).cross(boxBTransform.getAxisVector(1)), separation,  7, smallestPen, bestPen) ||
+        !tryAxis(boxA, boxATransform, boxB, boxBTransform, boxATransform.getAxisVector(0).cross(boxBTransform.getAxisVector(2)), separation,  8, smallestPen, bestPen) ||
 
-		!tryAxis(boxA, boxATransform, boxB, boxBTransform, getShapeAxis(boxA, boxATransform, 1).cross(getShapeAxis(boxB, boxBTransform, 0)), separation,  9, smallestPen, bestPen) ||
-		!tryAxis(boxA, boxATransform, boxB, boxBTransform, getShapeAxis(boxA, boxATransform, 1).cross(getShapeAxis(boxB, boxBTransform, 1)), separation, 10, smallestPen, bestPen) ||
-		!tryAxis(boxA, boxATransform, boxB, boxBTransform, getShapeAxis(boxA, boxATransform, 1).cross(getShapeAxis(boxB, boxBTransform, 2)), separation, 11, smallestPen, bestPen) ||
+        !tryAxis(boxA, boxATransform, boxB, boxBTransform, boxATransform.getAxisVector(1).cross(boxBTransform.getAxisVector(0)), separation,  9, smallestPen, bestPen) ||
+        !tryAxis(boxA, boxATransform, boxB, boxBTransform, boxATransform.getAxisVector(1).cross(boxBTransform.getAxisVector(1)), separation, 10, smallestPen, bestPen) ||
+        !tryAxis(boxA, boxATransform, boxB, boxBTransform, boxATransform.getAxisVector(1).cross(boxBTransform.getAxisVector(2)), separation, 11, smallestPen, bestPen) ||
 
-		!tryAxis(boxA, boxATransform, boxB, boxBTransform, getShapeAxis(boxA, boxATransform, 2).cross(getShapeAxis(boxB, boxBTransform, 0)), separation, 12, smallestPen, bestPen) ||
-		!tryAxis(boxA, boxATransform, boxB, boxBTransform, getShapeAxis(boxA, boxATransform, 2).cross(getShapeAxis(boxB, boxBTransform, 1)), separation, 13, smallestPen, bestPen) ||
-		!tryAxis(boxA, boxATransform, boxB, boxBTransform, getShapeAxis(boxA, boxATransform, 2).cross(getShapeAxis(boxB, boxBTransform, 2)), separation, 14, smallestPen, bestPen)
-	)
+        !tryAxis(boxA, boxATransform, boxB, boxBTransform, boxATransform.getAxisVector(2).cross(boxBTransform.getAxisVector(0)), separation, 12, smallestPen, bestPen) ||
+        !tryAxis(boxA, boxATransform, boxB, boxBTransform, boxATransform.getAxisVector(2).cross(boxBTransform.getAxisVector(1)), separation, 13, smallestPen, bestPen) ||
+        !tryAxis(boxA, boxATransform, boxB, boxBTransform, boxATransform.getAxisVector(2).cross(boxBTransform.getAxisVector(2)), separation, 14, smallestPen, bestPen) )
 	{
 		return 0;
 	}
@@ -272,31 +267,32 @@ unsigned int ContactGenerator::box_box(const CollisionRegistration& a, const Col
 	// We've found a collision, and we know which of the axes gave the smallest penetration.
 	if (bestPen < 3)
 	{
-		// BoxB vertex on boxA Face.
+		// Vertex of boxB in face of boxA
 		// TODO: Do stuff
-		//std::cout << "Colliding < 3";
+		//std::cout << bestPen << " Vertex of boxB in face of boxA\n";
 		fillPointFaceBoxBox(boxA, boxATransform, a.body, boxB, boxBTransform, b.body, separation, collisionData, bestPen, smallestPen);
 		return 1;
 	}
 	else if (bestPen < 6)
 	{
-		// BoxA vertex on BoxB Face.
+		// Vertex of boxA in face of boxB
 		// TODO: Do stuff
-		//std::cout << "Colliding < 6";
-		fillPointFaceBoxBox(boxB, boxBTransform, b.body, boxA, boxATransform, a.body, separation, collisionData, bestPen, smallestPen);
+		//std::cout << bestPen << " Vertex of boxA in face of boxB\n";
+		fillPointFaceBoxBox(boxB, boxBTransform, b.body, boxA, boxATransform, a.body, -separation, collisionData, bestPen-3, smallestPen);
 		return 1;
 	}
 	else
 	{
 		// Edge Edge contact.
 		//std::cout << "Colliding >= 6";
+		//std::cout << bestPen << " Edge-Edge\n";
 
 		// Find which axis.
 		bestPen -= 6;
 		unsigned int axisIndexA = bestPen / 3;
 		unsigned int axisIndexB = bestPen % 3;
-		Vec3 axisA = getShapeAxis(boxA, boxATransform, axisIndexA);
-		Vec3 axisB = getShapeAxis(boxB, boxBTransform, axisIndexB);
+		Vec3 axisA = boxATransform.getAxisVector(axisIndexA);
+		Vec3 axisB = boxBTransform.getAxisVector(axisIndexB);
 		Vec3 axis = axisA.cross(axisB);
 		axis.normalize();
 
@@ -312,10 +308,10 @@ unsigned int ContactGenerator::box_box(const CollisionRegistration& a, const Col
 		for (unsigned int i = 0; i < 3; i++)
 		{
 			if (i == axisIndexA) { ptOnEdgeA[i] = 0; }
-			else if (getShapeAxis(boxA, boxATransform, i).dot(axis) > 0) { ptOnEdgeA[i] = -ptOnEdgeA[i]; }
+			else if (boxATransform.getAxisVector(i).dot(axis) > 0) { ptOnEdgeA[i] = -ptOnEdgeA[i]; }
 
 			if (i == axisIndexB) { ptOnEdgeB[i] = 0; }
-			else if (getShapeAxis(boxB, boxBTransform, i).dot(axis) > 0) { ptOnEdgeB[i] = -ptOnEdgeB[i]; }
+			else if (boxBTransform.getAxisVector(i).dot(axis) > 0) { ptOnEdgeB[i] = -ptOnEdgeB[i]; }
 		}
 
 		// Transform the points into world coordinates.
@@ -655,7 +651,7 @@ void fillPointFaceBoxBox(const ShapeBox &boxA, const Transform &boxATransform, R
 	contact.body[1] = boxBBody;
 	contact.normal = normal = normal;
 	contact.penetration = penetration;
-	contact.position = boxATransform * vertex;
+	contact.position = boxBTransform * vertex;
 }
 
 } // namespace lt

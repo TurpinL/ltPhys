@@ -16,9 +16,10 @@ void PhysicsDemo::init()
 
 	m_staticSphereShape.setRadius(0.5);
 
-	m_controlledBody.setPosition(lt::Vec3(0.0f, 2.0f, 0.f));
+	m_controlledBody.setPosition(lt::Vec3(0.0f, 3.0f, 0.f));
 	m_controlledBody.setAngle(lt::Quat());
 	m_controlledBody.setInvMass(0);
+	m_controlledBody.setInvInertiaTensor(lt::Vec3());
 	m_controlledBody.setRestitution(0.4f);
 
 	m_frameCount = 0;
@@ -91,7 +92,7 @@ void PhysicsDemo::initPhysics()
 	world.addForceGenerator(&m_box, &m_gravity);
 
 	// Initialize static bodies
-	m_groundBody.setPosition(lt::Vec3(0, 0, 0));
+	m_groundBody.setPosition(lt::Vec3(0, -100, 0));
 	m_groundBody.setAngle(lt::Quat(lt::Vec3(1.0f, 0.0f, 0.0f), 0.0f));
 	m_groundBody.setRestitution(0.0f);
 	m_groundBody.setInvMass(0.0f);
@@ -123,7 +124,7 @@ void PhysicsDemo::initPhysics()
 
 	m_terrainShape.setTerrainData(m_terrainData);
 
-	m_terrainBody.setPosition(m_terrainData->getTerrainSize() * -0.5 - lt::Vec3(0, 50, 0));
+	m_terrainBody.setPosition(m_terrainData->getTerrainSize() * -0.5 - lt::Vec3(0, 0, 0));
 	m_terrainBody.setRestitution(0.0f);
 	m_terrainBody.setInvMass(0.0f);
 	m_terrainBody.setInvInertiaTensor(lt::Vec3(0, 0, 0));
@@ -135,8 +136,9 @@ void PhysicsDemo::initPhysics()
 	for (int i = 0; i < BOX_COUNT; i++)
 	{
 		m_boxShapes[i].setHalfExtents(lt::Vec3(0.5f, 0.5f, 0.5f));
-		//m_boxes[i].setPosition(lt::Vec3((rand() % 1000) * 0.05f - 25, 2.0f, (rand() % 1000) * 0.05f - 25));
-		//m_boxes[i].setAngle(lt::Quat(lt::Vec3(0, 0, 1), 50.f));
+		//m_boxes[i].setPosition(lt::Vec3(0.0f, 1.0f, 0.0f));
+		m_boxes[i].setPosition(lt::Vec3((rand() % 1000) * 0.05f - 25, 2.0f, (rand() % 1000) * 0.05f - 25));
+		m_boxes[i].setAngle(lt::Quat(lt::Vec3(0, 0, 1), 50.f));
 		m_boxes[i].setDamping(0.7f);
 		m_boxes[i].setAngularDamping(0.7f);
 		m_boxes[i].setRestitution(0.7f);

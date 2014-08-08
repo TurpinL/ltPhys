@@ -39,7 +39,15 @@ Transform& Transform::loadIdentity()
 Transform& Transform::scale(const Vec3 &xyz)
 {
 	m_data[0] *= xyz.x;
+	m_data[1] *= xyz.y;
+	m_data[2] *= xyz.z;
+
+	m_data[4] *= xyz.x;
 	m_data[5] *= xyz.y;
+	m_data[6] *= xyz.z;
+ 	
+	m_data[ 8] *= xyz.x;
+	m_data[ 9] *= xyz.y;
 	m_data[10] *= xyz.z;
 
 	return *this;
@@ -47,9 +55,9 @@ Transform& Transform::scale(const Vec3 &xyz)
 
 Transform& Transform::translate(const Vec3 &xyz)
 {
-	m_data[3] += xyz.x;
-	m_data[7] += xyz.y;
-	m_data[11] += xyz.z;
+	m_data[3]  += m_data[0]*xyz.x + m_data[1]*xyz.x + m_data[ 2]*xyz.x;
+	m_data[7]  += m_data[4]*xyz.y + m_data[5]*xyz.y + m_data[ 6]*xyz.y;
+	m_data[11] += m_data[8]*xyz.z + m_data[9]*xyz.z + m_data[10]*xyz.z;
 
 	return *this;
 }

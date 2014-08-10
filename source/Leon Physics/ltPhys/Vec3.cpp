@@ -151,26 +151,24 @@ const bool Vec3::nearEqual( const Vec3 &rhs, const Scalar &degOfError ) const
 
 Scalar& Vec3::operator[] (unsigned int index)
 {
-	if (index == 0)
-		return x;
-	else if (index == 1)
-		return y;
-	else if (index == 1)
-		return z;
-	else
-		return w;		
+	switch (index)
+	{
+	case 0:  return x; break;
+	case 1:  return y; break;
+	case 2:  return z; break;
+	default: return w;
+	}	
 }
 
 const Scalar& Vec3::get(unsigned int index) const
 {
-	if (index == 0)
-		return x;
-	else if (index == 1)
-		return y;
-	else if (index == 1)
-		return z;
-	else
-		return w;	
+	switch (index)
+	{
+	case 0:  return x; break;
+	case 1:  return y; break;
+	case 2:  return z; break;
+	default: return w;
+	}	
 }
 
 const Vec3 Vec3::rotate(const Scalar &angle, const Vec3 &axis) const

@@ -75,9 +75,6 @@
     <ClCompile Include="ltPhys\ContactGenerator.cpp">
       <Filter>PhysicsDemo\ltPhys\Collisions</Filter>
     </ClCompile>
-    <ClCompile Include="PhysicsDemo.cpp">
-      <Filter>PhysicsDemo</Filter>
-    </ClCompile>
     <ClCompile Include="PhysicsDemo_Display.cpp">
       <Filter>PhysicsDemo</Filter>
     </ClCompile>
@@ -110,6 +107,9 @@
     </ClCompile>
     <ClCompile Include="ltPhys\TerrainData.cpp">
       <Filter>PhysicsDemo\ltPhys</Filter>
+    </ClCompile>
+    <ClCompile Include="PhysicsDemo.cpp">
+      <Filter>PhysicsDemo</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

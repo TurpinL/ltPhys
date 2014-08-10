@@ -161,7 +161,7 @@ void ContactResolver::resolveAllInterpenetrations(const lt::CollisionData &colDa
 
 void ContactResolver::resolveInterpenetration(Contact& contact, Vec3 angleChange[2], Vec3 positionChange[2])
 {
-	Scalar totalInertia = 0;
+    Scalar totalInertia = 0;
 	Scalar angularInertia[2];
 	Scalar linearInertia[2];
 	Scalar angularMove[2];
@@ -226,7 +226,7 @@ void ContactResolver::resolveInterpenetration(Contact& contact, Vec3 angleChange
 		}
 	}
 
-	contact.penetration = 0;
+	//contact.penetration = 0;
 }
 
 // Incomplete and doesn't seem to work properly. Helps slightly though.

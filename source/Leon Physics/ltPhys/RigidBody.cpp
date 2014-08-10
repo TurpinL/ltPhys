@@ -37,6 +37,7 @@ void RigidBody::integrate(const Scalar& timeStep)
 	Vec3 angAccel = m_invInteriaTensor * m_torqueAccum;
 	
 	// Update Velocities
+	// TODO: Why is m_accel a member variable but angAccel isn't?
 	m_vel += m_accel * timeStep;
 	m_angVel += angAccel * timeStep;
 

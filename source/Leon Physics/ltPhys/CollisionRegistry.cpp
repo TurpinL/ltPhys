@@ -151,6 +151,7 @@ void CollisionRegistry::checkCollision(const CollisionRegistration& shapeA, cons
 	const ShapeType& shapeAType = shapeA.shape->getShapeType();
 	const ShapeType& shapeBType = shapeB.shape->getShapeType();
 
+	//HACK: check Collisions else if thing. Make this a better thing
 	if(shapeAType == LT_SHAPE_SPHERE && shapeBType == LT_SHAPE_SPHERE)
 	{
 		ContactGenerator::sphere_sphere(shapeA, shapeB, &m_collisionData);

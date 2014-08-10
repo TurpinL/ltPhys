@@ -63,6 +63,8 @@ MILESTONE: Generic Rigid Body Motion Physics. (It seems ok atleast)
 
 +++! Non linear interpenetration resolution
 
+Errors in simulation with a frametime of zero.
+
 Contact Preperation, calculates data about a contact that may be used in collision resolution and interpenetration resolution.
 
 Avoid excessive rotation p328

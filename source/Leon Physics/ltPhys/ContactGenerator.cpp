@@ -303,15 +303,27 @@ unsigned int ContactGenerator::box_box(const CollisionRegistration& a, const Col
 		}
 
 		Vec3 ptOnEdgeA = boxAHalfExtents;
-		Vec3 ptOnEdgeB = boxBHalfExtents;
+		Vec3 ptOnEdgeB = -boxBHalfExtents;
 
 		for (unsigned int i = 0; i < 3; i++)
 		{
-			if (i == axisIndexA) { ptOnEdgeA[i] = 0; }
-			else if (boxATransform.getAxisVector(i).dot(axis) > 0) { ptOnEdgeA[i] = -ptOnEdgeA[i]; }
+			if (i == axisIndexA) 
+			{ 
+				ptOnEdgeA[i] = 0; 
+			}
+			else if (boxATransform.getAxisVector(i).dot(axis) > 0) 
+			{ 
+				ptOnEdgeA[i] = -ptOnEdgeA[i]; 
+			}
 
-			if (i == axisIndexB) { ptOnEdgeB[i] = 0; }
-			else if (boxBTransform.getAxisVector(i).dot(axis) > 0) { ptOnEdgeB[i] = -ptOnEdgeB[i]; }
+			if (i == axisIndexB) 
+			{ 
+				ptOnEdgeB[i] = 0;
+			}
+			else if (boxBTransform.getAxisVector(i).dot(axis) > 0) 
+			{ 
+				ptOnEdgeB[i] = -ptOnEdgeB[i]; 
+			}
 		}
 
 		// Transform the points into world coordinates.
@@ -649,9 +661,9 @@ void fillPointFaceBoxBox(const ShapeBox &boxA, const Transform &boxATransform, R
 
 	contact.body[0] = boxABody;
 	contact.body[1] = boxBBody;
-	contact.normal = normal = normal;
+	contact.normal = normal;
 	contact.penetration = penetration;
-	contact.position = boxBTransform * vertex;
+	contact.position = boxBTransform * vertex - (normal * penetration * 0.5);
 }
 
 } // namespace lt

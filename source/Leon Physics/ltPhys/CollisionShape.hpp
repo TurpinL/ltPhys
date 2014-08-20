@@ -12,11 +12,11 @@ namespace lt
 ////////////////////////////////////////////////////////////
 enum ShapeType
 {
-	LT_SHAPE_NULL = 0,
-	LT_SHAPE_SPHERE = 1,
-	LT_SHAPE_BOX = 2,
-	LT_SHAPE_HALFSPACE = 3,
-	LT_SHAPE_TERRAIN = 4
+	SHAPE_NULL = 0,
+	SHAPE_SPHERE = 1,
+	SHAPE_BOX = 2,
+	SHAPE_HALFSPACE = 3,
+	SHAPE_TERRAIN = 4
 };
 
 ////////////////////////////////////////////////////////////

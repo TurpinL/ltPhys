@@ -29,9 +29,6 @@ void PhysicsDemo::handleEvent(SDL_Event *E)
 			m_camZoom += 0.4f;
 		else if(E->button.button == SDL_BUTTON_WHEELDOWN)
 			m_camZoom -= 0.4f;			
-		else if(E->button.button == SDL_BUTTON_RIGHT)
-			m_box.applyCentralForce( lt::Vec3(0.0f, 1000.0f, 0.0f) );
-		break;
 	}
 }
 

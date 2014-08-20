@@ -133,6 +133,11 @@ const CollisionData& CollisionRegistry::getCollisionData() const
 	return m_collisionData;
 }
 
+const std::vector<CollisionRegistration>& CollisionRegistry::getCollisionRegistry() const
+{
+	return m_registry;
+}
+
 //--------------------------
 //	PRIVATES			
 //--------------------------
@@ -152,27 +157,27 @@ void CollisionRegistry::checkCollision(const CollisionRegistration& shapeA, cons
 	const ShapeType& shapeBType = shapeB.shape->getShapeType();
 
 	//HACK: check Collisions else if thing. Make this a better thing
-	if(shapeAType == LT_SHAPE_SPHERE && shapeBType == LT_SHAPE_SPHERE)
+	if(shapeAType == SHAPE_SPHERE && shapeBType == SHAPE_SPHERE)
 	{
 		ContactGenerator::sphere_sphere(shapeA, shapeB, &m_collisionData);
 	}
-	else if(shapeAType == LT_SHAPE_SPHERE && shapeBType == LT_SHAPE_HALFSPACE)
+	else if(shapeAType == SHAPE_SPHERE && shapeBType == SHAPE_HALFSPACE)
 	{
 		ContactGenerator::sphere_halfspace(shapeA, shapeB, &m_collisionData);
 	}
-	else if(shapeAType == LT_SHAPE_BOX && shapeBType == LT_SHAPE_HALFSPACE)
+	else if(shapeAType == SHAPE_BOX && shapeBType == SHAPE_HALFSPACE)
 	{
 		ContactGenerator::box_halfspace(shapeA, shapeB, &m_collisionData);
 	}
-	else if(shapeAType == LT_SHAPE_SPHERE && shapeBType == LT_SHAPE_TERRAIN)
+	else if(shapeAType == SHAPE_SPHERE && shapeBType == SHAPE_TERRAIN)
 	{
 		ContactGenerator::sphere_terrain(shapeA, shapeB, &m_collisionData);
 	}
-	else if(shapeAType == LT_SHAPE_BOX && shapeBType == LT_SHAPE_TERRAIN)
+	else if(shapeAType == SHAPE_BOX && shapeBType == SHAPE_TERRAIN)
 	{
 		ContactGenerator::box_terrain(shapeA, shapeB, &m_collisionData);
 	}
-	else if(shapeAType == LT_SHAPE_BOX && shapeBType == LT_SHAPE_BOX)
+	else if(shapeAType == SHAPE_BOX && shapeBType == SHAPE_BOX)
 	{
 		ContactGenerator::box_box(shapeA, shapeB, &m_collisionData);
 	}

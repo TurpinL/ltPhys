@@ -17,31 +17,18 @@ private:
 
 	lt::FGenGravity m_gravity;
 
-	// Phys Sphere
-	lt::FGenSpring2 m_spring;
-	lt::RigidBody m_myRigidBody;
-	lt::RigidBody m_controlledBody;
+	lt::ShapeBox m_boxShapeLarge;
+	lt::ShapeBox m_boxShapeSmall;
+	lt::ShapeHalfspace m_shapeGround;
 
-	// Physics Cuboid
-	lt::RigidBody m_box;
-	lt::FGenSpring2 m_boxSpring;
+	lt::FGenSpring2 m_spring;
+
 	lt::Vec3 m_boxSpringOffset;
 
-	// Physics Cubes
-	lt::RigidBody m_boxes[BOX_COUNT];
-	lt::ShapeBox m_boxShapes[BOX_COUNT];
-
-	// Shapes
-	lt::ShapeSphere m_staticSphereShape;
-	lt::ShapeBox m_boxShape;
-	lt::ShapeHalfspace m_groundShape;
-	lt::ShapeTerrain m_terrainShape;
-	TerrainData *m_terrainData;
-
-	// Static Bodies
-	lt::RigidBody m_groundBody;
-	lt::RigidBody m_staticBallBody;
-	lt::RigidBody m_terrainBody;
+	lt::RigidBody m_controlledBody;
+	lt::RigidBody m_bodyGround;
+	lt::RigidBody m_bodyLarge;
+	lt::RigidBody m_bodySmall;
 
 	void init();
 		void initSDL();

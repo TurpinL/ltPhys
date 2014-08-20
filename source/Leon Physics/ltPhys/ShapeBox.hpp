@@ -32,7 +32,7 @@ public:
 	////////////////////////////////////////////////////////////
 	ShapeBox(const Vec3& halfExtents);
 
-	virtual ShapeType getShapeType() const { return LT_SHAPE_BOX; }
+	virtual ShapeType getShapeType() const { return SHAPE_BOX; }
 
 	////////////////////////////////////////////////////////////
 	/// @brief Set the box's half extents

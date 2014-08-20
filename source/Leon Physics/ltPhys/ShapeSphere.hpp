@@ -48,7 +48,7 @@ public:
 	////////////////////////////////////////////////////////////
 	const Scalar& getRadius() const;
 
-	virtual ShapeType getShapeType() const { return LT_SHAPE_SPHERE; }
+	virtual ShapeType getShapeType() const { return SHAPE_SPHERE; }
 
 private:
 	Scalar m_radius;

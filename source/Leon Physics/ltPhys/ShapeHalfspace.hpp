@@ -23,7 +23,7 @@ public:
 	////////////////////////////////////////////////////////////
 	ShapeHalfspace();
 
-	virtual ShapeType getShapeType() const { return LT_SHAPE_HALFSPACE; }
+	virtual ShapeType getShapeType() const { return SHAPE_HALFSPACE; }
 };
 
 } // namespace lt

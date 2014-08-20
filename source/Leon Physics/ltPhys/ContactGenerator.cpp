@@ -17,8 +17,8 @@ unsigned int ContactGenerator::sphere_sphere(const CollisionRegistration& a, con
 {
 	// Make sure we have contacts left and Check if they're spheres.
 	if (collisionData->contactsLeft <= 0 ||
-	   a.shape->getShapeType() != LT_SHAPE_SPHERE || 
-	   b.shape->getShapeType() != LT_SHAPE_SPHERE ) 
+	   a.shape->getShapeType() != SHAPE_SPHERE || 
+	   b.shape->getShapeType() != SHAPE_SPHERE ) 
 	{
 		return 0;		
 	}
@@ -69,8 +69,8 @@ unsigned int ContactGenerator::sphere_sphere(const CollisionRegistration& a, con
 //{
 //	// Make sure we have contacts left and Check if they're the right shapes.
 //	if (collisionData->contactsLeft <= 0 ||
-//	   a.shape->getShapeType() != LT_SHAPE_SPHERE || 
-//	   b.shape->getShapeType() != LT_SHAPE_BOX ) 
+//	   a.shape->getShapeType() != SHAPE_SPHERE || 
+//	   b.shape->getShapeType() != SHAPE_BOX ) 
 //	{
 //		return 0;		
 //	}
@@ -81,8 +81,8 @@ unsigned int ContactGenerator::sphere_halfspace(const CollisionRegistration& a, 
 {
 	// Make sure we have contacts left and Check if they're the right shapes.
 	if (collisionData->contactsLeft <= 0 ||
-	   a.shape->getShapeType() != LT_SHAPE_SPHERE || 
-	   b.shape->getShapeType() != LT_SHAPE_HALFSPACE ) 
+	   a.shape->getShapeType() != SHAPE_SPHERE || 
+	   b.shape->getShapeType() != SHAPE_HALFSPACE ) 
 	{
 		return 0;		
 	}
@@ -134,8 +134,8 @@ unsigned int ContactGenerator::sphere_terrain(const CollisionRegistration& a, co
 {
 	// Make sure we have contacts left and Check if they're the right shapes.
 	if (collisionData->contactsLeft <= 0 ||
-	   a.shape->getShapeType() != LT_SHAPE_SPHERE || 
-	   b.shape->getShapeType() != LT_SHAPE_TERRAIN ) 
+	   a.shape->getShapeType() != SHAPE_SPHERE || 
+	   b.shape->getShapeType() != SHAPE_TERRAIN ) 
 	{
 		return 0;		
 	}
@@ -200,8 +200,8 @@ unsigned int ContactGenerator::box_box(const CollisionRegistration& a, const Col
 {
 	// Make sure we have contacts left and Check if they're the right shapes.
 	if (collisionData->contactsLeft <= 0 ||
-	   a.shape->getShapeType() != LT_SHAPE_BOX || 
-	   b.shape->getShapeType() != LT_SHAPE_BOX ) 
+	   a.shape->getShapeType() != SHAPE_BOX || 
+	   b.shape->getShapeType() != SHAPE_BOX ) 
 	{
 		return 0;		
 	}
@@ -354,8 +354,8 @@ unsigned int ContactGenerator::box_halfspace(const CollisionRegistration& a, con
 {
 	// Make sure we have contacts left and Check if they're the right shapes.
 	if (collisionData->contactsLeft <= 0 ||
-	   a.shape->getShapeType() != LT_SHAPE_BOX || 
-	   b.shape->getShapeType() != LT_SHAPE_HALFSPACE ) 
+	   a.shape->getShapeType() != SHAPE_BOX || 
+	   b.shape->getShapeType() != SHAPE_HALFSPACE ) 
 	{
 		return 0;		
 	}
@@ -451,8 +451,8 @@ unsigned int ContactGenerator::box_terrain(const CollisionRegistration& a, const
 {
 	// Make sure we have contacts left and Check if they're the right shapes.
 	if (collisionData->contactsLeft <= 0 ||
-	   a.shape->getShapeType() != LT_SHAPE_BOX || 
-	   b.shape->getShapeType() != LT_SHAPE_TERRAIN ) 
+	   a.shape->getShapeType() != SHAPE_BOX || 
+	   b.shape->getShapeType() != SHAPE_TERRAIN ) 
 	{
 		return 0;		
 	}

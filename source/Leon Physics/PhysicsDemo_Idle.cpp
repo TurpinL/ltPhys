@@ -32,15 +32,14 @@ void PhysicsDemo::idle()
 	m_controlledBody.setAngle(lt::Quat(lt::Vec3(0.0f, 1.0f, 0.0f), 90 * m_frameTime * (keyState[SDLK_l] - keyState[SDLK_j])) * m_controlledBody.getAngle());
 	m_controlledBody.setAngle(lt::Quat(lt::Vec3(0.0f, 0.0f, 1.0f), 90 * m_frameTime * (keyState[SDLK_u] - keyState[SDLK_o])) * m_controlledBody.getAngle());
 
-	float xDelta = (keyState[SDLK_d] - keyState[SDLK_a]) * 3.0f;
-	float yDelta = (keyState[SDLK_q] - keyState[SDLK_e]) * 3.0f;
-	float zDelta = (keyState[SDLK_s] - keyState[SDLK_w]) * 3.0f;
+	float xDelta = (keyState[SDLK_d] - keyState[SDLK_a]) * 6.0f;
+	float yDelta = (keyState[SDLK_q] - keyState[SDLK_e]) * 6.0f;
+	float zDelta = (keyState[SDLK_s] - keyState[SDLK_w]) * 6.0f;
 	//m_controlledBody.setPosition(m_controlledBody.getPosition() + lt::Vec3(xDelta, yDelta, zDelta));
 	m_controlledBody.setVelocity(lt::Vec3(xDelta, yDelta, zDelta));
 
 	// Move stuff
 	lt::Scalar deltaZ = (keyState[SDLK_t] - keyState[SDLK_y]) * 100 * m_frameTime;
-	m_myRigidBody.applyRelForce(lt::Vec3(0.0f, 0.0f, deltaZ), lt::Vec3(0.0f, 1.0f, 0.0f));
 
 	// Physics
 	world.stepSimulation(m_frameTime);
@@ -59,8 +58,8 @@ void PhysicsDemo::calcFrameTime()
 	m_frameCount++;
 
 	// FPS Printer
-	/*if(m_frameCount % 20 == 0)
-		std::cout << (1.0f / m_frameTime) << std::endl;*/
+	if(m_frameCount % 20 == 0)
+		std::cout << (1.0f / m_frameTime) << std::endl;
 
 	m_lastClock = curTime;
 }

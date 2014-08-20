@@ -24,7 +24,7 @@ public:
 	//////////////////////////////////////////////////////////// 
 	ShapeTerrain();
 
-	virtual ShapeType getShapeType() const { return LT_SHAPE_TERRAIN; }
+	virtual ShapeType getShapeType() const { return SHAPE_TERRAIN; }
 
 	//////////////////////////////////////////////////////////// 
 	/// @brief Sets this terrain's terrain data to terrainData

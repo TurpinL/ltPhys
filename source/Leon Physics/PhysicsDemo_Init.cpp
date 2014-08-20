@@ -14,14 +14,6 @@ void PhysicsDemo::init()
 	m_camAng = lt::Vec3(20.0f, 0.0f, 0.0f);
 	m_camZoom = -5.0;
 
-	m_staticSphereShape.setRadius(0.5);
-
-	m_controlledBody.setPosition(lt::Vec3(0.0f, 3.0f, 0.f));
-	m_controlledBody.setAngle(lt::Quat());
-	m_controlledBody.setInvMass(0);
-	m_controlledBody.setInvInertiaTensor(lt::Vec3());
-	m_controlledBody.setRestitution(0.4f);
-
 	m_frameCount = 0;
 	m_lastClock = SDL_GetTicks();
 }
@@ -49,110 +41,56 @@ void PhysicsDemo::initGL()
 
 void PhysicsDemo::initPhysics()
 {
-	float density;
-
 	m_gravity.setGravity(-9.8f);
 
-	// Test Sphere
-	m_myRigidBody.setPosition(lt::Vec3(0.0f, 3.0f, 0.0f));
-	m_myRigidBody.setDamping(0.7f);
-	m_myRigidBody.setAngularDamping(0.7f);
-	m_myRigidBody.setMass(1.0f);
-	m_myRigidBody.setRestitution(0.4f);
-	//m_myRigidBody.setInertiaTensor( lt::Vec3(0.36f, 0.36f, 0.36f) );
-	m_myRigidBody.setInvInertiaTensor( lt::Vec3(0.1f, 0.1f, 0.1f) );
-	m_spring = lt::FGenSpring2(lt::Vec3(-0.5f, 0.f, 0.f), &m_controlledBody, lt::Vec3(0.f, 0.f, 0.f), 4.8f, 4.5f, true);
+	// Controlled Point
+	m_controlledBody.setPosition(lt::Vec3(0.0f, 3.0f, 2.f));
+	m_controlledBody.setAngle(lt::Quat());
+	m_controlledBody.setInvMass(0);
+	m_controlledBody.setInvInertiaTensor(lt::Vec3());
+	m_controlledBody.setRestitution(0.4f);
 
-	/*m_spring = lt::FGenSpring(&m_controlledBody, 10.0f, 1.2f);
-	m_fGenRegistry.add(&m_myRigidBody, &m_spring);*/
+	// Big Box
+	m_boxShapeLarge.setHalfExtents(lt::Vec3(2.0f, 2.0f, 2.0f));
+	m_bodyLarge.setPosition(lt::Vec3(0.0f, 3.0f, 0.0f));
+	m_bodyLarge.setDamping(0.7f);
+	m_bodyLarge.setAngularDamping(0.7f);
+	m_bodyLarge.setRestitution(0.7f);
+	m_bodyLarge.setInvMass(0.1f);
+	m_bodyLarge.setInvInertiaTensor( lt::Vec3(0.3f, 0.3f, 0.3f) );
 
-	// Phys Box
-	density = 100.f;
+	// Small Box
+	m_boxShapeSmall.setHalfExtents(lt::Vec3(0.5f, 0.5f, 0.5f));
+	m_bodySmall.setPosition(lt::Vec3(0.0f, 2.0f, 2.0f));
+	m_bodySmall.setDamping(0.7f);
+	m_bodySmall.setAngularDamping(0.7f);
+	m_bodySmall.setRestitution(0.7f);
+	m_bodySmall.setMass(0.7f);
+	m_bodySmall.setInertiaTensor( lt::Vec3(0.1f, 0.1f, 0.1f) );
 
-	m_boxShape.setHalfExtents(lt::Vec3(0.5f, 0.5f, 0.5f));
-	m_box.setPosition(lt::Vec3(2.0f, 2.0f, 0.0f));
-	//m_box.setAngle(lt::Quat(lt::Vec3(0, 0, 1), 50.f));
-	m_box.setDamping(0.7f);
-	m_box.setAngularDamping(0.7f);
-	m_box.setRestitution(0.7f);
-	const lt::Vec3& boxDimensions = m_boxShape.getHalfExtents();
-	m_box.setMass(0.7f);
+	// Ground Body
+	m_bodyGround.setPosition(lt::Vec3());
+	m_bodyGround.setRestitution(0.7f);
+	m_bodyGround.setInvMass(0);
+	m_bodyGround.setInvInertiaTensor( lt::Vec3() );
 
-	//m_box.setInertiaTensor( inertiaTensorCuboid(m_boxShape.getHalfExtents(), m_box.getMass()) );
-	m_box.setInertiaTensor( lt::Vec3(0.1f, 0.1f, 0.1f) );
+	m_boxSpringOffset = lt::Vec3(0.0f, 0.5f, 0.0f);
+	m_spring = lt::FGenSpring2(m_boxSpringOffset, &m_controlledBody, lt::Vec3(0.f, 0.f, 0.f), 6.0f, 1.0f, true);
 
-	m_boxSpringOffset = lt::Vec3(0.5f, 0.f, 0.f);
-	m_boxSpring = lt::FGenSpring2(m_boxSpringOffset, &m_controlledBody, lt::Vec3(0.f, 0.f, 0.f), 4.8f, 4.5f, true);
+	// Controlled Body
+	world.addRigidBody(&m_controlledBody);
 
-	world.addRigidBody(&m_myRigidBody, &m_staticSphereShape);
-	world.addRigidBody(&m_box, &m_boxShape);
-	world.addForceGenerator(&m_myRigidBody, &m_gravity);
-	world.addForceGenerator(&m_myRigidBody, &m_spring);
-	world.addForceGenerator(&m_box, &m_boxSpring);
-	world.addForceGenerator(&m_box, &m_gravity);
+	// Small Box
+	world.addRigidBody(&m_bodySmall, &m_boxShapeSmall);
+	world.addForceGenerator(&m_bodySmall, &m_gravity);
+	world.addForceGenerator(&m_bodySmall, &m_spring);
 
-	// Initialize static bodies
-	m_groundBody.setPosition(lt::Vec3(0, -100, 0));
-	m_groundBody.setAngle(lt::Quat(lt::Vec3(1.0f, 0.0f, 0.0f), 0.0f));
-	m_groundBody.setRestitution(0.0f);
-	m_groundBody.setInvMass(0.0f);
-	m_groundBody.setInvInertiaTensor(lt::Vec3(0, 0, 0));
+	// Large Box
+	world.addRigidBody(&m_bodyLarge, &m_boxShapeLarge);
+	world.addForceGenerator(&m_bodyLarge, &m_gravity);
 
-	m_staticBallBody.setPosition(lt::Vec3(0, 0, 0));
-	m_staticBallBody.setRestitution(1.0f);
-	m_staticBallBody.setInvMass(0.0f);
-	m_staticBallBody.setInvInertiaTensor(lt::Vec3(0, 0, 0));
-
-
-	// Terrain
-	// Create heightmap
-	int hmLength = 128;
-	int hmWidth = 128;
-	float *heightMap = new float[hmWidth * hmLength];
-
-	/*for(int i = 0; i < hmWidth * hmLength; i++)
-	{
-		if((i+3) % 4 <= 1)
-			heightMap[i] = 0;
-		else
-			heightMap[i] = 1;
-	}*/
-	//heightMap::genHeightMapFaultFormation(heightMap, hmLength, hmWidth, 32, 0.4f);
-	heightMap::genFromRAW(heightMap, hmLength, hmWidth, "pit128.raw");
-	m_terrainData = new TerrainData(heightMap, hmLength, hmWidth, lt::Vec3(100.0f, 10.0f, 100.0f));
-	delete[] heightMap;
-
-	m_terrainShape.setTerrainData(m_terrainData);
-
-	m_terrainBody.setPosition(m_terrainData->getTerrainSize() * -0.5 - lt::Vec3(0, 0, 0));
-	m_terrainBody.setRestitution(0.0f);
-	m_terrainBody.setInvMass(0.0f);
-	m_terrainBody.setInvInertiaTensor(lt::Vec3(0, 0, 0));
-
-	//world.addCollisionShape(nullptr, &m_staticSphereShape, lt::Transform(lt::Vec3(0.f, 0.f, 0.f), lt::Quat()));
-	//world.addCollisionShape(nullptr, &m_groundShape, lt::Transform(lt::Vec3(0.f, 0.f, 0.f), lt::Quat()));
-
-	// Initialize lots of boxes
-	for (int i = 0; i < BOX_COUNT; i++)
-	{
-		m_boxShapes[i].setHalfExtents(lt::Vec3(0.5f, 0.5f, 0.5f));
-		//m_boxes[i].setPosition(lt::Vec3(0.0f, 1.0f, 0.0f));
-		m_boxes[i].setPosition(lt::Vec3((rand() % 1000) * 0.05f - 25, 2.0f, (rand() % 1000) * 0.05f - 25));
-		m_boxes[i].setAngle(lt::Quat(lt::Vec3(0, 0, 1), 50.f));
-		m_boxes[i].setDamping(0.7f);
-		m_boxes[i].setAngularDamping(0.7f);
-		m_boxes[i].setRestitution(0.7f);
-		m_boxes[i].setMass(0.7f);
-		m_boxes[i].setInertiaTensor( lt::Vec3(0.1f, 0.1f, 0.1f) );
-
-		world.addRigidBody(&m_boxes[i], &m_boxShapes[i]);
-		world.addForceGenerator(&m_boxes[i], &m_gravity);
-	}
-
-	world.addRigidBody(&m_controlledBody, &m_boxShape);
-	world.addRigidBody(&m_staticBallBody, &m_boxShape);
-	world.addRigidBody(&m_groundBody, &m_groundShape);
-	world.addRigidBody(&m_terrainBody, &m_terrainShape);
+	// Ground
+	world.addRigidBody(&m_bodyGround, &m_shapeGround);
 }
 
 const lt::Vec3 inertiaTensorCuboid(const lt::Vec3& dimensions, const lt::Scalar& mass)

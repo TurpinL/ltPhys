@@ -94,84 +94,93 @@ void PhysicsDemo::display()
 			}
 
 		glEnable(GL_LIGHTING);
-		// Sphere 1
-		glPolygonMode(GL_FRONT, GL_LINE);
-		glPushMatrix();
-			m_controlledBody.getTransform().getOpenGLMatrix(transform);	
-			glMultMatrixf(transform);
+		//glPolygonMode(GL_FRONT, GL_LINE);		
+		
+		const std::vector<lt::CollisionRegistration> &colRegistry = world.m_collisionRegistry.getCollisionRegistry();
 
-			glColor3f(1.0f, 0.0f, 0.0f);
-			drawBox(m_boxShape.getHalfExtents());
-			//drawSphere(m_staticSphereShape.getRadius(), 20);
-		glPopMatrix();
-
-		// Sphere 2
-		glPolygonMode(GL_FRONT, GL_LINE);
-		glPushMatrix();
-			lt::Transform::Identity().getOpenGLMatrix(transform);	
-			glMultMatrixf(transform);
-
-			glColor3f(1.0f, 1.0f, 0.0f);
-			drawBox(m_boxShape.getHalfExtents());
-			//drawSphere(m_staticSphereShape.getRadius(), 20);
-		glPopMatrix();
-
-		// Phys Sphere
-		glPushMatrix();
-			m_myRigidBody.getTransform().getOpenGLMatrix(transform);	
-			glMultMatrixf(transform);
-
-			glColor3f(1.0f, 0.0f, 1.0f);
-			drawSphere(m_staticSphereShape.getRadius(), 20);
-		glPopMatrix();
-
-		//glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
-
-		glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
-
-		// Halfspace
-		glPushMatrix();
-			m_groundBody.getTransform().getOpenGLMatrix(transform);	
-			glMultMatrixf(transform);
-
-			glBegin(GL_TRIANGLE_STRIP);
-				glNormal3f(0.f, 1.f, 0.f);
-				glColor3f(0.2f, 1.f, 0.2f);
-				glVertex3f(-10.f, 0,  10.f);
-				glVertex3f(-10.f, 0, -10.f);
-				glVertex3f( 10.f, 0,  10.f);
-				glVertex3f( 10.f, 0, -10.f);
-			glEnd();
-		glPopMatrix();
-
-		// Phys Box
-		glPushMatrix();
-			m_box.getTransform().getOpenGLMatrix(transform);	
-			glMultMatrixf(transform);
-
-			glColor3f(0.0f, 0.5f, 1.0f);
-			drawBox(m_boxShape.getHalfExtents());
-		glPopMatrix();
-
-		// Boxes
-		for (int i = 0; i < BOX_COUNT; i++)
+		for(int i = 0; i < colRegistry.size(); i++)
 		{
+			const lt::RigidBody &curBody = *colRegistry[i].body;
+			const lt::CollisionShape &curShape = *colRegistry[i].shape;
+			const lt::Transform &curOffset = colRegistry[i].offset;
+
 			glPushMatrix();
-				m_boxes[i].getTransform().getOpenGLMatrix(transform);	
+				curBody.getTransform().getOpenGLMatrix(transform);
+				glMultMatrixf(transform);
+				curOffset.getOpenGLMatrix(transform);
 				glMultMatrixf(transform);
 
-				glColor3f(0.0f, 0.5f, 1.0f);
-				drawBox(m_boxShapes[i].getHalfExtents());
+				glColor3f( ((i+1)*1234567)%32 / 32.0f, 
+					       ((i+2)*1234567)%32 / 32.0f, 
+						   ((i+3)*1234567)%32 / 32.0f);
+
+				switch (curShape.getShapeType())
+				{
+				case lt::SHAPE_BOX:
+					drawBox( ((lt::ShapeBox&)curShape).getHalfExtents() );
+					break;
+				case lt::SHAPE_SPHERE:
+					drawSphere( ((lt::ShapeSphere&)curShape).getRadius(), 10 );
+					break;
+				case lt::SHAPE_HALFSPACE:
+					glBegin(GL_TRIANGLE_STRIP);
+						glNormal3f(0.f, 1.f, 0.f);
+						glVertex3f(-10000.f, 0,  10000.f);
+						glVertex3f(-10000.f, 0, -10000.f);
+						glVertex3f( 10000.f, 0,  10000.f);
+						glVertex3f( 10000.f, 0, -10000.f);
+					glEnd();
+					break;
+				}
+
 			glPopMatrix();
 		}
 
-		// Render Terrain
-		glPushMatrix();
-			m_terrainBody.getTransform().getOpenGLMatrix(transform);
-			glMultMatrixf(transform);
-			glColor3f(0.5f, 1.0f, 0.0f);
-			drawMesh(m_terrainShape.getTerrainData()->getMesh());
-		glPopMatrix();
+		//// Controller
+		//glPushMatrix();
+		//	m_controlledBody.getTransform().getOpenGLMatrix(transform);	
+		//	glMultMatrixf(transform);
+
+		//	glColor3f(1.0f, 0.0f, 0.0f);
+		//	drawSphere(0.2, 20);
+		//glPopMatrix();
+
+		//// Small Box
+		//glPushMatrix();
+		//	m_bodySmall.getTransform().getOpenGLMatrix(transform);	
+		//	glMultMatrixf(transform);
+
+		//	glColor3f(1.0f, 1.0f, 0.0f);
+		//	drawBox(m_boxShapeSmall.getHalfExtents());
+		//glPopMatrix();
+
+		//glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+
+		//// Large Box
+		//glPushMatrix();
+		//	m_bodyLarge.getTransform().getOpenGLMatrix(transform);	
+		//	glMultMatrixf(transform);
+
+		//	glColor3f(1.0f, 0.0f, 1.0f);
+		//	drawBox(m_boxShapeLarge.getHalfExtents());
+		//glPopMatrix();
+
+		//glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+
+		//// Halfspace
+		//glPushMatrix();
+		//	m_bodyGround.getTransform().getOpenGLMatrix(transform);	
+		//	glMultMatrixf(transform);
+
+		//	glBegin(GL_TRIANGLE_STRIP);
+		//		glNormal3f(0.f, 1.f, 0.f);
+		//		glColor3f(0.2f, 1.f, 0.2f);
+		//		glVertex3f(-10.f, 0,  10.f);
+		//		glVertex3f(-10.f, 0, -10.f);
+		//		glVertex3f( 10.f, 0,  10.f);
+		//		glVertex3f( 10.f, 0, -10.f);
+		//	glEnd();
+		//glPopMatrix();
 
 		// Test Spring
 		glDisable(GL_LIGHTING);
@@ -181,17 +190,12 @@ void PhysicsDemo::display()
 
 			glColor3f(1.0f, 0.5f, 0.0f);
 			glBegin(GL_LINES);
-				p1 = m_box.getPosition() + m_box.getPointInWorldSpace(m_boxSpringOffset);
-				glVertex3f(p1.x, p1.y, p1.z);
-				glVertex3f(p2.x, p2.y, p2.z);
-
-				p1 = m_myRigidBody.getPosition() + m_myRigidBody.getPointInWorldSpace(lt::Vec3(-0.5f, 0.f, 0.f));
+				p1 = m_bodySmall.getPosition() + m_bodySmall.getPointInWorldSpace(m_boxSpringOffset);
 				glVertex3f(p1.x, p1.y, p1.z);
 				glVertex3f(p2.x, p2.y, p2.z);
 			glEnd();
 
 		glPopMatrix();
-
 
 		glEnable(GL_LIGHTING);
 
@@ -237,7 +241,7 @@ const int CUBE_VERT_INDEX[] =
 	5, 4, 6, 5, 6, 7,	// -Z
 	7, 6, 0, 7, 0, 1,	// -X
 	0, 6, 4, 0, 4, 2,	// +Y
-	1, 7, 5, 1, 5, 3	// -Y 
+	1, 5, 7, 1, 3, 5	// -Y 
 };
 const float CUBE_NORMS[][3] = {
 	{ 0.0f,  0.0f, -1.0f}, 

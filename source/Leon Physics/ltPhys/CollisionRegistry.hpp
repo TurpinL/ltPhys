@@ -108,7 +108,14 @@ public:
 	////////////////////////////////////////////////////////////
 	const CollisionData& getCollisionData() const;
 
-
+	////////////////////////////////////////////////////////////
+	/// @brief Get a vector of objects and their associated 
+	/// collision shapes
+	///
+	/// @return registry of all collision shape/rigid body pairs
+	///
+	////////////////////////////////////////////////////////////
+	const std::vector<CollisionRegistration>& getCollisionRegistry() const;
 private:
 	CollisionData m_collisionData;
 	std::vector<CollisionRegistration> m_registry;

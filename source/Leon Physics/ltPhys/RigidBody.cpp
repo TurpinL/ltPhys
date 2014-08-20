@@ -18,10 +18,10 @@ RigidBody::RigidBody()
 	m_ang = Quat(0.0f, 0.0f, 0.0f, 1.0f);
 	m_angVel = Vec3(0.0f, 0.0f, 0.0f);
 
-	m_invMass = 1;
-	m_damping = 1;
-	m_angDamping = 1;
-	m_restitution = 1;
+	m_invMass = 1.0f;
+	m_damping = 1.0f;
+	m_angDamping = 1.0f;
+	m_restitution = 1.0f;
 
 	m_invInteriaTensor.setIdentity();
 }
@@ -112,7 +112,7 @@ void RigidBody::setVelocity(const Vec3& velocity) { m_vel = velocity; }
 void RigidBody::setAcceleration(const Vec3& acceleration) { m_accel = acceleration; }
 void RigidBody::setAngularVelocity(const Vec3& angVel) { m_angVel = angVel; }
 void RigidBody::setInvMass(const Scalar& invMass) { m_invMass = invMass; }
-void RigidBody::setMass(const Scalar& mass) { m_invMass = 1 / mass; }
+void RigidBody::setMass(const Scalar& mass) { m_invMass = 1.0f / mass; }
 void RigidBody::setDamping(const Scalar& damping) { m_damping = damping; }
 void RigidBody::setAngularDamping(const Scalar& angularDamping) { m_angDamping = angularDamping; }
 void RigidBody::setRestitution(const Scalar& restitution) { m_restitution = restitution; }

@@ -8,6 +8,11 @@ ShapeBox::ShapeBox()
 
 }
 
+ShapeBox::ShapeBox(const Vec3& halfExtents)
+{
+	m_halfExtents = halfExtents;
+}
+
 void ShapeBox::setHalfExtents(const Vec3& halfExtents)
 {
 	m_halfExtents = halfExtents;

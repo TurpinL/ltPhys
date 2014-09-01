@@ -9,8 +9,7 @@ namespace lt
 
 World::World()
 {
-	isOldInterpenetration = false;
-	m_collisionRegistry.setMaxContacts(100);
+	m_collisionRegistry.setMaxContacts(1000);
 }
 
 void World::stepSimulation(const Scalar& timeStep)

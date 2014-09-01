@@ -19,6 +19,7 @@ private:
 
 	lt::ShapeBox m_boxShapeLarge;
 	lt::ShapeBox m_boxShapeSmall;
+	lt::ShapeBox m_boxShapePlayer;
 	lt::ShapeHalfspace m_shapeGround;
 
 	lt::FGenSpring2 m_spring;

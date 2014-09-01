@@ -1,7 +1,6 @@
 #ifndef MESH_HPP
 #define MESH_HPP
 
-#include <GL\glew.h>
 #include "Vec3.hpp"
 
 /**
@@ -10,18 +9,18 @@
 struct Mesh
 {
 	lt::Vec3 *verts;
-	GLuint  numVerts;
+	unsigned int numVerts;
 
 	lt::Vec3 *norms;
-	GLuint  numNorms;
+	unsigned int numNorms;
 
 	lt::Vec3 *texCoords;
-	GLuint  numTexCoords;
+	unsigned int numTexCoords;
 
 	// Stored as  in sets of three indices.
 	// [vert, norm, tex, v, n, t, v, n...]
-	GLuint *indices;
-	GLuint  numIndices;
+	unsigned int *indices;
+	unsigned int numIndices;
 
 	Mesh()
 	: verts(nullptr), norms(nullptr), texCoords(nullptr), indices(nullptr),

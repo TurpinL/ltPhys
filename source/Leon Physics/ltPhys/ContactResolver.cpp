@@ -77,7 +77,7 @@ void ContactResolver::calcImpulse(const Contact& contact, std::list<CollisionRes
 			- B.getAngularVelocity().dot(kB) ); // Closing velocity of point due to rotation of body B?
 	
 	Scalar denom = A.getInvMass() + B.getInvMass() + kA.dot(uA) + kB.dot(uB);
-	Scalar f = numer / denom;
+	Scalar f = (numer / denom) * contact.impulseModifier;
 	Vec3 impulse = contact.normal * f;
 
 	// Create collision responses
@@ -191,10 +191,10 @@ void ContactResolver::resolveInterpenetration(Contact& contact, Vec3 angleChange
 	{
 		// Calculate linear and angular movement.
 		Scalar inverseInertia = 1 / totalInertia;
-		linearMove[0] =  contact.penetration * linearInertia[0] * inverseInertia;
-		linearMove[1] = -contact.penetration * linearInertia[1] * inverseInertia;
-		angularMove[0] =  contact.penetration * angularInertia[0] * inverseInertia;
-		angularMove[1] = -contact.penetration * angularInertia[1] * inverseInertia;
+		linearMove[0] =  contact.penetration * linearInertia[0] * inverseInertia * contact.impulseModifier;
+		linearMove[1] = -contact.penetration * linearInertia[1] * inverseInertia * contact.impulseModifier;
+		angularMove[0] =  contact.penetration * angularInertia[0] * inverseInertia * contact.impulseModifier;
+		angularMove[1] = -contact.penetration * angularInertia[1] * inverseInertia * contact.impulseModifier;
 
 		for(unsigned int i = 0; i < 2; i++)
 		{
@@ -232,7 +232,7 @@ void ContactResolver::resolveInterpenetration(Contact& contact, Vec3 angleChange
 // Incomplete and doesn't seem to work properly. Helps slightly though.
 void ContactResolver::recalcPenetrations(const lt::CollisionData &colData, Vec3 angleChange[2], Vec3 positionChange[2], const Contact& deepestPenetrator)
 {
-	for (int i = 0; i < colData.size - colData.contactsLeft; i++)
+	for (unsigned i = 0; i < colData.size - colData.contactsLeft; i++)
 	{
 		if(&colData.contacts[i] != &deepestPenetrator)
 		{

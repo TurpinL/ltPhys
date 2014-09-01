@@ -55,8 +55,8 @@ float TerrainData::getHeight(lt::Vec3& normal, float x, float z) const
 	float h3 = getHeight((unsigned int)gx+1, (unsigned int)gz  ); // Top Right
 
 	// Calculate the co-ordinate position within the cell.
-	float cx = fmod(gx, 1);
-	float cz = fmod(gz, 1);
+	float cx = fmod(gx, 1.0f);
+	float cz = fmod(gz, 1.0f);
 
 	if(cz > cx)
 	{
@@ -168,7 +168,7 @@ void TerrainData::calcMeshData()
 	// Each set of neighbouring 4 elements of the heightmap will share 2 triangles.
 	// 3 vertices per triangle. 2 * 3 = 6. Hence the 6 in the equation.
 	m_mesh.numIndices = (m_hmLength - 1) * (m_hmWidth - 1) * 6;
-	m_mesh.indices = new GLuint[m_mesh.numIndices];
+	m_mesh.indices = new unsigned int[m_mesh.numIndices];
 
 	// Calculate the distance between each point.
 	float xStride = m_terrainSize.x / (m_hmLength - 1);

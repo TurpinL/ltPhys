@@ -47,7 +47,7 @@ void CollisionRegistry::findContacts()
 
 			// Don't collide if they are the same rigid body, unless they're both null.
 			if(m_registry[i].body != m_registry[j].body ||
-				(m_registry[i].body == nullptr && m_registry[i].body == nullptr))
+				(m_registry[i].body == nullptr && m_registry[j].body == nullptr))
 			{
 				checkCollision(m_registry[i], m_registry[j]);
 			}
@@ -153,38 +153,50 @@ void CollisionRegistry::removeElement(int index)
 void CollisionRegistry::checkCollision(const CollisionRegistration& shapeA, const CollisionRegistration& shapeB)
 {
 	// Get the shape types
-	const ShapeType& shapeAType = shapeA.shape->getShapeType();
-	const ShapeType& shapeBType = shapeB.shape->getShapeType();
+	ShapeType shapeAType = shapeA.shape->getShapeType();
+	ShapeType shapeBType = shapeB.shape->getShapeType();
+	const CollisionRegistration *shape1 = &shapeA;
+	const CollisionRegistration *shape2 = &shapeB;
 
-	//HACK: check Collisions else if thing. Make this a better thing
-	if(shapeAType == SHAPE_SPHERE && shapeBType == SHAPE_SPHERE)
+    //HACK: check Collisions else if thing. Make this a better thing
+	if (shapeAType > shapeBType)
 	{
-		ContactGenerator::sphere_sphere(shapeA, shapeB, &m_collisionData);
+		const CollisionRegistration *tempReg = shape1;
+		shape1 = shape2;
+		shape2 = tempReg;
+		ShapeType tempShape = shapeAType;
+		shapeAType = shapeBType;
+		shapeBType = tempShape;
 	}
-	else if(shapeAType == SHAPE_SPHERE && shapeBType == SHAPE_HALFSPACE)
-	{
-		ContactGenerator::sphere_halfspace(shapeA, shapeB, &m_collisionData);
-	}
+
+    if(shapeAType == SHAPE_SPHERE && shapeBType == SHAPE_SPHERE)
+    {
+        ContactGenerator::sphere_sphere(*shape1, *shape2, &m_collisionData);
+    }
+    else if(shapeAType == SHAPE_SPHERE && shapeBType == SHAPE_HALFSPACE)
+    {
+        ContactGenerator::sphere_halfspace(*shape1, *shape2, &m_collisionData);
+    }
+    else if(shapeAType == SHAPE_SPHERE && shapeBType == SHAPE_TERRAIN)
+    {
+        ContactGenerator::sphere_terrain(*shape1, *shape2, &m_collisionData);
+    }
+    else if(shapeAType == SHAPE_BOX && shapeBType == SHAPE_BOX)
+    {
+        ContactGenerator::box_box(*shape1, *shape2, &m_collisionData);
+    }
 	else if(shapeAType == SHAPE_BOX && shapeBType == SHAPE_HALFSPACE)
-	{
-		ContactGenerator::box_halfspace(shapeA, shapeB, &m_collisionData);
-	}
-	else if(shapeAType == SHAPE_SPHERE && shapeBType == SHAPE_TERRAIN)
-	{
-		ContactGenerator::sphere_terrain(shapeA, shapeB, &m_collisionData);
-	}
-	else if(shapeAType == SHAPE_BOX && shapeBType == SHAPE_TERRAIN)
-	{
-		ContactGenerator::box_terrain(shapeA, shapeB, &m_collisionData);
-	}
-	else if(shapeAType == SHAPE_BOX && shapeBType == SHAPE_BOX)
-	{
-		ContactGenerator::box_box(shapeA, shapeB, &m_collisionData);
-	}
-	else
-	{
-		//std::cout << "CollisionRegistry::Unhandled collision type (" << shapeAType << ", " << shapeBType << ")\n";
-	}
+    {
+        ContactGenerator::box_halfspace(*shape1, *shape2, &m_collisionData);
+    }
+    else if(shapeAType == SHAPE_BOX && shapeBType == SHAPE_TERRAIN)
+    {
+        ContactGenerator::box_terrain(*shape1, *shape2, &m_collisionData);
+    }
+    else
+    {
+        //std::cout << "CollisionRegistry::Unhandled collision type (" << shapeAType << ", " << shapeBType << ")\n";
+    }
 }
 
 

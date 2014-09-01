@@ -35,8 +35,8 @@ void PhysicsDemo::initGL()
 	glEnable(GL_DEPTH_TEST);
 
 	glEnable(GL_LIGHTING);
-		glEnable(GL_LIGHT0);
-		glEnable(GL_COLOR_MATERIAL);
+	glEnable(GL_LIGHT0);
+	glEnable(GL_COLOR_MATERIAL);
 }
 
 void PhysicsDemo::initPhysics()
@@ -44,29 +44,32 @@ void PhysicsDemo::initPhysics()
 	m_gravity.setGravity(-9.8f);
 
 	// Controlled Point
-	m_controlledBody.setPosition(lt::Vec3(0.0f, 3.0f, 2.f));
+	m_boxShapePlayer.setHalfExtents(lt::Vec3(0.35f, 1.1f, 0.35f));
+	m_controlledBody.setPosition(lt::Vec3(1.0f, 3.0f, 2.1f));
 	m_controlledBody.setAngle(lt::Quat());
-	m_controlledBody.setInvMass(0);
+	m_controlledBody.setDamping(0.7f);
+	m_controlledBody.setAngularDamping(0.7f);
+	m_controlledBody.setMass(80.0f);
 	m_controlledBody.setInvInertiaTensor(lt::Vec3());
-	m_controlledBody.setRestitution(0.4f);
+	m_controlledBody.setRestitution(-0.4f);
 
 	// Big Box
-	m_boxShapeLarge.setHalfExtents(lt::Vec3(2.0f, 2.0f, 2.0f));
+	m_boxShapeLarge.setHalfExtents(lt::Vec3(1.5f, 1.35f, 1.5f));
 	m_bodyLarge.setPosition(lt::Vec3(0.0f, 3.0f, 0.0f));
 	m_bodyLarge.setDamping(0.7f);
 	m_bodyLarge.setAngularDamping(0.7f);
 	m_bodyLarge.setRestitution(0.7f);
-	m_bodyLarge.setInvMass(0.1f);
-	m_bodyLarge.setInvInertiaTensor( lt::Vec3(0.3f, 0.3f, 0.3f) );
+	m_bodyLarge.setMass(30.0f);
+	m_bodyLarge.setInertiaTensor( lt::Vec3(50.0f, 56.0f, 50.0f) );
 
 	// Small Box
-	m_boxShapeSmall.setHalfExtents(lt::Vec3(0.5f, 0.5f, 0.5f));
+	m_boxShapeSmall.setHalfExtents(lt::Vec3(0.35f, 0.12f, 0.35f));
 	m_bodySmall.setPosition(lt::Vec3(0.0f, 2.0f, 2.0f));
 	m_bodySmall.setDamping(0.7f);
 	m_bodySmall.setAngularDamping(0.7f);
-	m_bodySmall.setRestitution(0.7f);
-	m_bodySmall.setMass(0.7f);
-	m_bodySmall.setInertiaTensor( lt::Vec3(0.1f, 0.1f, 0.1f) );
+	m_bodySmall.setRestitution(0.1f);
+	m_bodySmall.setMass(0.5f);
+	m_bodySmall.setInertiaTensor( lt::Vec3(0.06f, 0.1f, 0.06f) );
 
 	// Ground Body
 	m_bodyGround.setPosition(lt::Vec3());
@@ -74,11 +77,12 @@ void PhysicsDemo::initPhysics()
 	m_bodyGround.setInvMass(0);
 	m_bodyGround.setInvInertiaTensor( lt::Vec3() );
 
-	m_boxSpringOffset = lt::Vec3(0.0f, 0.5f, 0.0f);
+	m_boxSpringOffset = lt::Vec3(0.0f, 0.12f, 0.0f);
 	m_spring = lt::FGenSpring2(m_boxSpringOffset, &m_controlledBody, lt::Vec3(0.f, 0.f, 0.f), 6.0f, 1.0f, true);
 
 	// Controlled Body
-	world.addRigidBody(&m_controlledBody);
+	world.addRigidBody(&m_controlledBody, &m_boxShapePlayer);
+	world.addForceGenerator(&m_controlledBody, &m_gravity);
 
 	// Small Box
 	world.addRigidBody(&m_bodySmall, &m_boxShapeSmall);

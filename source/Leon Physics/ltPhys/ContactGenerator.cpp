@@ -343,6 +343,7 @@ unsigned int ContactGenerator::box_box(const CollisionRegistration& a, const Col
 		contact.normal = axis;
 		contact.penetration = smallestPen;
 		contact.position = vertex;
+		contact.impulseModifier = 1;
 
 		return 1;
 	}
@@ -528,6 +529,7 @@ unsigned int ContactGenerator::box_terrain(const CollisionRegistration& a, const
 			contact.normal = contactNormal.normalized();
 			contact.penetration = -vertexDistance;
 			contact.position = boxVertex[i] + contact.normal*(contact.penetration*0.5f);
+			contact.impulseModifier = 1;
 
 			// As we're potentially making multiple contacts, check if we have contacts left.
 			if(collisionData->contactsLeft <= 0)

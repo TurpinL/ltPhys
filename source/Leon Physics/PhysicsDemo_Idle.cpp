@@ -10,11 +10,6 @@ void PhysicsDemo::idle()
 
 	Uint8 *keyState = SDL_GetKeyState(NULL);
 
-	if(keyState[SDLK_SPACE])
-	{
-		m_frameTime = 0;
-	}
-
 	SDL_GetMouseState(&m_mouseX, &m_mouseY);
 
 	// Camera rotation
@@ -36,13 +31,17 @@ void PhysicsDemo::idle()
 	float yDelta = (keyState[SDLK_q] - keyState[SDLK_e]) * 6.0f;
 	float zDelta = (keyState[SDLK_s] - keyState[SDLK_w]) * 6.0f;
 	//m_controlledBody.setPosition(m_controlledBody.getPosition() + lt::Vec3(xDelta, yDelta, zDelta));
-	m_controlledBody.setVelocity(lt::Vec3(xDelta, yDelta, zDelta));
+	m_controlledBody.setVelocity(lt::Vec3(xDelta, m_controlledBody.getVelocity().y, zDelta));
+	//m_controlledBody.setVelocity(lt::Vec3(xDelta, yDelta, zDelta));
 
 	// Move stuff
 	lt::Scalar deltaZ = (keyState[SDLK_t] - keyState[SDLK_y]) * 100 * m_frameTime;
 
 	// Physics
-	world.stepSimulation(m_frameTime);
+	if(!keyState[SDLK_SPACE])
+	{
+		world.stepSimulation(m_frameTime);
+	}
 
 	m_lastMouseX = m_mouseX;
 	m_lastMouseY = m_mouseY;

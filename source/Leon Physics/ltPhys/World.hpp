@@ -29,8 +29,6 @@ namespace lt
 class World
 {
 public:
-	bool isOldInterpenetration;
-
 	////////////////////////////////////////////////////////////
 	/// @brief Default Constructor
 	///

@@ -98,7 +98,7 @@ void PhysicsDemo::display()
 		
 		const std::vector<lt::CollisionRegistration> &colRegistry = world.m_collisionRegistry.getCollisionRegistry();
 
-		for(int i = 0; i < colRegistry.size(); i++)
+		for(unsigned int i = 0; i < colRegistry.size(); i++)
 		{
 			const lt::RigidBody &curBody = *colRegistry[i].body;
 			const lt::CollisionShape &curShape = *colRegistry[i].shape;
@@ -213,7 +213,7 @@ void drawMesh(const Mesh &mesh)
 	//};
 		
 	glBegin(GL_TRIANGLES);
-		for (GLuint i = 0; i < mesh.numIndices; i++)
+		for (unsigned int i = 0; i < mesh.numIndices; i++)
 		{
 			GLuint index = mesh.indices[i];
 			//glColor3f(colour[i%3].x, colour[i%3].y, colour[i%3].z);

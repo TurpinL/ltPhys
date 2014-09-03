@@ -122,7 +122,8 @@ const Scalar Quat::getAngle() const
 const Vec3 Quat::getAxis() const
 {
 	// Account for singularity at w = 1
-	if(w > 0.9999 && w < 1.00001)
+	if( (w >  0.9999 && w <  1.00001) ||
+		(w < -0.9999 && w > -1.00001) )
 	{
 		return Vec3(1, 0, 0);
 	}

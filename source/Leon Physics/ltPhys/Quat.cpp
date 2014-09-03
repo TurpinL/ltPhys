@@ -124,6 +124,10 @@ const Vec3 Quat::getAxis() const
 {
 	Scalar commonTerm = (Scalar)sqrt14(1 - w*w);
 	
+	// Account for singularity at w = 1
+	if(w > 0.9999 && w < 1.00001)
+		return Vec3(1, 0, 0);
+	
 	return Vec3(x / commonTerm, y / commonTerm, z / commonTerm);
 }
 

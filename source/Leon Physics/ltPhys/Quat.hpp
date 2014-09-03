@@ -75,8 +75,23 @@ public:
 
 	//const Quat& operator *= (const Scalar rhs);
 	//const Scalar dot(const Quat &rhs) const;
-	//const Scalar length() const;
-	//const Scalar length2() const;
+
+	////////////////////////////////////////////////////////////
+	/// @brief Get the length of the quaternion
+	///
+	/// @return Length of the quaternion
+	/// 
+    ////////////////////////////////////////////////////////////
+	const Scalar length() const;
+
+	////////////////////////////////////////////////////////////
+	/// @brief Get the squared length of the quaternion
+	///
+	/// @return Squared length of the quaternion
+	/// 
+    ////////////////////////////////////////////////////////////
+	const Scalar length2() const;
+
 	//const Scalar angle(const Quat &rhs) const;
 
 	////////////////////////////////////////////////////////////
@@ -100,7 +115,13 @@ public:
 	const Vec3 getAxis() const;
 
 	//const Quat& inverse() const;
-	//void normalize();
+
+	////////////////////////////////////////////////////////////
+	/// @brief Normalize the quaternion. Though a quaternion 
+	/// should never not be normalized, they tend to become 
+	/// unormalized due to floating point inaccuracies.
+    ////////////////////////////////////////////////////////////
+	Quat& normalize();
 
 	Scalar x; ///< X Component
 	Scalar y; ///< Y Component

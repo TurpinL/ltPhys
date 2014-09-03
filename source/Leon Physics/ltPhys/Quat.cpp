@@ -58,7 +58,7 @@ const Quat Quat::operator * (const Quat &rhs) const
 	Scalar tempW = w*rhs.w - xyz.dot(xyzRight);
 	Vec3 temp = xyz.cross(xyzRight) + xyzRight*w + xyz*rhs.w;
 
-	return Quat(temp.x, temp.y, temp.z, tempW);
+	return Quat(temp.x, temp.y, temp.z, tempW).normalize();
 }
 
 //const Quat& Quat::operator += (const Quat &rhs)
@@ -84,6 +84,7 @@ Quat& Quat::operator *= (const Quat &rhs)
 	z = temp.z;
 	w = tempW;
 
+	normalize();
 	return *this;
 }
 
@@ -96,23 +97,21 @@ Quat& Quat::operator *= (const Quat &rhs)
 //{
 //
 //}
-//
-//const Scalar Quat::length() const
-//{
-//
-//}
-//
-//const Scalar Quat::length2() const
-//{
-//
-//}
-//
+
+const Scalar Quat::length() const
+{
+	return (Scalar)sqrt14(length2());
+}
+
+const Scalar Quat::length2() const
+{
+	return x*x + y*y + z*z + w*w;
+}
+
 //const Scalar Quat::angle(const Quat &rhs) const
 //{
 //
 //}
-
-
 
 const Scalar Quat::getAngle() const
 {
@@ -122,12 +121,14 @@ const Scalar Quat::getAngle() const
 
 const Vec3 Quat::getAxis() const
 {
-	Scalar commonTerm = (Scalar)sqrt14(1 - w*w);
-	
 	// Account for singularity at w = 1
 	if(w > 0.9999 && w < 1.00001)
+	{
 		return Vec3(1, 0, 0);
-	
+	}
+
+	Scalar commonTerm = (Scalar)sqrt14(1 - w*w);
+
 	return Vec3(x / commonTerm, y / commonTerm, z / commonTerm);
 }
 
@@ -135,10 +136,20 @@ const Vec3 Quat::getAxis() const
 //{
 //
 //}
-//
-//void normalize()
-//{
-//
-//}
+
+Quat& Quat::normalize()
+{
+	Scalar magnitude = length();
+
+	if (magnitude > 1 || magnitude < 1)
+	{
+		x /= magnitude;
+		y /= magnitude;
+		z /= magnitude;
+		w /= magnitude;
+	}
+
+	return *this;
+}
 
 } // namespace lt

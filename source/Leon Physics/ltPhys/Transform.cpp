@@ -9,14 +9,14 @@ Transform::Transform()
 }
 
 Transform::Transform(const Scalar &a, const Scalar &b, const Scalar &c, const Scalar &d,
-		   const Scalar &e, const Scalar &f, const Scalar &g, const Scalar &h, 
+		   const Scalar &e, const Scalar &f, const Scalar &g, const Scalar &h,
 		   const Scalar &i, const Scalar &j, const Scalar &k, const Scalar &l,
 		   const Scalar &m, const Scalar &n, const Scalar &o, const Scalar &p )
 {
 	m_data[0]  = a; m_data[1]  = b; m_data[2]  = c; m_data[3]  = d;
 	m_data[4]  = e; m_data[5]  = f; m_data[6]  = g; m_data[7]  = h;
 	m_data[8]  = i; m_data[9]  = j; m_data[10] = k; m_data[11] = l;
-	m_data[12] = m; m_data[13] = h; m_data[14] = o; m_data[15] = p;
+	m_data[12] = m; m_data[13] = n; m_data[14] = o; m_data[15] = p;
 }
 
 Transform::Transform(const Vec3 &position, const Quat &orientation)
@@ -45,7 +45,7 @@ Transform& Transform::scale(const Vec3 &xyz)
 	m_data[4] *= xyz.x;
 	m_data[5] *= xyz.y;
 	m_data[6] *= xyz.z;
- 	
+
 	m_data[ 8] *= xyz.x;
 	m_data[ 9] *= xyz.y;
 	m_data[10] *= xyz.z;

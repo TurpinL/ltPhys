@@ -36,11 +36,6 @@ public:
 	static unsigned int sphere_halfspace(const CollisionRegistration& a, const CollisionRegistration& b, CollisionData *collisionData);
 
 	////////////////////////////////////////////////////////////
-	/// @brief Check for contact between a sphere and terrain
-	////////////////////////////////////////////////////////////
-	static unsigned int sphere_terrain(const CollisionRegistration& a, const CollisionRegistration& b, CollisionData *collisionData);
-
-	////////////////////////////////////////////////////////////
 	/// @brief Check for contact between a box and box
 	////////////////////////////////////////////////////////////
 	static unsigned int box_box(const CollisionRegistration& a, const CollisionRegistration& b, CollisionData *collisionData);
@@ -49,11 +44,6 @@ public:
 	/// @brief Check for contact between a box and a halfspace
 	////////////////////////////////////////////////////////////
 	static unsigned int box_halfspace(const CollisionRegistration& a, const CollisionRegistration& b, CollisionData *collisionData);
-
-	////////////////////////////////////////////////////////////
-	/// @brief Check for contact between a box and a terrain
-	////////////////////////////////////////////////////////////
-	static unsigned int box_terrain(const CollisionRegistration& a, const CollisionRegistration& b, CollisionData *collisionData);
 };
 
 } // namespace lt

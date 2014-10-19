@@ -22,6 +22,12 @@ private:
 	lt::ShapeBox m_boxShapePlayer;
 	lt::ShapeHalfspace m_shapeGround;
 
+	lt::CollisionShape *m_tableTop;
+	lt::CollisionShape *m_tableLeg1;
+	lt::CollisionShape *m_tableLeg2;
+	lt::CollisionShape *m_tableLeg3;
+	lt::CollisionShape *m_tableLeg4;
+
 	lt::FGenSpring2 m_spring;
 
 	lt::Vec3 m_boxSpringOffset;
@@ -30,6 +36,7 @@ private:
 	lt::RigidBody m_bodyGround;
 	lt::RigidBody m_bodyLarge;
 	lt::RigidBody m_bodySmall;
+	lt::RigidBody m_table;
 
 	void init();
 		void initSDL();

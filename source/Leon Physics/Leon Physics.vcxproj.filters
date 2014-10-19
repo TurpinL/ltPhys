@@ -63,9 +63,6 @@
     <ClCompile Include="ltPhys\ForceGeneratorRegistry.cpp">
       <Filter>PhysicsDemo\ltPhys\Systems</Filter>
     </ClCompile>
-    <ClCompile Include="ltPhys\CollisionRegistry.cpp">
-      <Filter>PhysicsDemo\ltPhys\Systems</Filter>
-    </ClCompile>
     <ClCompile Include="ltPhys\ContactGenerator.cpp">
       <Filter>PhysicsDemo\ltPhys\Collisions</Filter>
     </ClCompile>
@@ -102,6 +99,9 @@
     <ClCompile Include="ltPhys\FGenSpring.cpp">
       <Filter>PhysicsDemo\ltPhys\Constraints</Filter>
     </ClCompile>
+    <ClCompile Include="ltPhys\CollisionShape.cpp">
+      <Filter>PhysicsDemo\ltPhys\Collisions\Shapes</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="ltPhys.hpp">
@@ -109,9 +109,6 @@
     </ClInclude>
     <ClInclude Include="ltPhys\ForceGenerator.hpp">
       <Filter>PhysicsDemo\ltPhys\Constraints</Filter>
-    </ClInclude>
-    <ClInclude Include="ltPhys\Contact.hpp">
-      <Filter>PhysicsDemo\ltPhys\Collisions</Filter>
     </ClInclude>
     <ClInclude Include="ltPhys\FGenGravity.hpp">
       <Filter>PhysicsDemo\ltPhys\Constraints</Filter>
@@ -138,9 +135,6 @@
       <Filter>PhysicsDemo\ltPhys\Systems</Filter>
     </ClInclude>
     <ClInclude Include="ltPhys\ForceGeneratorRegistry.hpp">
-      <Filter>PhysicsDemo\ltPhys\Systems</Filter>
-    </ClInclude>
-    <ClInclude Include="ltPhys\CollisionRegistry.hpp">
       <Filter>PhysicsDemo\ltPhys\Systems</Filter>
     </ClInclude>
     <ClInclude Include="ltPhys\ContactGenerator.hpp">

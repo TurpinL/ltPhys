@@ -143,6 +143,21 @@ void RigidBody::setInvInertiaTensor(const Mat3& inverseInertiaTensor)
 	_transformInertiaTensor(m_invInertiaTensorWorld, m_invInteriaTensor, m_transform); // Update World Inertia Tensor 
 }
 
+void RigidBody::addCollisionShape(const CollisionShape* colShape)
+{
+	m_collisionShapes.insert(colShape);
+}
+
+void RigidBody::removeCollisionShape(const CollisionShape* colShape)
+{
+	m_collisionShapes.erase(colShape);
+}
+
+int RigidBody::numCollisionShapes() const
+{
+	return m_collisionShapes.size();
+}
+
 //--------------------------
 //	GETS			
 //--------------------------
@@ -160,7 +175,7 @@ const Mat3 RigidBody::getInertiaTensor() const { return m_invInteriaTensor.inver
 const Mat3& RigidBody::getInvInertiaTensor() const { return m_invInteriaTensor; }
 const Mat3& RigidBody::getInvInertiaTensorWorld() const { return m_invInertiaTensorWorld; }
 const Transform& RigidBody::getTransform() const { return m_transform; }
-
+const std::set<const CollisionShape*>& RigidBody::getCollisionShapes() const { return m_collisionShapes; }
 
 //--------------------------
 //	PRIVATES			

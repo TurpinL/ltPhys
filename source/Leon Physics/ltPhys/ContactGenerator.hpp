@@ -1,7 +1,8 @@
 #ifndef LTPHYS_CONTACTGENERATOR_H
 #define LTPHYS_CONTACTGENERATOR_H
 
-#include "Contact.hpp"
+#include <vector>
+
 #include "CollisionShape.hpp"
 #include "ShapeSphere.hpp"
 #include "ShapeHalfspace.hpp"
@@ -10,6 +11,8 @@
 #include "Transform.hpp"
 #include "Vec3.hpp"
 #include "Quat.hpp"
+#include "ContactManifold.hpp"
+#include "ContactPoint.hpp"
 
 namespace lt
 {
@@ -23,27 +26,30 @@ namespace lt
 class ContactGenerator
 {
 public:	
+	static void generateContacts(std::vector<RigidBody*>& rigidBodies, std::vector<ContactManifold>& contactManifolds);
+	static void checkCollision(RigidBody &rbA, RigidBody &rbB, std::vector<ContactManifold>& contactManifolds);
+
 	////////////////////////////////////////////////////////////
 	/// @brief Check for contact between a sphere and a sphere
 	////////////////////////////////////////////////////////////
-	static unsigned int sphere_sphere(const CollisionRegistration& a, const CollisionRegistration& b, CollisionData *collisionData);
+	static void sphere_sphere(const CollisionShape &a, const RigidBody &rbA, const CollisionShape &b, const RigidBody &rbB, ContactManifold &contactManifold);
 
 	//static unsigned int sphere_box(const CollisionRegistration& a, const CollisionRegistration& b, CollisionData *collisionData);
 
 	////////////////////////////////////////////////////////////
 	/// @brief Check for contact between a sphere and a halfspace
 	////////////////////////////////////////////////////////////
-	static unsigned int sphere_halfspace(const CollisionRegistration& a, const CollisionRegistration& b, CollisionData *collisionData);
+	static void sphere_halfspace(const CollisionShape &a, const RigidBody &rbA, const CollisionShape &b, const RigidBody &rbB, ContactManifold &contactManifold);
 
 	////////////////////////////////////////////////////////////
 	/// @brief Check for contact between a box and box
 	////////////////////////////////////////////////////////////
-	static unsigned int box_box(const CollisionRegistration& a, const CollisionRegistration& b, CollisionData *collisionData);
+	static void box_box(const CollisionShape &a, const RigidBody &rbA, const CollisionShape &b, const RigidBody &rbB, ContactManifold &contactManifold);
 
 	////////////////////////////////////////////////////////////
 	/// @brief Check for contact between a box and a halfspace
 	////////////////////////////////////////////////////////////
-	static unsigned int box_halfspace(const CollisionRegistration& a, const CollisionRegistration& b, CollisionData *collisionData);
+	static void box_halfspace(const CollisionShape &a, const RigidBody &rbA, const CollisionShape &b, const RigidBody &rbB, ContactManifold &contactManifold);
 };
 
 } // namespace lt

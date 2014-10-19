@@ -16,10 +16,10 @@
 
 #include "ltPhys\World.hpp"
 
-#include "ltPhys\Contact.hpp"
 #include "ltPhys\ContactGenerator.hpp"
 #include "ltPhys\ContactResolver.hpp"
-#include "ltPhys\CollisionRegistry.hpp"
+#include "ltPhys\ContactManifold.hpp"
+#include "ltPhys\ContactPoint.hpp"
 
 #include "ltPhys\CollisionShape.hpp"
 #include "ltPhys\ShapeSphere.hpp"

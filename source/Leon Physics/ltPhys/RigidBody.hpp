@@ -1,11 +1,14 @@
 #ifndef LTPHYS_RIGIDBODY_H
 #define LTPHYS_RIGIDBODY_H
 
+#include <set>
+
 #include "Scalar.hpp"
 #include "Vec3.hpp"
 #include "Quat.hpp"
 #include "Mat3.hpp"
 #include "Transform.hpp"
+#include "CollisionShape.hpp"
 
 namespace lt
 {
@@ -151,6 +154,10 @@ public:
     ////////////////////////////////////////////////////////////
 	void setInvInertiaTensor(const Mat3& inverseInertiaTensor);
 
+	void addCollisionShape(const CollisionShape* colShape);
+	void removeCollisionShape(const CollisionShape* colShape);
+	int numCollisionShapes() const;
+
 	const Vec3& getPosition() const;
 	const Vec3& getVelocity() const;
 	const Vec3& getAcceleration() const;
@@ -165,6 +172,7 @@ public:
 	const Mat3& getInvInertiaTensor() const;
 	const Mat3& getInvInertiaTensorWorld() const;
 	const Transform& getTransform() const;
+	const std::set<const CollisionShape*>& getCollisionShapes() const;
 
 private:
 	Vec3 m_pos; // Position
@@ -186,6 +194,8 @@ private:
 	Scalar m_damping; // Damping Coefficient.
 	Scalar m_angDamping; // Angular Damping Coefficient
 	Scalar m_restitution; // Coefficient of restitution
+
+	std::set<const CollisionShape*> m_collisionShapes;
 
 	void _clearAccums();
 	void _calcDerivedData();

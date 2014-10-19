@@ -1,6 +1,8 @@
 #ifndef LTPHYS_COLLISIONSHAPE_H
 #define LTPHYS_COLLISIONSHAPE_H
 
+#include "Transform.hpp"
+
 namespace lt
 {
 
@@ -39,6 +41,11 @@ public:
 	///
 	////////////////////////////////////////////////////////////
 	virtual ShapeType getShapeType() const = 0;
+
+	void setOffset(const Transform& offset);
+	const Transform& getOffset() const;
+private:
+	Transform m_offset;
 };
 
 } // namespace lt

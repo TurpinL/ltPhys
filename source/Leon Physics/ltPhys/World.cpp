@@ -8,9 +8,7 @@ namespace lt
 //--------------------------
 
 World::World()
-{
-	m_collisionRegistry.setMaxContacts(1000);
-}
+{}
 
 void World::stepSimulation(const Scalar& timeStep)
 {
@@ -20,23 +18,16 @@ void World::stepSimulation(const Scalar& timeStep)
 	// Move bodies
 	integrateBodies(timeStep);
 
-	// Detect Contacts
-	m_collisionRegistry.findContacts();
-	// Then resolve them
-	contactResolver.resolveContacts(m_collisionRegistry.getCollisionData());
+	// Clear Contacts, generate new ones, then resolve them
+	m_contactManifolds.clear();
+	ContactGenerator::generateContacts(m_rigidBodies, m_contactManifolds);
+	contactResolver.resolveContacts(m_contactManifolds);
 }
 
 void World::addRigidBody(RigidBody* body)
 {
 	// Add the body
 	m_rigidBodies.push_back(body);
-}
-
-void World::addRigidBody(RigidBody* body, CollisionShape* shape, const Transform& offset)
-{
-	addRigidBody(body);
-
-	m_collisionRegistry.add(body, shape, offset);
 }
 
 void World::removeRigidBody(RigidBody* body)
@@ -57,27 +48,6 @@ void World::removeRigidBody(RigidBody* body)
 	}
 }
 
-void World::addCollisionShape(RigidBody* body, CollisionShape* shape, const Transform& offset)
-{
-	m_collisionRegistry.add(body, shape, offset);
-}
-
-void World::removeCollisionShape(RigidBody* body, CollisionShape* shape)
-{
-	m_collisionRegistry.remove(body, shape);
-}
-
-void World::removeCollisionShape(RigidBody* body)
-{
-	m_collisionRegistry.remove(body);
-}
-
-void World::removeCollisionShape(CollisionShape* shape)
-{
-	m_collisionRegistry.remove(shape);
-}
-
-
 void World::addForceGenerator(RigidBody *body, ForceGenerator *forceGenerator)
 {
 	m_forceGenRegistry.add(body, forceGenerator);
@@ -86,6 +56,16 @@ void World::addForceGenerator(RigidBody *body, ForceGenerator *forceGenerator)
 void World::removeForceGenerator(RigidBody *body, ForceGenerator *forceGenerator)
 {
 	m_forceGenRegistry.remove(body, forceGenerator);
+}
+
+const std::vector<RigidBody*>& World::getRigidBodyList()
+{
+	return m_rigidBodies;
+}
+
+const std::vector<ContactManifold>& World::getContactManifolds()
+{
+	return m_contactManifolds;
 }
 
 //--------------------------

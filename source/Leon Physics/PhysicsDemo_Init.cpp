@@ -51,6 +51,35 @@ void PhysicsDemo::initPhysics()
 	m_controlledBody.setMass(80.0f);
 	m_controlledBody.setInvInertiaTensor(lt::Vec3());
 	m_controlledBody.setRestitution(-0.4f);
+	m_controlledBody.addCollisionShape(&m_boxShapePlayer);
+
+	// Table
+	m_tableTop = new lt::ShapeBox(lt::Vec3(3.95f, 0.1f, 1.35f));
+	m_tableTop->setOffset(lt::Transform(lt::Vec3(0.0f, 1.325f, 0.0f), lt::Quat()));
+	
+	m_tableLeg1 = new lt::ShapeBox(lt::Vec3(0.05f, 1.325f, 0.05f));
+	m_tableLeg1->setOffset(lt::Transform(lt::Vec3(3.85f, 0.0f, 1.25f), lt::Quat()));
+	
+	m_tableLeg2 = new lt::ShapeBox(lt::Vec3(0.05f, 1.325f, 0.05f));
+	m_tableLeg2->setOffset(lt::Transform(lt::Vec3(3.85f, 0.0f, -1.25f), lt::Quat()));
+		
+	m_tableLeg3 = new lt::ShapeBox(lt::Vec3(0.05f, 1.325f, 0.05f));
+	m_tableLeg3->setOffset(lt::Transform(lt::Vec3(-3.85f, 0.0f, 1.25f), lt::Quat()));	
+
+	m_tableLeg4 = new lt::ShapeBox(lt::Vec3(0.05f, 1.325f, 0.05f));
+	m_tableLeg4->setOffset(lt::Transform(lt::Vec3(-3.85f, 0.0f, -1.25f), lt::Quat()));
+
+	m_table.setPosition(lt::Vec3(0.0f, 4.0f, 0.0f));
+	m_table.setDamping(0.7f);
+	m_table.setAngularDamping(0.7f);
+	m_table.setRestitution(0.7f);
+	m_table.setMass(30.0f);
+	m_table.setInertiaTensor( lt::Vec3(50.0f, 56.0f, 50.0f) );
+	m_table.addCollisionShape(m_tableTop);
+	m_table.addCollisionShape(m_tableLeg1);
+	m_table.addCollisionShape(m_tableLeg2);
+	m_table.addCollisionShape(m_tableLeg3);
+	m_table.addCollisionShape(m_tableLeg4);
 
 	// Big Box
 	m_boxShapeLarge.setHalfExtents(lt::Vec3(1.5f, 1.35f, 1.5f));
@@ -60,6 +89,7 @@ void PhysicsDemo::initPhysics()
 	m_bodyLarge.setRestitution(0.7f);
 	m_bodyLarge.setMass(30.0f);
 	m_bodyLarge.setInertiaTensor( lt::Vec3(50.0f, 56.0f, 50.0f) );
+	m_bodyLarge.addCollisionShape(&m_boxShapeLarge);
 
 	// Small Box
 	m_boxShapeSmall.setHalfExtents(lt::Vec3(0.35f, 0.12f, 0.35f));
@@ -69,31 +99,37 @@ void PhysicsDemo::initPhysics()
 	m_bodySmall.setRestitution(0.1f);
 	m_bodySmall.setMass(0.5f);
 	m_bodySmall.setInertiaTensor( lt::Vec3(0.06f, 0.1f, 0.06f) );
+	m_bodySmall.addCollisionShape(&m_boxShapeSmall);
 
 	// Ground Body
 	m_bodyGround.setPosition(lt::Vec3());
 	m_bodyGround.setRestitution(0.7f);
 	m_bodyGround.setInvMass(0);
 	m_bodyGround.setInvInertiaTensor( lt::Vec3() );
+	m_bodyGround.addCollisionShape(&m_shapeGround);
 
 	m_boxSpringOffset = lt::Vec3(0.0f, 0.12f, 0.0f);
 	m_spring = lt::FGenSpring2(m_boxSpringOffset, &m_controlledBody, lt::Vec3(0.f, 0.f, 0.f), 6.0f, 1.0f, true);
 
 	// Controlled Body
-	world.addRigidBody(&m_controlledBody, &m_boxShapePlayer);
+	world.addRigidBody(&m_controlledBody);
 	world.addForceGenerator(&m_controlledBody, &m_gravity);
 
+	// Table Body
+	world.addRigidBody(&m_table);
+	world.addForceGenerator(&m_table, &m_gravity);
+
 	// Small Box
-	world.addRigidBody(&m_bodySmall, &m_boxShapeSmall);
+	world.addRigidBody(&m_bodySmall);
 	world.addForceGenerator(&m_bodySmall, &m_gravity);
 	world.addForceGenerator(&m_bodySmall, &m_spring);
 
 	// Large Box
-	world.addRigidBody(&m_bodyLarge, &m_boxShapeLarge);
+	world.addRigidBody(&m_bodyLarge);
 	world.addForceGenerator(&m_bodyLarge, &m_gravity);
 
 	// Ground
-	world.addRigidBody(&m_bodyGround, &m_shapeGround);
+	world.addRigidBody(&m_bodyGround);
 }
 
 const lt::Vec3 inertiaTensorCuboid(const lt::Vec3& dimensions, const lt::Scalar& mass)

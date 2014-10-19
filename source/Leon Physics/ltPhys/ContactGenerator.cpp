@@ -11,36 +11,100 @@ static inline Scalar penetrationOnAxis(const ShapeBox &boxA, const Transform &bo
 static inline bool tryAxis(const ShapeBox &boxA, const Transform &boxATransform, const ShapeBox &boxB, const Transform &boxBTransform, Vec3 axis, const Vec3 &separation, unsigned int index, Scalar &smallestPenetration, unsigned int &smallestCase);
 static inline Vec3 contactPoint(const Vec3 &pOne, const Vec3 &dOne, Scalar sizeOne, const Vec3 &pTwo, const Vec3 &dTwo, Scalar sizeTwo, bool useOne);
 
-void fillPointFaceBoxBox(const ShapeBox &boxA, const Transform &boxATransform, RigidBody *boxABody, const ShapeBox &boxB, const Transform &boxBTransform, RigidBody *boxBBody, const Vec3 &separation, CollisionData *collisionData, unsigned bestPen, Scalar penetration);
+void fillPointFaceBoxBox(const ShapeBox &boxA, const Transform &boxATransform, const RigidBody &boxABody, const ShapeBox &boxB, const Transform &boxBTransform, const RigidBody &boxBBody, const Vec3 &separation, ContactManifold &contactManifold, unsigned bestPen, Scalar penetration);
+static inline Vec3 getShapeAxis(const ShapeBox &box, const Transform &boxTransform, unsigned int index);
+static inline Scalar transformToAxis(const ShapeBox &box, const Transform &boxTransform, const Vec3 &axis);
 
-unsigned int ContactGenerator::sphere_sphere(const CollisionRegistration& a, const CollisionRegistration& b, CollisionData *collisionData)
+void ContactGenerator::generateContacts(std::vector<RigidBody*>& rigidBodies, std::vector<ContactManifold>& contactManifolds)
+{
+	// For each rigid body with each other rigid body
+	for(unsigned int i = 0; i < rigidBodies.size(); i++)
+	{
+		if(rigidBodies[i]->numCollisionShapes() != 0)
+		{
+			for (unsigned int j = i+1; j < rigidBodies.size(); j++)
+			{
+				if(rigidBodies[j]->numCollisionShapes() != 0)
+				{
+					checkCollision(*rigidBodies[i], *rigidBodies[j], contactManifolds);
+				}
+			}
+		}
+	}
+}
+
+void ContactGenerator::checkCollision(RigidBody &rbA, RigidBody &rbB, std::vector<ContactManifold>& contactManifolds)
+{
+	const std::set<const CollisionShape*>& colShapesA = rbA.getCollisionShapes();
+	const std::set<const CollisionShape*>& colShapesB = rbB.getCollisionShapes();
+
+	std::set<const CollisionShape*>::iterator i;
+	std::set<const CollisionShape*>::iterator j;
+	for (i = colShapesA.begin(); i != colShapesA.end(); ++i)
+	{
+		for (j = colShapesB.begin(); j != colShapesB.end(); ++j)
+		{
+			// Get shape types
+			ShapeType shapeAType = (*i)->getShapeType();
+			ShapeType shapeBType = (*j)->getShapeType();
+			const CollisionShape *shape1 = *i;
+			const CollisionShape *shape2 = *j;
+
+			if (shapeAType > shapeBType)
+			{
+				const CollisionShape *tempReg = shape1;
+				shape1 = shape2;
+				shape2 = tempReg;
+				ShapeType tempShape = shapeAType;
+				shapeAType = shapeBType;
+				shapeBType = tempShape;
+			}
+
+			ContactManifold manifold(rbA, rbB);
+
+			//HACK: check Collisions else if thing. Make this a better thing
+			if(shapeAType == SHAPE_SPHERE && shapeBType == SHAPE_SPHERE)
+			{
+				ContactGenerator::sphere_sphere(*shape1, rbA, *shape2, rbB, manifold);
+			}
+			else if(shapeAType == SHAPE_SPHERE && shapeBType == SHAPE_HALFSPACE)
+			{
+				ContactGenerator::sphere_halfspace(*shape1, rbA, *shape2, rbB, manifold);
+			}
+			else if(shapeAType == SHAPE_BOX && shapeBType == SHAPE_BOX)
+			{
+				ContactGenerator::box_box(*shape1, rbA, *shape2, rbB, manifold);
+			}
+			else if(shapeAType == SHAPE_BOX && shapeBType == SHAPE_HALFSPACE)
+			{
+				ContactGenerator::box_halfspace(*shape1, rbA, *shape2, rbB, manifold);
+			}
+			else
+			{
+				//std::cout << "CollisionRegistry::Unhandled collision type (" << shapeAType << ", " << shapeBType << ")\n";
+			}
+
+			if(manifold.getNumContacts() > 0)
+			{
+				contactManifolds.push_back(manifold);
+			}
+		}
+	}
+}
+
+void ContactGenerator::sphere_sphere(const CollisionShape &a, const RigidBody &rbA, const CollisionShape &b, const RigidBody &rbB, ContactManifold &contactManifold)
 {
 	// Make sure we have contacts left and Check if they're spheres.
-	if (collisionData->contactsLeft <= 0 ||
-	   a.shape->getShapeType() != SHAPE_SPHERE || 
-	   b.shape->getShapeType() != SHAPE_SPHERE ) 
-	{
-		return 0;		
-	}
-
+	if ( a.getShapeType() != SHAPE_SPHERE || b.getShapeType() != SHAPE_SPHERE ) { return; }
+	
 	//  then typecast their shape to a sphere
-	const ShapeSphere& shapeA = *(ShapeSphere*)a.shape;
-	const ShapeSphere& shapeB = *(ShapeSphere*)b.shape;
+	const ShapeSphere& shapeA = (const ShapeSphere&)a;
+	const ShapeSphere& shapeB = (const ShapeSphere&)b;
 
 	// Get the sphere positions
-	Vec3 posA = a.offset.getPosition();
-	Vec3 posB = b.offset.getPosition();
+	Vec3 posA = a.getOffset().getPosition() + rbA.getPosition();
+	Vec3 posB = b.getOffset().getPosition() + rbB.getPosition();
 
-	if (a.body != nullptr)
-	{
-		posA += a.body->getTransform().getPosition();
-	}
-
-	if (b.body != nullptr)
-	{
-		posB += b.body->getTransform().getPosition();
-	}
-	
 	// Find the vector between the two object
 	Vec3 midLine = posA - posB;
 	Scalar distance = midLine.length();
@@ -48,64 +112,32 @@ unsigned int ContactGenerator::sphere_sphere(const CollisionRegistration& a, con
 	// Check for collision
 	if (distance <= 0.0f || distance >= shapeA.getRadius() + shapeB.getRadius())
 	{
-		return 0;
+		return;
 	}
 
-	Contact& contact = collisionData->contacts[collisionData->size - collisionData->contactsLeft];
-	collisionData->contactsLeft--;
+	// Create contact data
+	ContactPoint newContact;
 
-	// Manually normalize the midLine, so the Vec3 class doesn't have to recalculate the length.
-	contact.normal = midLine * ( ((Scalar)1.0) / distance );
-	contact.position = posA + (midLine * (Scalar)-0.5);
-	contact.penetration = (shapeA.getRadius() + shapeA.getRadius() - distance);
-	contact.impulseModifier = 1;
-	contact.body[0] = a.body;
-	contact.body[1] = b.body;
-	
-	return 1;
+	newContact.normal = midLine * ( ((Scalar)1.0) / distance );
+	newContact.position = posA + (midLine * (Scalar)-0.5);
+	newContact.penetration = (shapeA.getRadius() + shapeA.getRadius() - distance);
+
+	contactManifold.addContactPoint(newContact);
 }
 
-//unsigned int ContactGenerator::sphere_box(const CollisionRegistration& a, const CollisionRegistration& b, CollisionData *collisionData)
-//{
-//	// Make sure we have contacts left and Check if they're the right shapes.
-//	if (collisionData->contactsLeft <= 0 ||
-//	   a.shape->getShapeType() != SHAPE_SPHERE || 
-//	   b.shape->getShapeType() != SHAPE_BOX ) 
-//	{
-//		return 0;		
-//	}
-//
-//}
-//
-unsigned int ContactGenerator::sphere_halfspace(const CollisionRegistration& a, const CollisionRegistration& b, CollisionData *collisionData)
+void ContactGenerator::sphere_halfspace(const CollisionShape &a, const RigidBody &rbA, const CollisionShape &b, const RigidBody &rbB, ContactManifold &contactManifold)
 {
 	// Make sure we have contacts left and Check if they're the right shapes.
-	if (collisionData->contactsLeft <= 0 ||
-	   a.shape->getShapeType() != SHAPE_SPHERE || 
-	   b.shape->getShapeType() != SHAPE_HALFSPACE ) 
-	{
-		return 0;		
-	}
+	if ( a.getShapeType() != SHAPE_SPHERE || b.getShapeType() != SHAPE_HALFSPACE ) { return; }
 
 	// then typecast their appropriate shapes
-	const ShapeSphere& sphere = *(ShapeSphere*)a.shape;
-	const ShapeHalfspace& halfspace = *(ShapeHalfspace*)b.shape;
+	const ShapeSphere& sphere = (const ShapeSphere&)a;
+	const ShapeHalfspace& halfspace = (const ShapeHalfspace&)b;
 
 	// Get the positions and halfspace normal
-	Vec3 posSphere = a.offset.getPosition();
-	Vec3 posHalfspace = b.offset.getPosition();
-	Vec3 normHalfspace = b.offset * Vec3(0.f, 1.f, 0.f, 0.f);
-
-	if (a.body != nullptr)
-	{
-		posSphere += a.body->getTransform().getPosition();
-	}
-
-	if (b.body != nullptr)
-	{
-		posHalfspace += b.body->getTransform().getPosition();
-		normHalfspace = b.body->getTransform() * normHalfspace;
-	}
+	Vec3 posSphere = a.getOffset().getPosition() + rbA.getTransform().getPosition();
+	Vec3 posHalfspace = a.getOffset().getPosition() + rbB.getTransform().getPosition();;
+	Vec3 normHalfspace = rbB.getTransform() * b.getOffset() * Vec3(0.f, 1.f, 0.f, 0.f);
 
 	// Find the distance from the plane to the sphere
 	Scalar distance = normHalfspace.dot(posSphere) - sphere.getRadius() - (posHalfspace).y;
@@ -113,57 +145,37 @@ unsigned int ContactGenerator::sphere_halfspace(const CollisionRegistration& a, 
 	// Check collision
 	if(distance < 0)
 	{
-		// Create the contact
-		Contact& contact = collisionData->contacts[collisionData->size - collisionData->contactsLeft];
-		collisionData->contactsLeft--;
+		// Create contact data
+		ContactPoint newContact;
 
-		contact.body[0] = a.body;
-		contact.body[1] = b.body;
-		contact.normal = normHalfspace;
-		contact.penetration = -distance;
-		contact.impulseModifier = 1;
-		contact.position = posSphere + -contact.normal*(sphere.getRadius() - contact.penetration/2);
+		newContact.normal = normHalfspace;
+		newContact.position = posSphere + -newContact.normal*(sphere.getRadius() - newContact.penetration/2);
+		newContact.penetration = -distance;
 
-		return 1;
+		contactManifold.addContactPoint(newContact);
 	}
 
-	return 0;
+	return;
 }
 
-unsigned int ContactGenerator::box_box(const CollisionRegistration& a, const CollisionRegistration& b, CollisionData *collisionData)
+void ContactGenerator::box_box(const CollisionShape &a, const RigidBody &rbA, const CollisionShape &b, const RigidBody &rbB, ContactManifold &contactManifold)
 {
-	// Make sure we have contacts left and Check if they're the right shapes.
-	if (collisionData->contactsLeft <= 0 ||
-	   a.shape->getShapeType() != SHAPE_BOX || 
-	   b.shape->getShapeType() != SHAPE_BOX ) 
-	{
-		return 0;		
-	}
+	// Make sure we have contacts left and Check if they're boxes.
+	if ( a.getShapeType() != SHAPE_BOX || b.getShapeType() != SHAPE_BOX ) { return; }
 
 	// then typecast their appropriate shapes
-	const ShapeBox& boxA = *(ShapeBox*)a.shape;
-	const ShapeBox& boxB = *(ShapeBox*)b.shape;
+	const ShapeBox& boxA = (const ShapeBox&)a;
+	const ShapeBox& boxB = (const ShapeBox&)b;
 
 	const Vec3& boxAHalfExtents = boxA.getHalfExtents();
 	const Vec3& boxBHalfExtents = boxB.getHalfExtents();
 
-	Transform& boxATransform = Transform::Identity();
-	Transform& boxBTransform = Transform::Identity();
+	Transform boxATransform = rbA.getTransform() * a.getOffset();
+	Transform boxBTransform = rbB.getTransform() * b.getOffset();
 
 	// Vector between box centres.
-	Vec3 separation = Vec3();
-
-	if(a.body != nullptr)
-	{
-		separation -= a.body->getPosition();
-		boxATransform =  a.body->getTransform();
-	} 
-
-	if(b.body != nullptr)
-	{
-		separation += b.body->getPosition();
-		boxBTransform =  b.body->getTransform();
-	}
+	Vec3 separation = ( rbB.getPosition() + b.getOffset().getPosition() ) - 
+					  ( rbA.getPosition() + a.getOffset().getPosition() );
 
 	Scalar smallestPen = SCALAR_MAX;
 	unsigned int bestPen = 0xffffffff;
@@ -178,7 +190,7 @@ unsigned int ContactGenerator::box_box(const CollisionRegistration& a, const Col
         !tryAxis(boxA, boxATransform, boxB, boxBTransform, boxBTransform.getAxisVector(1), separation, 4, smallestPen, bestPen) ||
         !tryAxis(boxA, boxATransform, boxB, boxBTransform, boxBTransform.getAxisVector(2), separation, 5, smallestPen, bestPen) )
 	{
-		return 0;
+		return;
 	}
 
 	unsigned bestSingleAxis = bestPen;
@@ -195,7 +207,7 @@ unsigned int ContactGenerator::box_box(const CollisionRegistration& a, const Col
         !tryAxis(boxA, boxATransform, boxB, boxBTransform, boxATransform.getAxisVector(2).cross(boxBTransform.getAxisVector(1)), separation, 13, smallestPen, bestPen) ||
         !tryAxis(boxA, boxATransform, boxB, boxBTransform, boxATransform.getAxisVector(2).cross(boxBTransform.getAxisVector(2)), separation, 14, smallestPen, bestPen) )
 	{
-		return 0;
+		return;
 	}
 
 	// We've found a collision, and we know which of the axes gave the smallest penetration.
@@ -204,16 +216,16 @@ unsigned int ContactGenerator::box_box(const CollisionRegistration& a, const Col
 		// Vertex of boxB in face of boxA
 		// TODO: Do stuff
 		//std::cout << bestPen << " Vertex of boxB in face of boxA\n";
-		fillPointFaceBoxBox(boxA, boxATransform, a.body, boxB, boxBTransform, b.body, separation, collisionData, bestPen, smallestPen);
-		return 1;
+		fillPointFaceBoxBox(boxA, boxATransform, rbA, boxB, boxBTransform, rbB, separation, contactManifold, bestPen, smallestPen);
+		return;
 	}
 	else if (bestPen < 6)
 	{
 		// Vertex of boxA in face of boxB
 		// TODO: Do stuff
 		//std::cout << bestPen << " Vertex of boxA in face of boxB\n";
-		fillPointFaceBoxBox(boxB, boxBTransform, b.body, boxA, boxATransform, a.body, -separation, collisionData, bestPen-3, smallestPen);
-		return 1;
+		fillPointFaceBoxBox(boxB, boxBTransform, rbB, boxA, boxATransform, rbA, -separation, contactManifold, bestPen-3, smallestPen);
+		return;
 	}
 	else
 	{
@@ -268,36 +280,28 @@ unsigned int ContactGenerator::box_box(const CollisionRegistration& a, const Col
 		// line-segments.
 		Vec3 vertex = contactPoint(ptOnEdgeA, axisA, boxAHalfExtents.get(axisIndexA), ptOnEdgeB, axisB, boxBHalfExtents.get(axisIndexB), bestSingleAxis > 2);
 
+
 		// Create contact data
-		Contact& contact = collisionData->contacts[collisionData->size - collisionData->contactsLeft];
-		collisionData->contactsLeft--;
-
-		contact.body[0] = a.body;
-		contact.body[1] = b.body;
-		contact.normal = axis;
-		contact.penetration = smallestPen;
-		contact.position = vertex;
-		contact.impulseModifier = 1;
-
-		return 1;
+		ContactPoint newContact;
+		
+		newContact.normal = axis;
+		newContact.penetration = smallestPen;
+		newContact.position = vertex;
+		
+		contactManifold.addContactPoint(newContact);
 	}
 
-	return 0;
+	return;
 }
 
-unsigned int ContactGenerator::box_halfspace(const CollisionRegistration& a, const CollisionRegistration& b, CollisionData *collisionData)
+void ContactGenerator::box_halfspace(const CollisionShape &a, const RigidBody &rbA, const CollisionShape &b, const RigidBody &rbB, ContactManifold &contactManifold)
 {
 	// Make sure we have contacts left and Check if they're the right shapes.
-	if (collisionData->contactsLeft <= 0 ||
-	   a.shape->getShapeType() != SHAPE_BOX || 
-	   b.shape->getShapeType() != SHAPE_HALFSPACE ) 
-	{
-		return 0;		
-	}
+	if (a.getShapeType() != SHAPE_BOX || b.getShapeType() != SHAPE_HALFSPACE ) { return; }
 
 	// then typecast their appropriate shapes
-	const ShapeBox& box = *(ShapeBox*)a.shape;
-	const ShapeHalfspace& halfspace = *(ShapeHalfspace*)b.shape;
+	const ShapeBox& box = (const ShapeBox&)a;
+	const ShapeHalfspace& halfspace = (const ShapeHalfspace&)b;
 
 	const Vec3& boxHalfExtents = box.getHalfExtents();
 
@@ -314,32 +318,17 @@ unsigned int ContactGenerator::box_halfspace(const CollisionRegistration& a, con
 		Vec3(+boxHalfExtents.x, +boxHalfExtents.y, +boxHalfExtents.z),
 	};
 
+	const Transform& boxTransform = rbA.getTransform();
+
 	// Apply collision object offset
 	for (int i = 0; i < 8; i++)
 	{
-		boxVertex[i] = a.offset * boxVertex[i];
-	}
-
-	// Apply attatched rigid body's offset.
-	if (a.body != nullptr)
-	{
-		const Transform& boxTransform = a.body->getTransform();
-
-		for (int i = 0; i < 8; i++)
-		{
-			boxVertex[i] = boxTransform * boxVertex[i];
-		}
+		boxVertex[i] = boxTransform * a.getOffset() * boxVertex[i];
 	}
 
 	// Calculate halfspace's position and normal
-	Vec3 posHalfspace = b.offset.getPosition();
-	Vec3 normHalfspace = b.offset * Vec3(0.f, 1.f, 0.f, 0.f);
-
-	if (b.body != nullptr)
-	{
-		posHalfspace += b.body->getTransform().getPosition();
-		normHalfspace = b.body->getTransform() * normHalfspace;
-	}
+	Vec3 posHalfspace = b.getOffset().getPosition() + rbB.getPosition();
+	Vec3 normHalfspace = rbB.getTransform() * b.getOffset() * Vec3(0.f, 1.f, 0.f, 0.f);
 
 	// Check each vertice for intersection with the halfspace
 	Scalar vertexDistance;
@@ -353,33 +342,42 @@ unsigned int ContactGenerator::box_halfspace(const CollisionRegistration& a, con
 		if(vertexDistance <= 0)
 		{
 			// Create contact data
-			Contact& contact = collisionData->contacts[collisionData->size - collisionData->contactsLeft];
-			collisionData->contactsLeft--;
-			numContacts++;
+			ContactPoint newContact;
 
-			contact.body[0] = a.body;
-			contact.body[1] = b.body;
-			contact.normal = normHalfspace;
-			contact.penetration = -vertexDistance;
-			contact.position = boxVertex[i] + contact.normal*(contact.penetration*0.5f);
+			newContact.normal = normHalfspace;
+			newContact.penetration = -vertexDistance;
+			newContact.position = boxVertex[i] + newContact.normal*(newContact.penetration*0.5f);
 
-			// As we're potentially making multiple contacts, check if we have contacts left.
-			if(collisionData->contactsLeft <= 0)
-			{
-				break;
-			}
+			contactManifold.addContactPoint(newContact);
 		}
 	}
 
-	// Set the contact's impulseModifier now that we know how many contacts exist
-	Scalar impulseModifier = (Scalar)1 / numContacts;
+	return;
+}
 
-	for(unsigned int i = 0; i < numContacts; i++)
+void fillPointFaceBoxBox(const ShapeBox &boxA, const Transform &boxATransform, const RigidBody &boxABody, 
+						 const ShapeBox &boxB, const Transform &boxBTransform, const RigidBody &boxBBody, 
+						 const Vec3 &separation, ContactManifold &contactManifold, unsigned bestPen, Scalar penetration)
+{
+	Vec3 normal = getShapeAxis(boxA, boxATransform, bestPen);
+	if (getShapeAxis(boxA, boxATransform, bestPen).dot(separation) > 0)
 	{
-		collisionData->contacts[collisionData->size - collisionData->contactsLeft - i - 1].impulseModifier = impulseModifier;
+		normal = -normal;
 	}
 
-	return numContacts;
+	Vec3 vertex = boxB.getHalfExtents();
+	if (getShapeAxis(boxB, boxBTransform, 0).dot(normal) < 0) { vertex.x = -vertex.x; }
+	if (getShapeAxis(boxB, boxBTransform, 1).dot(normal) < 0) { vertex.y = -vertex.y; }
+	if (getShapeAxis(boxB, boxBTransform, 2).dot(normal) < 0) { vertex.z = -vertex.z; }
+
+	// Create contact data
+	ContactPoint newContact;
+
+	newContact.normal = normal;
+	newContact.penetration = penetration;
+	newContact.position = boxBTransform * vertex - (normal * penetration * 0.5);
+
+	contactManifold.addContactPoint(newContact);
 }
 
 static inline Vec3 getShapeAxis(const ShapeBox &box, const Transform &boxTransform, unsigned int index)
@@ -471,33 +469,6 @@ static inline Vec3 contactPoint(const Vec3 &pOne, const Vec3 &dOne, Scalar sizeO
 
 		return cOne * 0.5f + cTwo * 0.5f; 
 	}
-}
-
-
-void fillPointFaceBoxBox(const ShapeBox &boxA, const Transform &boxATransform, RigidBody *boxABody,
-	const ShapeBox &boxB, const Transform &boxBTransform, RigidBody *boxBBody,
-	const Vec3 &separation, CollisionData *collisionData, unsigned bestPen, Scalar penetration)
-{
-	Vec3 normal = getShapeAxis(boxA, boxATransform, bestPen);
-	if (getShapeAxis(boxA, boxATransform, bestPen).dot(separation) > 0)
-	{
-		normal = -normal;
-	}
-
-	Vec3 vertex = boxB.getHalfExtents();
-	if (getShapeAxis(boxB, boxBTransform, 0).dot(normal) < 0) { vertex.x = -vertex.x; }
-	if (getShapeAxis(boxB, boxBTransform, 1).dot(normal) < 0) { vertex.y = -vertex.y; }
-	if (getShapeAxis(boxB, boxBTransform, 2).dot(normal) < 0) { vertex.z = -vertex.z; }
-
-	// Create contact data
-	Contact& contact = collisionData->contacts[collisionData->size - collisionData->contactsLeft];
-	collisionData->contactsLeft--;
-
-	contact.body[0] = boxABody;
-	contact.body[1] = boxBBody;
-	contact.normal = normal;
-	contact.penetration = penetration;
-	contact.position = boxBTransform * vertex - (normal * penetration * 0.5);
 }
 
 } // namespace lt

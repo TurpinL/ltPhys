@@ -1,8 +1,9 @@
 #ifndef LTPHYS_CONTACTRESOLVER_H
 #define LTPHYS_CONTACTRESOLVER_H
 
-#include "Contact.hpp"
+#include "ContactManifold.hpp"
 #include <list>
+#include <vector>
 
 namespace lt
 {
@@ -33,14 +34,12 @@ public:
 	/// @param colData List of collisions to resolve.
 	///
 	////////////////////////////////////////////////////////////			
-	void resolveContacts(const lt::CollisionData &colData);
+	void resolveContacts(std::vector<ContactManifold> &contactManifolds);
 private:
-	void resolveMotion(const Contact& contact, std::list<CollisionResponse> &collisionResponseRegistry);
-	void calcImpulse(const Contact& contact, std::list<CollisionResponse> &collisionResponseRegistry);
-	void resolveAllInterpenetrations(const lt::CollisionData &colData);
-	void resolveInterpenetration(Contact& contact, Vec3 angleChange[2], Vec3 positionChange[2]);
-	void recalcPenetrations(const lt::CollisionData &colData, Vec3 angleChange[2], Vec3 positionChange[2], const Contact& deepestPenetrator);
-
+	void resolveMotion(ContactManifold& manifold, std::list<CollisionResponse> &collisionResponseRegistry);
+	void calcImpulse(ContactManifold& contact, std::list<CollisionResponse> &collisionResponseRegistry);
+	void resolveAllInterpenetrations(std::vector<ContactManifold> &contactManifolds);
+	void resolveInterpenetration(ContactManifold& manifold);
 };
 
 } // namespace lt

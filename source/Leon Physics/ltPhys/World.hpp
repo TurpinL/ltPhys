@@ -6,10 +6,11 @@
 #include "Vec3.hpp"
 #include "Scalar.hpp"
 #include "RigidBody.hpp"
-#include "CollisionRegistry.hpp"
+#include "ContactGenerator.hpp"
 #include "CollisionShape.hpp"
 #include "ForceGeneratorRegistry.hpp"
 #include "ContactResolver.hpp"
+#include "ContactManifold.hpp"
 
 namespace lt
 {
@@ -52,18 +53,6 @@ public:
 	///
 	////////////////////////////////////////////////////////////
 	void addRigidBody(RigidBody* body);
-
-	////////////////////////////////////////////////////////////
-	/// @brief Registers a rigid body with a collision shape
-	///
-	/// @param body Rigid body to add to the world
-	/// @param shape Collision shape to associate with the
-	/// rigid body
-	/// @param offset The offset of the collision shape
-	/// from the rigid body.
-	///
-	////////////////////////////////////////////////////////////
-	void addRigidBody(RigidBody* body, CollisionShape* shape, const Transform& offset = Transform::Identity());
 	
 	////////////////////////////////////////////////////////////
 	/// @brief Removes a rigid body from the world.
@@ -72,46 +61,6 @@ public:
 	///
 	////////////////////////////////////////////////////////////	
 	void removeRigidBody(RigidBody* body);
-
-
-	////////////////////////////////////////////////////////////	
-	/// @brief Registers a collision shape to a rigid body
-	///
-	/// @param body Rigid body to add to the world
-	/// @param shape Collision shape to associate with the
-	/// rigid body
-	/// @param offset The offset of the collision shape
-	/// from the rigid body.
-	///
-	////////////////////////////////////////////////////////////	
-	void addCollisionShape(RigidBody* body, CollisionShape* shape, const Transform& offset = Transform::Identity());
-	
-	////////////////////////////////////////////////////////////	
-	/// @brief Removes a collision shape from a rigid body.
-	///
-	/// @param body Rigid body that contains this collision shape
-	/// @param shape Collision shape to remove from the body
-	///
-	////////////////////////////////////////////////////////////		
-	void removeCollisionShape(RigidBody* body, CollisionShape* shape);
-
-	////////////////////////////////////////////////////////////	
-	/// @brief Removes all collision shapes from a given 
-	/// rigid body.
-	///
-	/// @param body Rigid body to remove collision shapes from.
-	///
-	////////////////////////////////////////////////////////////		
-	void removeCollisionShape(RigidBody* body);
-
-	////////////////////////////////////////////////////////////		
-	/// @brief Removes all instances of givin collision shape
-	/// from the world.
-	///
-	/// @param shape Collision shape to remove
-	///
-	////////////////////////////////////////////////////////////		
-	void removeCollisionShape(CollisionShape* shape);
 
 	////////////////////////////////////////////////////////////		
 	/// @brief Add a force generator to the world.
@@ -133,16 +82,14 @@ public:
 	////////////////////////////////////////////////////////////		
 	void removeForceGenerator(RigidBody *body, ForceGenerator *forceGenerator);
 
-	////////////////////////////////////////////////////////////
-	/// @brief This is only public for debugging porpoises.
-	/// Should definitely be changed to private sometime.
-	////////////////////////////////////////////////////////////		
-	CollisionRegistry m_collisionRegistry;
+	const std::vector<RigidBody*>& getRigidBodyList();
+	const std::vector<ContactManifold>& World::getContactManifolds();	
 
 private:
 	std::vector<RigidBody*> m_rigidBodies;
 	ForceGeneratorRegistry m_forceGenRegistry;
 	ContactResolver contactResolver;
+	std::vector<ContactManifold> m_contactManifolds;
 
 	void integrateBodies(const Scalar& timeStep);
 };

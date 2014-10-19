@@ -77,7 +77,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="ltPhys\CollisionRegistry.cpp" />
+    <ClCompile Include="ltPhys\CollisionShape.cpp" />
     <ClCompile Include="ltPhys\ContactGenerator.cpp" />
     <ClCompile Include="ltPhys\ContactManifold.cpp" />
     <ClCompile Include="ltPhys\ContactResolver.cpp" />
@@ -102,9 +102,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="ltPhys.hpp" />
-    <ClInclude Include="ltPhys\CollisionRegistry.hpp" />
     <ClInclude Include="ltPhys\CollisionShape.hpp" />
-    <ClInclude Include="ltPhys\Contact.hpp" />
     <ClInclude Include="ltPhys\ContactGenerator.hpp" />
     <ClInclude Include="ltPhys\ContactManifold.hpp" />
     <ClInclude Include="ltPhys\ContactPoint.hpp" />

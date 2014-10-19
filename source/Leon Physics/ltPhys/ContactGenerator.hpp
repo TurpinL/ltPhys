@@ -6,7 +6,6 @@
 #include "ShapeSphere.hpp"
 #include "ShapeHalfspace.hpp"
 #include "ShapeBox.hpp"
-#include "ShapeTerrain.hpp"
 #include "Scalar.hpp"
 #include "Transform.hpp"
 #include "Vec3.hpp"

@@ -42,12 +42,6 @@
     <ClCompile Include="ltPhys\FGenGravity.cpp">
       <Filter>PhysicsDemo\ltPhys\Constraints</Filter>
     </ClCompile>
-    <ClCompile Include="ltPhys\FGenSpring.cpp">
-      <Filter>PhysicsDemo\ltPhys\Constraints</Filter>
-    </ClCompile>
-    <ClCompile Include="ltPhys\FGenSpring2.cpp">
-      <Filter>PhysicsDemo\ltPhys\Constraints</Filter>
-    </ClCompile>
     <ClCompile Include="ltPhys\Mat3.cpp">
       <Filter>PhysicsDemo\ltPhys\Math</Filter>
     </ClCompile>
@@ -87,9 +81,6 @@
     <ClCompile Include="PhysicsDemo_Init.cpp">
       <Filter>PhysicsDemo</Filter>
     </ClCompile>
-    <ClCompile Include="HeightmapFunctions.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="ltPhys\ContactResolver.cpp">
       <Filter>PhysicsDemo\ltPhys\Collisions</Filter>
     </ClCompile>
@@ -102,14 +93,14 @@
     <ClCompile Include="ltPhys\ShapeSphere.cpp">
       <Filter>PhysicsDemo\ltPhys\Collisions\Shapes</Filter>
     </ClCompile>
-    <ClCompile Include="ltPhys\ShapeTerrain.cpp">
-      <Filter>PhysicsDemo\ltPhys\Collisions\Shapes</Filter>
-    </ClCompile>
-    <ClCompile Include="ltPhys\TerrainData.cpp">
-      <Filter>PhysicsDemo\ltPhys</Filter>
-    </ClCompile>
     <ClCompile Include="PhysicsDemo.cpp">
       <Filter>PhysicsDemo</Filter>
+    </ClCompile>
+    <ClCompile Include="ltPhys\ContactManifold.cpp">
+      <Filter>PhysicsDemo\ltPhys\Collisions</Filter>
+    </ClCompile>
+    <ClCompile Include="ltPhys\FGenSpring.cpp">
+      <Filter>PhysicsDemo\ltPhys\Constraints</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -123,12 +114,6 @@
       <Filter>PhysicsDemo\ltPhys\Collisions</Filter>
     </ClInclude>
     <ClInclude Include="ltPhys\FGenGravity.hpp">
-      <Filter>PhysicsDemo\ltPhys\Constraints</Filter>
-    </ClInclude>
-    <ClInclude Include="ltPhys\FGenSpring.hpp">
-      <Filter>PhysicsDemo\ltPhys\Constraints</Filter>
-    </ClInclude>
-    <ClInclude Include="ltPhys\FGenSpring2.hpp">
       <Filter>PhysicsDemo\ltPhys\Constraints</Filter>
     </ClInclude>
     <ClInclude Include="ltPhys\Quat.hpp">
@@ -164,17 +149,8 @@
     <ClInclude Include="PhysicsDemo.hpp">
       <Filter>PhysicsDemo</Filter>
     </ClInclude>
-    <ClInclude Include="ltPhys\Mesh.hpp">
-      <Filter>PhysicsDemo\ltPhys</Filter>
-    </ClInclude>
-    <ClInclude Include="HeightmapFunctions.hpp">
-      <Filter>Source Files</Filter>
-    </ClInclude>
     <ClInclude Include="ltPhys\ContactResolver.hpp">
       <Filter>PhysicsDemo\ltPhys\Collisions</Filter>
-    </ClInclude>
-    <ClInclude Include="ltPhys\ShapeTerrain.hpp">
-      <Filter>PhysicsDemo\ltPhys\Collisions\Shapes</Filter>
     </ClInclude>
     <ClInclude Include="ltPhys\ShapeBox.hpp">
       <Filter>PhysicsDemo\ltPhys\Collisions\Shapes</Filter>
@@ -185,11 +161,17 @@
     <ClInclude Include="ltPhys\ShapeSphere.hpp">
       <Filter>PhysicsDemo\ltPhys\Collisions\Shapes</Filter>
     </ClInclude>
-    <ClInclude Include="ltPhys\TerrainData.hpp">
-      <Filter>PhysicsDemo\ltPhys</Filter>
-    </ClInclude>
     <ClInclude Include="ltPhys\CollisionShape.hpp">
       <Filter>PhysicsDemo\ltPhys\Collisions\Shapes</Filter>
+    </ClInclude>
+    <ClInclude Include="ltPhys\ContactManifold.hpp">
+      <Filter>PhysicsDemo\ltPhys\Collisions</Filter>
+    </ClInclude>
+    <ClInclude Include="ltPhys\ContactPoint.hpp">
+      <Filter>PhysicsDemo\ltPhys\Collisions</Filter>
+    </ClInclude>
+    <ClInclude Include="ltPhys\FGenSpring.hpp">
+      <Filter>PhysicsDemo\ltPhys\Constraints</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

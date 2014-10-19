@@ -2,7 +2,6 @@
 #include <iostream>
 #include <cmath>
 
-void drawMesh(const Mesh &mesh);
 void drawBox(lt::Vec3 halfExtents);
 void drawSphere(float radius, unsigned int segments);
 
@@ -201,27 +200,6 @@ void PhysicsDemo::display()
 
 		glFlush();
 	SDL_GL_SwapBuffers();
-}
-
-void drawMesh(const Mesh &mesh)
-{
-	//lt::Vec3 colour[3] = 
-	//{
-	//	lt::Vec3(1.0f, 0.0f, 0.0f),
-	//	lt::Vec3(0.0f, 1.0f, 0.0f),
-	//	lt::Vec3(0.0f, 0.0f, 1.0f),
-	//};
-		
-	glBegin(GL_TRIANGLES);
-		for (unsigned int i = 0; i < mesh.numIndices; i++)
-		{
-			GLuint index = mesh.indices[i];
-			//glColor3f(colour[i%3].x, colour[i%3].y, colour[i%3].z);
-			glNormal3f(mesh.norms[index].x, mesh.norms[index].y, mesh.norms[index].z);
-			glTexCoord2f(mesh.texCoords[index].x, mesh.texCoords[index].y);
-			glVertex3f(mesh.verts[index].x, mesh.verts[index].y, mesh.verts[index].z);
-		}
-	glEnd();
 }
 
 const float CUBE_VERTS[][3] = {

@@ -50,7 +50,6 @@ private:
 		int m_mouseY;
 		int m_lastMouseY;
 	void display();
-		void testRender(const TerrainData &terrain);
 		lt::Vec3 m_camAng;
 		float m_camZoom;
 };

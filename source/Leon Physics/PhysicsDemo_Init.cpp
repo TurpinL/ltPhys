@@ -1,5 +1,4 @@
  #include "PhysicsDemo.hpp"
-#include "HeightmapFunctions.hpp"
 
 #include <random>
 

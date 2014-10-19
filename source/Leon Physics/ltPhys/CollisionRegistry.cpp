@@ -177,10 +177,6 @@ void CollisionRegistry::checkCollision(const CollisionRegistration& shapeA, cons
     {
         ContactGenerator::sphere_halfspace(*shape1, *shape2, &m_collisionData);
     }
-    else if(shapeAType == SHAPE_SPHERE && shapeBType == SHAPE_TERRAIN)
-    {
-        ContactGenerator::sphere_terrain(*shape1, *shape2, &m_collisionData);
-    }
     else if(shapeAType == SHAPE_BOX && shapeBType == SHAPE_BOX)
     {
         ContactGenerator::box_box(*shape1, *shape2, &m_collisionData);
@@ -188,10 +184,6 @@ void CollisionRegistry::checkCollision(const CollisionRegistration& shapeA, cons
 	else if(shapeAType == SHAPE_BOX && shapeBType == SHAPE_HALFSPACE)
     {
         ContactGenerator::box_halfspace(*shape1, *shape2, &m_collisionData);
-    }
-    else if(shapeAType == SHAPE_BOX && shapeBType == SHAPE_TERRAIN)
-    {
-        ContactGenerator::box_terrain(*shape1, *shape2, &m_collisionData);
     }
     else
     {

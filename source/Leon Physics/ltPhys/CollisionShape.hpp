@@ -16,7 +16,6 @@ enum ShapeType
 	SHAPE_SPHERE = 1,
 	SHAPE_BOX = 2,
 	SHAPE_HALFSPACE = 3,
-	SHAPE_TERRAIN = 4
 };
 
 ////////////////////////////////////////////////////////////

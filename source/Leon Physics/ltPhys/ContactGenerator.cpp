@@ -38,6 +38,8 @@ void ContactGenerator::checkCollision(RigidBody &rbA, RigidBody &rbB, std::vecto
 	const std::set<const CollisionShape*>& colShapesA = rbA.getCollisionShapes();
 	const std::set<const CollisionShape*>& colShapesB = rbB.getCollisionShapes();
 
+	ContactManifold manifold(rbA, rbB);
+
 	std::set<const CollisionShape*>::iterator i;
 	std::set<const CollisionShape*>::iterator j;
 	for (i = colShapesA.begin(); i != colShapesA.end(); ++i)
@@ -60,8 +62,6 @@ void ContactGenerator::checkCollision(RigidBody &rbA, RigidBody &rbB, std::vecto
 				shapeBType = tempShape;
 			}
 
-			ContactManifold manifold(rbA, rbB);
-
 			//HACK: check Collisions else if thing. Make this a better thing
 			if(shapeAType == SHAPE_SPHERE && shapeBType == SHAPE_SPHERE)
 			{
@@ -83,12 +83,12 @@ void ContactGenerator::checkCollision(RigidBody &rbA, RigidBody &rbB, std::vecto
 			{
 				//std::cout << "CollisionRegistry::Unhandled collision type (" << shapeAType << ", " << shapeBType << ")\n";
 			}
-
-			if(manifold.getNumContacts() > 0)
-			{
-				contactManifolds.push_back(manifold);
-			}
 		}
+	}
+
+	if(manifold.getNumContacts() > 0)
+	{
+		contactManifolds.push_back(manifold);
 	}
 }
 

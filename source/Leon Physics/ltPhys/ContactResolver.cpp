@@ -51,6 +51,14 @@ void ContactResolver::calcImpulse(ContactManifold& manifold, std::list<Collision
 	// Calculate restitution of collision;
 	Scalar restitution = A.getRestitution() * B.getRestitution();
 
+	// Collision responses
+	CollisionResponse responseOfBodyA;
+	CollisionResponse responseOfBodyB;
+
+	responseOfBodyA.body = &A;
+	responseOfBodyB.body = &B;
+
+
 	int numContacts = manifold.getNumContacts();
 
 	for(int i = 0 ; i < numContacts; i++)
@@ -82,23 +90,17 @@ void ContactResolver::calcImpulse(ContactManifold& manifold, std::list<Collision
 		Scalar f = numer/denom;
 		Vec3 impulse = normal * f / (Scalar)numContacts;
 
+		responseOfBodyA.changeInVelocity += impulse * A.getInvMass();
+		responseOfBodyB.changeInVelocity += -impulse * B.getInvMass();
+	
+		responseOfBodyA.changeInAngularVelocity += uA * f;
+		responseOfBodyB.changeInAngularVelocity += -uB * f;
+	
 		
-		// Create collision responses
-		CollisionResponse responseOfBodyA;
-		CollisionResponse responseOfBodyB;
-	
-		responseOfBodyA.body = &A;
-		responseOfBodyB.body = &B;
-
-		responseOfBodyA.changeInVelocity = impulse * A.getInvMass();
-		responseOfBodyB.changeInVelocity = -impulse * B.getInvMass();
-	
-		responseOfBodyA.changeInAngularVelocity = uA * f;
-		responseOfBodyB.changeInAngularVelocity = -uB * f;
-	
-		collisionResponseRegistry.push_back(responseOfBodyA);
-		collisionResponseRegistry.push_back(responseOfBodyB);
 	}
+	
+	collisionResponseRegistry.push_back(responseOfBodyA);
+	collisionResponseRegistry.push_back(responseOfBodyB);
 }
 
 void ContactResolver::resolveAllInterpenetrations(std::vector<ContactManifold> &contactManifolds)

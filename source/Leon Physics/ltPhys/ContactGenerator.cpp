@@ -11,7 +11,7 @@ static inline Scalar penetrationOnAxis(const ShapeBox &boxA, const Transform &bo
 static inline bool tryAxis(const ShapeBox &boxA, const Transform &boxATransform, const ShapeBox &boxB, const Transform &boxBTransform, Vec3 axis, const Vec3 &separation, unsigned int index, Scalar &smallestPenetration, unsigned int &smallestCase);
 static inline Vec3 contactPoint(const Vec3 &pOne, const Vec3 &dOne, Scalar sizeOne, const Vec3 &pTwo, const Vec3 &dTwo, Scalar sizeTwo, bool useOne);
 
-void fillPointFaceBoxBox(const ShapeBox &boxA, const Transform &boxATransform, const RigidBody &boxABody, const ShapeBox &boxB, const Transform &boxBTransform, const RigidBody &boxBBody, const Vec3 &separation, ContactManifold &contactManifold, unsigned bestPen, Scalar penetration);
+void fillPointFaceBoxBox(const ShapeBox &boxA, const Transform &boxATransform, const ShapeBox &boxB, const Transform &boxBTransform, const Vec3 &separation, ContactManifold &contactManifold, unsigned bestPen, Scalar penetration, bool doSwapBodies);
 static inline Vec3 getShapeAxis(const ShapeBox &box, const Transform &boxTransform, unsigned int index);
 static inline Scalar transformToAxis(const ShapeBox &box, const Transform &boxTransform, const Vec3 &axis);
 
@@ -174,8 +174,7 @@ void ContactGenerator::box_box(const CollisionShape &a, const RigidBody &rbA, co
 	Transform boxBTransform = rbB.getTransform() * b.getOffset();
 
 	// Vector between box centres.
-	Vec3 separation = ( rbB.getPosition() + b.getOffset().getPosition() ) - 
-					  ( rbA.getPosition() + a.getOffset().getPosition() );
+	Vec3 separation = boxBTransform.getPosition() - boxATransform.getPosition();
 
 	Scalar smallestPen = SCALAR_MAX;
 	unsigned int bestPen = 0xffffffff;
@@ -216,7 +215,7 @@ void ContactGenerator::box_box(const CollisionShape &a, const RigidBody &rbA, co
 		// Vertex of boxB in face of boxA
 		// TODO: Do stuff
 		//std::cout << bestPen << " Vertex of boxB in face of boxA\n";
-		fillPointFaceBoxBox(boxA, boxATransform, rbA, boxB, boxBTransform, rbB, separation, contactManifold, bestPen, smallestPen);
+		fillPointFaceBoxBox(boxA, boxATransform, boxB, boxBTransform, separation, contactManifold, bestPen, smallestPen, false);
 		return;
 	}
 	else if (bestPen < 6)
@@ -224,7 +223,7 @@ void ContactGenerator::box_box(const CollisionShape &a, const RigidBody &rbA, co
 		// Vertex of boxA in face of boxB
 		// TODO: Do stuff
 		//std::cout << bestPen << " Vertex of boxA in face of boxB\n";
-		fillPointFaceBoxBox(boxB, boxBTransform, rbB, boxA, boxATransform, rbA, -separation, contactManifold, bestPen-3, smallestPen);
+		fillPointFaceBoxBox(boxA, boxATransform, boxB, boxBTransform, -separation, contactManifold, bestPen-3, smallestPen, true);
 		return;
 	}
 	else
@@ -355,27 +354,41 @@ void ContactGenerator::box_halfspace(const CollisionShape &a, const RigidBody &r
 	return;
 }
 
-void fillPointFaceBoxBox(const ShapeBox &boxA, const Transform &boxATransform, const RigidBody &boxABody, 
-						 const ShapeBox &boxB, const Transform &boxBTransform, const RigidBody &boxBBody, 
-						 const Vec3 &separation, ContactManifold &contactManifold, unsigned bestPen, Scalar penetration)
+void fillPointFaceBoxBox(const ShapeBox &boxA, const Transform &boxATransform,
+						 const ShapeBox &boxB, const Transform &boxBTransform,
+						 const Vec3 &separation, ContactManifold &contactManifold, unsigned bestPen, Scalar penetration, bool doSwapBodies)
 {
-	Vec3 normal = getShapeAxis(boxA, boxATransform, bestPen);
-	if (getShapeAxis(boxA, boxATransform, bestPen).dot(separation) > 0)
+	const ShapeBox *box0 = &boxA;
+	const Transform *box0Transform = &boxATransform;
+
+	const ShapeBox *box1 = &boxB;
+	const Transform *box1Transform = &boxBTransform;
+
+	if (doSwapBodies)
+	{
+		box0 = &boxB;
+		box0Transform = &boxBTransform;
+		box1 = &boxA;
+		box1Transform = &boxATransform;
+	}
+
+	Vec3 normal = getShapeAxis(*box0, *box0Transform, bestPen);
+	if (getShapeAxis(*box0, *box0Transform, bestPen).dot(separation) > 0)
 	{
 		normal = -normal;
 	}
 
-	Vec3 vertex = boxB.getHalfExtents();
-	if (getShapeAxis(boxB, boxBTransform, 0).dot(normal) < 0) { vertex.x = -vertex.x; }
-	if (getShapeAxis(boxB, boxBTransform, 1).dot(normal) < 0) { vertex.y = -vertex.y; }
-	if (getShapeAxis(boxB, boxBTransform, 2).dot(normal) < 0) { vertex.z = -vertex.z; }
+	Vec3 vertex = box1->getHalfExtents();
+	if (getShapeAxis(*box1, *box1Transform, 0).dot(normal) < 0) { vertex.x = -vertex.x; }
+	if (getShapeAxis(*box1, *box1Transform, 1).dot(normal) < 0) { vertex.y = -vertex.y; }
+	if (getShapeAxis(*box1, *box1Transform, 2).dot(normal) < 0) { vertex.z = -vertex.z; }
 
 	// Create contact data
 	ContactPoint newContact;
 
-	newContact.normal = normal;
+	newContact.normal = (doSwapBodies) ? -normal : normal;
 	newContact.penetration = penetration;
-	newContact.position = boxBTransform * vertex - (normal * penetration * 0.5);
+	newContact.position = *box1Transform * vertex - (normal * penetration * 0.5);
 
 	contactManifold.addContactPoint(newContact);
 }

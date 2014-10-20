@@ -1,10 +1,12 @@
 #ifndef LTPHYS_FORCEGENERATORREGISTRY_H
 #define LTPHYS_FORCEGENERATORREGISTRY_H
 
-#include "RigidBody.hpp"
-#include "Scalar.hpp"
-#include "ForceGenerator.hpp"
 #include <vector>
+
+#include "../lt3DMath/lt3DMath.hpp"
+
+#include "RigidBody.hpp"
+#include "ForceGenerator.hpp"
 
 namespace lt
 {

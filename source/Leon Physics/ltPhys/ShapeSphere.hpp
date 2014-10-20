@@ -2,7 +2,6 @@
 #define LTPHYS_SHAPESPHERE_H
 
 #include "CollisionShape.hpp"
-#include "Scalar.hpp"
 
 namespace lt
 {

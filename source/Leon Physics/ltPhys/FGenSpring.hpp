@@ -1,8 +1,9 @@
 #ifndef LTPHYS_FGENSRPING2_H
 #define LTPHYS_FGENSRPING2_H
 
+#include "../lt3DMath/lt3DMath.hpp"
+
 #include "ForceGenerator.hpp"
-#include "Scalar.hpp"
 #include "RigidBody.hpp"
 
 namespace lt

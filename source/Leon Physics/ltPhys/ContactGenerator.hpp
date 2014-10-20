@@ -3,14 +3,12 @@
 
 #include <vector>
 
+#include "../lt3DMath/lt3DMath.hpp"
+
 #include "CollisionShape.hpp"
 #include "ShapeSphere.hpp"
 #include "ShapeHalfspace.hpp"
 #include "ShapeBox.hpp"
-#include "Scalar.hpp"
-#include "Transform.hpp"
-#include "Vec3.hpp"
-#include "Quat.hpp"
 #include "ContactManifold.hpp"
 #include "ContactPoint.hpp"
 

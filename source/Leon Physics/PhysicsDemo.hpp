@@ -5,7 +5,7 @@
 
 #include <SDL.h> // SDL v1.2.15
 #include <GL/glew.h> // GLEW v1.9.0
-#include "ltPhys.hpp"
+#include "ltPhys\ltPhys.hpp"
 
 class PhysicsDemo
 {

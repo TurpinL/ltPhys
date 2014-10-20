@@ -1,7 +1,7 @@
 #ifndef LTPHYS_COLLISIONSHAPE_H
 #define LTPHYS_COLLISIONSHAPE_H
 
-#include "Transform.hpp"
+#include "../lt3DMath/lt3DMath.hpp"
 
 namespace lt
 {

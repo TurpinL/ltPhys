@@ -3,11 +3,8 @@
 
 #include <set>
 
-#include "Scalar.hpp"
-#include "Vec3.hpp"
-#include "Quat.hpp"
-#include "Mat3.hpp"
-#include "Transform.hpp"
+#include "../lt3DMath/lt3DMath.hpp"
+
 #include "CollisionShape.hpp"
 
 namespace lt

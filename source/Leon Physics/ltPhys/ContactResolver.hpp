@@ -1,9 +1,10 @@
 #ifndef LTPHYS_CONTACTRESOLVER_H
 #define LTPHYS_CONTACTRESOLVER_H
 
-#include "ContactManifold.hpp"
 #include <list>
 #include <vector>
+
+#include "ContactManifold.hpp"
 
 namespace lt
 {

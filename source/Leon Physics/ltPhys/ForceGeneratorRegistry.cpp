@@ -83,7 +83,7 @@ void ForceGeneratorRegistry::clear()
 void ForceGeneratorRegistry::_removeElement(int index)
 {
 	// Swap this element and the end so as not to leave holes.
-	m_registry[index] = m_registry[m_registry.size()]; 
+	m_registry[index] = m_registry[m_registry.size() - 1]; 
 	// Delete the duplicated element.
 	m_registry.pop_back();
 }

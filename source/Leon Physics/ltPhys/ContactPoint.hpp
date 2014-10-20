@@ -1,8 +1,7 @@
 #ifndef LTPHYS_CONTACTPOINT_HPP
 #define LTPHYS_CONTACTPOINT_HPP
 
-#include "Vec3.hpp"
-#include "Scalar.hpp"
+#include "../lt3DMath/lt3DMath.hpp"
 
 namespace lt
 {

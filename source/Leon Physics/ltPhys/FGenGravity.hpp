@@ -1,10 +1,10 @@
 #ifndef LTPHYS_FGENGRAVITY_H
 #define LTPHYS_FGENGRAVITY_H
 
+#include "../lt3DMath/lt3DMath.hpp"
+
 #include "ForceGenerator.hpp"
 #include "RigidBody.hpp"
-#include "Scalar.hpp"
-#include "Vec3.hpp"
 
 namespace lt
 {

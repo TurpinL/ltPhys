@@ -22,9 +22,6 @@
     <Filter Include="PhysicsDemo\ltPhys\Collisions">
       <UniqueIdentifier>{010efb89-f6e0-474b-bf49-ecf60e480357}</UniqueIdentifier>
     </Filter>
-    <Filter Include="PhysicsDemo\ltPhys\Math">
-      <UniqueIdentifier>{c9965ed6-1bf8-4b4d-8f21-9f4bdc0bf481}</UniqueIdentifier>
-    </Filter>
     <Filter Include="PhysicsDemo\ltPhys\Systems">
       <UniqueIdentifier>{b2a184c5-908e-415b-a89e-7d5d7926481a}</UniqueIdentifier>
     </Filter>
@@ -34,6 +31,9 @@
     <Filter Include="PhysicsDemo\ltPhys\Collisions\Shapes">
       <UniqueIdentifier>{8c24da6c-0ae4-4124-a2bb-676051820694}</UniqueIdentifier>
     </Filter>
+    <Filter Include="PhysicsDemo\lt3DMath">
+      <UniqueIdentifier>{ab840e82-c6a2-473e-a9e2-65d5ae228222}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -41,18 +41,6 @@
     </ClCompile>
     <ClCompile Include="ltPhys\FGenGravity.cpp">
       <Filter>PhysicsDemo\ltPhys\Constraints</Filter>
-    </ClCompile>
-    <ClCompile Include="ltPhys\Mat3.cpp">
-      <Filter>PhysicsDemo\ltPhys\Math</Filter>
-    </ClCompile>
-    <ClCompile Include="ltPhys\Quat.cpp">
-      <Filter>PhysicsDemo\ltPhys\Math</Filter>
-    </ClCompile>
-    <ClCompile Include="ltPhys\Transform.cpp">
-      <Filter>PhysicsDemo\ltPhys\Math</Filter>
-    </ClCompile>
-    <ClCompile Include="ltPhys\Vec3.cpp">
-      <Filter>PhysicsDemo\ltPhys\Math</Filter>
     </ClCompile>
     <ClCompile Include="ltPhys\RigidBody.cpp">
       <Filter>PhysicsDemo\ltPhys\Bodies</Filter>
@@ -102,31 +90,25 @@
     <ClCompile Include="ltPhys\CollisionShape.cpp">
       <Filter>PhysicsDemo\ltPhys\Collisions\Shapes</Filter>
     </ClCompile>
+    <ClCompile Include="lt3DMath\Mat3.cpp">
+      <Filter>PhysicsDemo\lt3DMath</Filter>
+    </ClCompile>
+    <ClCompile Include="lt3DMath\Quat.cpp">
+      <Filter>PhysicsDemo\lt3DMath</Filter>
+    </ClCompile>
+    <ClCompile Include="lt3DMath\Transform.cpp">
+      <Filter>PhysicsDemo\lt3DMath</Filter>
+    </ClCompile>
+    <ClCompile Include="lt3DMath\Vec3.cpp">
+      <Filter>PhysicsDemo\lt3DMath</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="ltPhys.hpp">
-      <Filter>PhysicsDemo\ltPhys</Filter>
-    </ClInclude>
     <ClInclude Include="ltPhys\ForceGenerator.hpp">
       <Filter>PhysicsDemo\ltPhys\Constraints</Filter>
     </ClInclude>
     <ClInclude Include="ltPhys\FGenGravity.hpp">
       <Filter>PhysicsDemo\ltPhys\Constraints</Filter>
-    </ClInclude>
-    <ClInclude Include="ltPhys\Quat.hpp">
-      <Filter>PhysicsDemo\ltPhys\Math</Filter>
-    </ClInclude>
-    <ClInclude Include="ltPhys\Mat3.hpp">
-      <Filter>PhysicsDemo\ltPhys\Math</Filter>
-    </ClInclude>
-    <ClInclude Include="ltPhys\Scalar.hpp">
-      <Filter>PhysicsDemo\ltPhys\Math</Filter>
-    </ClInclude>
-    <ClInclude Include="ltPhys\Vec3.hpp">
-      <Filter>PhysicsDemo\ltPhys\Math</Filter>
-    </ClInclude>
-    <ClInclude Include="ltPhys\Transform.hpp">
-      <Filter>PhysicsDemo\ltPhys\Math</Filter>
     </ClInclude>
     <ClInclude Include="ltPhys\RigidBody.hpp">
       <Filter>PhysicsDemo\ltPhys\Bodies</Filter>
@@ -166,6 +148,27 @@
     </ClInclude>
     <ClInclude Include="ltPhys\FGenSpring.hpp">
       <Filter>PhysicsDemo\ltPhys\Constraints</Filter>
+    </ClInclude>
+    <ClInclude Include="ltPhys\ltPhys.hpp">
+      <Filter>PhysicsDemo\ltPhys</Filter>
+    </ClInclude>
+    <ClInclude Include="lt3DMath\lt3DMath.hpp">
+      <Filter>PhysicsDemo\lt3DMath</Filter>
+    </ClInclude>
+    <ClInclude Include="lt3DMath\Mat3.hpp">
+      <Filter>PhysicsDemo\lt3DMath</Filter>
+    </ClInclude>
+    <ClInclude Include="lt3DMath\Quat.hpp">
+      <Filter>PhysicsDemo\lt3DMath</Filter>
+    </ClInclude>
+    <ClInclude Include="lt3DMath\Scalar.hpp">
+      <Filter>PhysicsDemo\lt3DMath</Filter>
+    </ClInclude>
+    <ClInclude Include="lt3DMath\Transform.hpp">
+      <Filter>PhysicsDemo\lt3DMath</Filter>
+    </ClInclude>
+    <ClInclude Include="lt3DMath\Vec3.hpp">
+      <Filter>PhysicsDemo\lt3DMath</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

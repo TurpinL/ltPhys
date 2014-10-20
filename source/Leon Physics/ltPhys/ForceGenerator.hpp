@@ -1,7 +1,8 @@
 #ifndef LTPHYS_FORCEGENERATOR_H
 #define LTPHYS_FORCEGENERATOR_H
 
-#include "Scalar.hpp"
+#include "../lt3DMath/lt3DMath.hpp"
+
 #include "RigidBody.hpp"
 
 namespace lt

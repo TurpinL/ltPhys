@@ -77,6 +77,10 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="lt3DMath\Mat3.cpp" />
+    <ClCompile Include="lt3DMath\Quat.cpp" />
+    <ClCompile Include="lt3DMath\Transform.cpp" />
+    <ClCompile Include="lt3DMath\Vec3.cpp" />
     <ClCompile Include="ltPhys\CollisionShape.cpp" />
     <ClCompile Include="ltPhys\ContactGenerator.cpp" />
     <ClCompile Include="ltPhys\ContactManifold.cpp" />
@@ -84,14 +88,10 @@
     <ClCompile Include="ltPhys\FGenGravity.cpp" />
     <ClCompile Include="ltPhys\FGenSpring.cpp" />
     <ClCompile Include="ltPhys\ForceGeneratorRegistry.cpp" />
-    <ClCompile Include="ltPhys\Mat3.cpp" />
-    <ClCompile Include="ltPhys\Quat.cpp" />
     <ClCompile Include="ltPhys\RigidBody.cpp" />
     <ClCompile Include="ltPhys\ShapeBox.cpp" />
     <ClCompile Include="ltPhys\ShapeHalfspace.cpp" />
     <ClCompile Include="ltPhys\ShapeSphere.cpp" />
-    <ClCompile Include="ltPhys\Transform.cpp" />
-    <ClCompile Include="ltPhys\Vec3.cpp" />
     <ClCompile Include="ltPhys\World.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="PhysicsDemo.cpp" />
@@ -101,7 +101,12 @@
     <ClCompile Include="PhysicsDemo_Init.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="ltPhys.hpp" />
+    <ClInclude Include="lt3DMath\lt3DMath.hpp" />
+    <ClInclude Include="lt3DMath\Mat3.hpp" />
+    <ClInclude Include="lt3DMath\Quat.hpp" />
+    <ClInclude Include="lt3DMath\Scalar.hpp" />
+    <ClInclude Include="lt3DMath\Transform.hpp" />
+    <ClInclude Include="lt3DMath\Vec3.hpp" />
     <ClInclude Include="ltPhys\CollisionShape.hpp" />
     <ClInclude Include="ltPhys\ContactGenerator.hpp" />
     <ClInclude Include="ltPhys\ContactManifold.hpp" />
@@ -111,15 +116,11 @@
     <ClInclude Include="ltPhys\FGenSpring.hpp" />
     <ClInclude Include="ltPhys\ForceGenerator.hpp" />
     <ClInclude Include="ltPhys\ForceGeneratorRegistry.hpp" />
-    <ClInclude Include="ltPhys\Mat3.hpp" />
-    <ClInclude Include="ltPhys\Quat.hpp" />
+    <ClInclude Include="ltPhys\ltPhys.hpp" />
     <ClInclude Include="ltPhys\RigidBody.hpp" />
-    <ClInclude Include="ltPhys\Scalar.hpp" />
     <ClInclude Include="ltPhys\ShapeBox.hpp" />
     <ClInclude Include="ltPhys\ShapeHalfspace.hpp" />
     <ClInclude Include="ltPhys\ShapeSphere.hpp" />
-    <ClInclude Include="ltPhys\Transform.hpp" />
-    <ClInclude Include="ltPhys\Vec3.hpp" />
     <ClInclude Include="ltPhys\World.hpp" />
     <ClInclude Include="PhysicsDemo.hpp" />
   </ItemGroup>

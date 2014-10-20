@@ -2,7 +2,6 @@
 #define LTPHYS_SHAPEBOX_H
 
 #include "CollisionShape.hpp"
-#include "Vec3.hpp"
 
 namespace lt
 {

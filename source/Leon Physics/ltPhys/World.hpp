@@ -3,8 +3,9 @@
 
 #include <vector>
 #include <list>
-#include "Vec3.hpp"
-#include "Scalar.hpp"
+
+#include "../lt3DMath/lt3DMath.hpp"
+
 #include "RigidBody.hpp"
 #include "ContactGenerator.hpp"
 #include "CollisionShape.hpp"

@@ -38,6 +38,7 @@ void World::removeRigidBody(RigidBody* body)
 		// Check for a match
 		if (m_rigidBodies[i] == body)
 		{
+			m_forceGenRegistry.remove(body);
 			// Swap this element and the end so as not to leave holes.
 			m_rigidBodies[i] = m_rigidBodies[m_rigidBodies.size() - 1]; 
 			// Delete the duplicated element.

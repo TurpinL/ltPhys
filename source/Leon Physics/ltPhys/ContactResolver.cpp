@@ -87,8 +87,8 @@ void ContactResolver::calcImpulse(ContactManifold& manifold, std::list<Collision
 		Scalar denom = A.getInvMass() + B.getInvMass() + 
 				kA.dot(uA) + kB.dot(uB);
 
-		Scalar f = numer/denom;
-		Vec3 impulse = normal * f / (Scalar)numContacts;
+		Scalar f = numer/(denom*(Scalar)numContacts); 
+		Vec3 impulse = normal * f;
 
 		responseOfBodyA.changeInVelocity += impulse * A.getInvMass();
 		responseOfBodyB.changeInVelocity += -impulse * B.getInvMass();

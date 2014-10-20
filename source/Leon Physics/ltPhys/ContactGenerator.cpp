@@ -38,7 +38,8 @@ void ContactGenerator::checkCollision(RigidBody &rbA, RigidBody &rbB, std::vecto
 	const std::set<const CollisionShape*>& colShapesA = rbA.getCollisionShapes();
 	const std::set<const CollisionShape*>& colShapesB = rbB.getCollisionShapes();
 
-	ContactManifold manifold(rbA, rbB);
+	ContactManifold normManifold(rbA, rbB);
+	ContactManifold swappedManifold(rbB, rbA);
 
 	std::set<const CollisionShape*>::iterator i;
 	std::set<const CollisionShape*>::iterator j;
@@ -51,6 +52,9 @@ void ContactGenerator::checkCollision(RigidBody &rbA, RigidBody &rbB, std::vecto
 			ShapeType shapeBType = (*j)->getShapeType();
 			const CollisionShape *shape1 = *i;
 			const CollisionShape *shape2 = *j;
+			RigidBody *body1 = &rbA;
+			RigidBody *body2 = &rbB;
+			ContactManifold *curManifold = &normManifold;
 
 			if (shapeAType > shapeBType)
 			{
@@ -60,24 +64,28 @@ void ContactGenerator::checkCollision(RigidBody &rbA, RigidBody &rbB, std::vecto
 				ShapeType tempShape = shapeAType;
 				shapeAType = shapeBType;
 				shapeBType = tempShape;
+				RigidBody *tempBody = body1; 
+				body1 = body2;
+				body2 = tempBody;
+				curManifold = &swappedManifold;
 			}
 
 			//HACK: check Collisions else if thing. Make this a better thing
 			if(shapeAType == SHAPE_SPHERE && shapeBType == SHAPE_SPHERE)
 			{
-				ContactGenerator::sphere_sphere(*shape1, rbA, *shape2, rbB, manifold);
+				ContactGenerator::sphere_sphere(*shape1, *body1, *shape2, *body2, *curManifold);
 			}
 			else if(shapeAType == SHAPE_SPHERE && shapeBType == SHAPE_HALFSPACE)
 			{
-				ContactGenerator::sphere_halfspace(*shape1, rbA, *shape2, rbB, manifold);
+				ContactGenerator::sphere_halfspace(*shape1, *body1, *shape2, *body2, *curManifold);
 			}
 			else if(shapeAType == SHAPE_BOX && shapeBType == SHAPE_BOX)
 			{
-				ContactGenerator::box_box(*shape1, rbA, *shape2, rbB, manifold);
+				ContactGenerator::box_box(*shape1, *body1, *shape2, *body2, *curManifold);
 			}
 			else if(shapeAType == SHAPE_BOX && shapeBType == SHAPE_HALFSPACE)
 			{
-				ContactGenerator::box_halfspace(*shape1, rbA, *shape2, rbB, manifold);
+				ContactGenerator::box_halfspace(*shape1, *body1, *shape2, *body2, *curManifold);
 			}
 			else
 			{
@@ -86,9 +94,21 @@ void ContactGenerator::checkCollision(RigidBody &rbA, RigidBody &rbB, std::vecto
 		}
 	}
 
-	if(manifold.getNumContacts() > 0)
+	// Convert all swapped manifolds to normal manifolds.
+	for(int i = 0; i < swappedManifold.getNumContacts(); ++i)
 	{
-		contactManifolds.push_back(manifold);
+		ContactPoint newContact;
+
+		newContact = swappedManifold.getContactPoint(i);
+
+		newContact.normal = -newContact.normal;
+
+		normManifold.addContactPoint(newContact);
+	}
+
+	if(normManifold.getNumContacts() > 0)
+	{
+		contactManifolds.push_back(normManifold);
 	}
 }
 

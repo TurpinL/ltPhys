@@ -13,7 +13,7 @@ namespace lt
 	void FGenSpring2::updateForce(RigidBody &parent, const Scalar &timeStep)
 	{
 		Vec3 relPivotInParent = parent.getPointInWorldSpace(m_pivotInParent);
-		Vec3 relPivotInOther = parent.getPointInWorldSpace(m_pivotInOther);
+		Vec3 relPivotInOther = m_other->getPointInWorldSpace(m_pivotInOther);
 
 		Vec3 force = parent.getPosition() + relPivotInParent;
 		force -= m_other->getPosition() + relPivotInOther;

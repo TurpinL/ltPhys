@@ -71,7 +71,6 @@ void ContactResolver::calcImpulse(ContactManifold& manifold, std::list<Collision
 
 		Vec3 normal = pt.normal;
 
-		// Maybe ptA/ptB should be used instead of contactPosA/contactPosB
 		Vec3 kA = contactPosA.cross(normal); // Temp variable to store reused equation
 		Vec3 kB = contactPosB.cross(normal); // Temp variable to store reused equation
 		Vec3 uA = A.getInvInertiaTensorWorld() * kA; // Temp variable to store reused equation
@@ -114,7 +113,6 @@ void ContactResolver::resolveAllInterpenetrations(std::vector<ContactManifold> &
 void ContactResolver::resolveInterpenetration(ContactManifold& manifold)
 {
 	// Get the two bodies
-	// TODO: Figure out a proper way to do this without breaking constness
 	RigidBody* bodies[2];
 	bodies[0] = &manifold.getBody0(); 
 	bodies[1] = &manifold.getBody1(); 

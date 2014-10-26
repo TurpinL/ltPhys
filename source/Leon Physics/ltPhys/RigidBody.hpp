@@ -92,11 +92,6 @@ public:
 	void setVelocity(const Vec3& velocity);
 
     ////////////////////////////////////////////////////////////
-	/// @brief Sets the acceleration of the body
-    ////////////////////////////////////////////////////////////
-	void setAcceleration(const Vec3& acceleration);
-
-    ////////////////////////////////////////////////////////////
 	/// @brief Sets the angle of the body
     ////////////////////////////////////////////////////////////
 	void setAngle(const Quat& angle);
@@ -157,7 +152,6 @@ public:
 
 	const Vec3& getPosition() const;
 	const Vec3& getVelocity() const;
-	const Vec3& getAcceleration() const;
 	const Quat& getAngle() const;
 	const Vec3& getAngularVelocity() const;
 	const Scalar& getInvMass() const;
@@ -174,15 +168,10 @@ public:
 private:
 	Vec3 m_pos; // Position
 	Vec3 m_vel; // Velocity
-	Vec3 m_accel; // Acceleration
 
 	Quat m_ang; // angular orientation
 	Vec3 m_angVel; // angular velocity
 	Mat3 m_invInteriaTensor; // inverse interia tensor (Body aligned)
-	
-	// Derived Data
-	Transform m_transform; // This rigid body's transformation matrix.
-	Mat3 m_invInertiaTensorWorld; // inverse interia tensor (World aligned)
 
 	Vec3 m_forceAccum; // Force accumulator
 	Vec3 m_torqueAccum; // Torque accumulator
@@ -193,6 +182,10 @@ private:
 	Scalar m_restitution; // Coefficient of restitution
 
 	std::set<const CollisionShape*> m_collisionShapes;
+
+	// Derived Data
+	Transform m_transform; // This rigid body's transformation matrix.
+	Mat3 m_invInertiaTensorWorld; // inverse interia tensor (World aligned)
 
 	void _clearAccums();
 	void _calcDerivedData();

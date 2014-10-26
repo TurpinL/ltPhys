@@ -9,18 +9,18 @@
 namespace lt
 {
 
-/** FGenSpring2.hpp
+/** FGenSpring.hpp
  *	@brief 
  *
  *  @author Leon Turpin
  *  @date January 2014
  */
-class FGenSpring2 : public ForceGenerator
+class FGenSpring : public ForceGenerator
 {
 public:
-	FGenSpring2();
+	FGenSpring();
 
-	FGenSpring2(const Vec3& pivotInParent, RigidBody *other, const Vec3& pivotInOther, const Scalar& springConstant, const Scalar &restLength = 0.0f, bool isStretchOnly = false);
+	FGenSpring(const Vec3& pivotInParent, RigidBody *other, const Vec3& pivotInOther, const Scalar& springConstant, const Scalar &restLength = 0.0f, bool isStretchOnly = false);
 
 	void updateForce(RigidBody& parent, const Scalar& timeStep);
 

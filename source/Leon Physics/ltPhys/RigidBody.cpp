@@ -10,7 +10,6 @@ RigidBody::RigidBody()
 {
 	m_pos = Vec3(0.0f, 0.0f, 0.0f);
 	m_vel = Vec3(0.0f, 0.0f, 0.0f);
-	m_accel = Vec3(0.0f, 0.0f, 0.0f);
 
 	m_forceAccum = Vec3(0.0f, 0.0f, 0.0f);
 	m_torqueAccum = Vec3(0.0f, 0.0f, 0.0f);
@@ -31,14 +30,13 @@ void RigidBody::integrate(const Scalar& timeStep)
 	const Scalar DEG_TO_RAD = 57.2957795f;
 
 	// Acceleration due to force
-	m_accel = m_forceAccum * m_invMass;
+	Vec3 accel = m_forceAccum * m_invMass;
 
 	// Angular acceleration due to torque
 	Vec3 angAccel = m_invInteriaTensor * m_torqueAccum;
 	
 	// Update Velocities
-	// TODO: Why is m_accel a member variable but angAccel isn't?
-	m_vel += m_accel * timeStep;
+	m_vel += accel * timeStep;
 	m_angVel += angAccel * timeStep;
 
 	// Apply damping
@@ -109,7 +107,6 @@ void RigidBody::setAngle(const Quat& angle)
 }
 
 void RigidBody::setVelocity(const Vec3& velocity) { m_vel = velocity; }
-void RigidBody::setAcceleration(const Vec3& acceleration) { m_accel = acceleration; }
 void RigidBody::setAngularVelocity(const Vec3& angVel) { m_angVel = angVel; }
 void RigidBody::setInvMass(const Scalar& invMass) { m_invMass = invMass; }
 void RigidBody::setMass(const Scalar& mass) { m_invMass = 1.0f / mass; }
@@ -163,7 +160,6 @@ int RigidBody::numCollisionShapes() const
 //--------------------------
 const Vec3& RigidBody::getPosition() const { return m_pos; }
 const Vec3& RigidBody::getVelocity() const { return m_vel; }
-const Vec3& RigidBody::getAcceleration() const { return m_accel; }
 const Quat& RigidBody::getAngle() const { return m_ang; }
 const Vec3& RigidBody::getAngularVelocity() const { return m_angVel; }
 const Scalar RigidBody::getMass() const { return 1.0f / m_invMass; }

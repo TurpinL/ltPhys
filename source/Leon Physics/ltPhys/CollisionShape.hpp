@@ -42,7 +42,22 @@ public:
 	////////////////////////////////////////////////////////////
 	virtual ShapeType getShapeType() const = 0;
 
+	////////////////////////////////////////////////////////////
+	/// @brief Set the collision shape's offset from the bodie's
+	/// center of mass.
+	///
+	/// @param offset Offset from the body's center of mass.
+	///
+	////////////////////////////////////////////////////////////
 	void setOffset(const Transform& offset);
+
+	////////////////////////////////////////////////////////////
+	/// @brief Get the collision shape's offset from the bodie's
+	/// center of mass.
+	///
+	/// @return offset Offset from the body's center of mass.
+	///
+	////////////////////////////////////////////////////////////
 	const Transform& getOffset() const;
 private:
 	Transform m_offset;

@@ -24,7 +24,16 @@ namespace lt
 class ContactGenerator
 {
 public:	
+	////////////////////////////////////////////////////////////
+	/// @brief Check for contact between all rigid bodies
+	/// Adds the contact data to the contact manifolds vector
+	////////////////////////////////////////////////////////////
 	static void generateContacts(std::vector<RigidBody*>& rigidBodies, std::vector<ContactManifold>& contactManifolds);
+
+	////////////////////////////////////////////////////////////
+	/// @brief Check for contact between two rigid bodies
+	/// Adds the contact data to the contact manifolds vector
+	////////////////////////////////////////////////////////////
 	static void checkCollision(RigidBody &rbA, RigidBody &rbB, std::vector<ContactManifold>& contactManifolds);
 
 	////////////////////////////////////////////////////////////

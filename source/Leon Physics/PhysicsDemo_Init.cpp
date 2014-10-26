@@ -54,20 +54,23 @@ void PhysicsDemo::initPhysics()
 	m_controlledBody.addCollisionShape(&m_boxShapePlayer);
 
 	// Table
-	m_tableTop = new lt::ShapeBox(lt::Vec3(3.95f, 0.1f, 1.35f));
-	m_tableTop->setOffset(lt::Transform(lt::Vec3(0.0f, 1.325f, 0.0f), lt::Quat()));
+	m_tableTop = new lt::ShapeBox(lt::Vec3(0.7f, 0.1f, 0.85f));
+	m_tableTop->setOffset(lt::Transform(lt::Vec3(0.0f, 0.75f, 0.0f), lt::Quat()));
 	
-	m_tableLeg1 = new lt::ShapeBox(lt::Vec3(0.05f, 1.325f, 0.05f));
-	m_tableLeg1->setOffset(lt::Transform(lt::Vec3(3.85f, 0.0f, 1.25f), lt::Quat()));
+	m_tableLeg1 = new lt::ShapeBox(lt::Vec3(0.7f, 0.75f, 0.1f));
+	m_tableLeg1->setOffset(lt::Transform(lt::Vec3(0.0f, 1.5f, -0.75f), lt::Quat()));
 	
-	m_tableLeg2 = new lt::ShapeBox(lt::Vec3(0.05f, 1.325f, 0.05f));
-	m_tableLeg2->setOffset(lt::Transform(lt::Vec3(3.85f, 0.0f, -1.25f), lt::Quat()));
+	m_tableLeg2 = new lt::ShapeBox(lt::Vec3(0.1f, 0.75f, 0.1f));
+	m_tableLeg2->setOffset(lt::Transform(lt::Vec3(0.6f, 0.0f, -0.75f), lt::Quat()));
 		
-	m_tableLeg3 = new lt::ShapeBox(lt::Vec3(0.05f, 1.325f, 0.05f));
-	m_tableLeg3->setOffset(lt::Transform(lt::Vec3(-3.85f, 0.0f, 1.25f), lt::Quat()));	
+	m_tableLeg3 = new lt::ShapeBox(lt::Vec3(0.1f, 0.75f, 0.1f));
+	m_tableLeg3->setOffset(lt::Transform(lt::Vec3(-0.6f, 0.0f, 0.75f), lt::Quat()));
 
-	m_tableLeg4 = new lt::ShapeBox(lt::Vec3(0.05f, 1.325f, 0.05f));
-	m_tableLeg4->setOffset(lt::Transform(lt::Vec3(-3.85f, 0.0f, -1.25f), lt::Quat()));
+	m_tableLeg4 = new lt::ShapeBox(lt::Vec3(0.1f, 0.75f, 0.1f));
+	m_tableLeg4->setOffset(lt::Transform(lt::Vec3(-0.6f, 0.0f, -0.75f), lt::Quat()));
+
+	m_tableLeg5 = new lt::ShapeBox(lt::Vec3(0.1f, 0.75f, 0.1f));
+	m_tableLeg5->setOffset(lt::Transform(lt::Vec3(0.6f, 0.0f, 0.75f), lt::Quat()));
 
 	m_table.setPosition(lt::Vec3(0.0f, 4.0f, 0.0f));
 	m_table.setDamping(0.7f);
@@ -80,10 +83,11 @@ void PhysicsDemo::initPhysics()
 	m_table.addCollisionShape(m_tableLeg2);
 	m_table.addCollisionShape(m_tableLeg3);
 	m_table.addCollisionShape(m_tableLeg4);
+	m_table.addCollisionShape(m_tableLeg5);
 
 	// Big Box
-	m_boxShapeLarge.setHalfExtents(lt::Vec3(1.5f, 1.35f, 1.5f));
-	m_bodyLarge.setPosition(lt::Vec3(0.0f, 3.0f, 0.0f));
+	m_boxShapeLarge.setHalfExtents(lt::Vec3(2, 2, 2));
+	m_bodyLarge.setPosition(lt::Vec3(1.0f, 3.0f, 0.0f));
 	m_bodyLarge.setDamping(0.7f);
 	m_bodyLarge.setAngularDamping(0.7f);
 	m_bodyLarge.setRestitution(0.7f);
@@ -111,11 +115,11 @@ void PhysicsDemo::initPhysics()
 	m_boxSpringOffset = lt::Vec3(0.0f, 0.12f, 0.0f);
 	m_spring = lt::FGenSpring2(m_boxSpringOffset, &m_controlledBody, lt::Vec3(0.f, 0.f, 0.f), 6.0f, 1.0f, true);
 
-	// Controlled Body
+	//// Controlled Body
 	world.addRigidBody(&m_controlledBody);
 	world.addForceGenerator(&m_controlledBody, &m_gravity);
 
-	// Table Body
+	//// Table Body
 	world.addRigidBody(&m_table);
 	world.addForceGenerator(&m_table, &m_gravity);
 
@@ -124,12 +128,12 @@ void PhysicsDemo::initPhysics()
 	world.addForceGenerator(&m_bodySmall, &m_gravity);
 	world.addForceGenerator(&m_bodySmall, &m_spring);
 
+	// Ground
+	world.addRigidBody(&m_bodyGround);
+
 	// Large Box
 	world.addRigidBody(&m_bodyLarge);
 	world.addForceGenerator(&m_bodyLarge, &m_gravity);
-
-	// Ground
-	world.addRigidBody(&m_bodyGround);
 }
 
 const lt::Vec3 inertiaTensorCuboid(const lt::Vec3& dimensions, const lt::Scalar& mass)

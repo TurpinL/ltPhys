@@ -27,6 +27,7 @@ private:
 	lt::CollisionShape *m_tableLeg2;
 	lt::CollisionShape *m_tableLeg3;
 	lt::CollisionShape *m_tableLeg4;
+	lt::CollisionShape *m_tableLeg5;
 
 	lt::FGenSpring2 m_spring;
 

@@ -1,5 +1,5 @@
-#ifndef LTPHYS_FGENSRPING2_H
-#define LTPHYS_FGENSRPING2_H
+#ifndef LTPHYS_FGENSRPING_H
+#define LTPHYS_FGENSRPING_H
 
 #include "../lt3DMath/lt3DMath.hpp"
 
@@ -10,7 +10,8 @@ namespace lt
 {
 
 /** FGenSpring.hpp
- *	@brief 
+ *	@brief Applies a spring force on one rigid body, using another rigid
+ *  body as an anchor for the end of the spring.
  *
  *  @author Leon Turpin
  *  @date January 2014
@@ -18,11 +19,25 @@ namespace lt
 class FGenSpring : public ForceGenerator
 {
 public:
+	////////////////////////////////////////////////////////////
+	/// @brief Default Constructor
+	////////////////////////////////////////////////////////////
 	FGenSpring();
 
 	FGenSpring(const Vec3& pivotInParent, RigidBody *other, const Vec3& pivotInOther, const Scalar& springConstant, const Scalar &restLength = 0.0f, bool isStretchOnly = false);
 
+	////////////////////////////////////////////////////////////
+	/// @brief Called by the World class to apply force to the 
+	/// associated rigid body
+	////////////////////////////////////////////////////////////
 	void updateForce(RigidBody& parent, const Scalar& timeStep);
+
+	void setPivotInParent(const Vec3& pivot);
+	void setOther(RigidBody *other);
+	void setPivotInOther(const Vec3& pivot);
+	void setSpringConstant(lt::Scalar constant);
+	void setRestLength(lt::Scalar length);
+	void setIsStretchOnly(bool isStretchOnly);
 
 private:
 	RigidBody *m_other; // The body at the other end of the spring
@@ -39,4 +54,4 @@ private:
 
 } // namespace lt
 
-#endif // LTPHYS_FGENSRPING2_H
+#endif // LTPHYS_FGENSRPING_H

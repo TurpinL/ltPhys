@@ -31,4 +31,11 @@ void FGenSpring::updateForce(RigidBody &parent, const Scalar &timeStep)
 	}
 }
 
+void FGenSpring::setPivotInParent(const Vec3& pivot) {m_pivotInParent = pivot;}
+void FGenSpring::setOther(RigidBody *other) {m_other = other;}
+void FGenSpring::setPivotInOther(const Vec3& pivot) {m_pivotInOther = pivot;}
+void FGenSpring::setSpringConstant(lt::Scalar constant) {m_springConstant = constant;}
+void FGenSpring::setRestLength(lt::Scalar length) {m_restLength = length;}
+void FGenSpring::setIsStretchOnly(bool isStretchOnly) {m_isStretchOnly = isStretchOnly;}
+
 } // namespace lt

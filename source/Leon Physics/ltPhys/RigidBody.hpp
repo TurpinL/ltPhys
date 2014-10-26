@@ -146,9 +146,37 @@ public:
     ////////////////////////////////////////////////////////////
 	void setInvInertiaTensor(const Mat3& inverseInertiaTensor);
 
+	////////////////////////////////////////////////////////////
+	/// @brief Add a collision shape to the body
+	///
+	/// @param colShape Collision shape to add to the body.
+	///
+	////////////////////////////////////////////////////////////
 	void addCollisionShape(const CollisionShape* colShape);
+
+	////////////////////////////////////////////////////////////
+	/// @brief Remove a collision shape from the body
+	///
+	/// @param colShape Collision shape to remove from the body.
+	///
+	////////////////////////////////////////////////////////////
 	void removeCollisionShape(const CollisionShape* colShape);
+
+	////////////////////////////////////////////////////////////
+	/// @brief Returns the numner of collision shapes registered to the body.
+	///
+	/// @return Number of collision shapes registered to the body
+	///
+	////////////////////////////////////////////////////////////
 	int numCollisionShapes() const;
+
+	////////////////////////////////////////////////////////////
+	/// @brief Get the set of all collision shapes registered to the body
+	///
+	/// @return Set of all collision shapes registered to the body
+	///
+	////////////////////////////////////////////////////////////
+	const std::set<const CollisionShape*>& getCollisionShapes() const;
 
 	const Vec3& getPosition() const;
 	const Vec3& getVelocity() const;
@@ -163,8 +191,6 @@ public:
 	const Mat3& getInvInertiaTensor() const;
 	const Mat3& getInvInertiaTensorWorld() const;
 	const Transform& getTransform() const;
-	const std::set<const CollisionShape*>& getCollisionShapes() const;
-
 private:
 	Vec3 m_pos; // Position
 	Vec3 m_vel; // Velocity

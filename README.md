@@ -1,4 +1,4 @@
 ltPhys
 ======
 
-A physics engine developed for a project. Based of Iam Millington's "Game Physics Engine Development"
+A physics engine based on Ian Millington's "Game Physics Engine Development"
